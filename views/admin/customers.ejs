@@ -1,0 +1,548 @@
+<%-include("../../views/partials/admin/sidebar")%>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        body {
+            display: flex;
+            background-color: #f8f9fa;
+        }
+        
+       
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            margin-left: 190px;
+        }
+        .header {
+            background-color: #1e2b4e;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            margin-right: 7px;
+        }
+        .header-icon {
+            margin-right: 15px;
+        }
+        .content {
+            padding: 20px;
+            flex-grow: 1;
+        }
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .page-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+        .sort-by {
+            display: flex;
+            margin-left: auto;
+            align-items: center;
+            font-size: 14px;
+            color: #495057;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 5px 15px;
+            background-color: white;
+            cursor: pointer;
+        }
+        .sort-icon {
+            margin-left: 5px;
+        }
+        .search-filter {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 7px;
+        }
+        .search-bar {
+            position: relative;
+        }
+        .search-input {
+            padding: 8px 15px 8px 35px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            width: 330px;
+            font-size: 14px;
+        }
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        .filter-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            background-color: white;
+            color: #495057;
+            cursor: pointer;
+        }
+        .add-customer {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .customer-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .customer-table th {
+            text-align: left;
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+            color: #6c757d;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .customer-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 14px;
+            color: #212529;
+        }
+        .action-btns {
+            display: flex;
+            gap: 10px;
+        }
+        .action-btn {
+            cursor: pointer;
+            color: #6c757d;
+        }
+        .pagination {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-top: 20px;
+        font-size: 14px;
+    }
+    
+    .pagination-info {
+        margin-right: 20px;
+    }
+    
+    .pagination-controls {
+        display: flex;
+    }
+    
+    .pagination-button {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #ccc;
+        margin: 0 2px;
+        cursor: pointer;
+    }
+    
+    .pagination-button.active {
+        background-color: #2c3e50;
+        color: white;
+        border-color: #2c3e50;
+    }
+        .page-btn {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #dee2e6;
+            background-color: white;
+            cursor: pointer;
+            margin: 0 2px;
+        }
+        .page-btn.active {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        .svg-inline--fa.fa-w-20 {
+    width: 1.25em;
+    margin-right: 7px;
+}
+a{
+    text-decoration: none;
+    color: #000;
+}
+.allowed{
+    background-color: #32e43b;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px
+}
+.blocked{
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+ /* Custom style for the standalone blue title bar in modal */
+ .modal-custom-title {
+            background-color: #adc2e6;
+            color: #000;
+            padding: 12px;
+            text-align: center;
+            border-radius: 6px 6px 0 0;
+            margin: -1px;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+        .form-label.required:after {
+            content: " *";
+            color: red;
+        }
+        .btn-add-customer {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            padding: 0.5rem 1rem;
+        }
+        .btn-cancel {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            padding: 0.5rem 1rem;
+        }
+        .table-responsive {
+            margin-top: 20px;
+        }
+        .table th {
+            font-weight: normal;
+            color: #6c757d;
+        }
+        .action-icons {
+            display: flex;
+            gap: 10px;
+        }
+        .action-icons i {
+            cursor: pointer;
+        }
+        .modal-dialog {
+            max-width: 500px;
+        }
+
+    #modal-content-delete{
+     width: 40%;
+    top: 20%;
+    left: 30%;
+    height: 30%;
+    align-items: center;
+    }
+    .deletmodalc{
+    margin-top:34px;
+
+    }
+
+    </style>
+
+    
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <svg class="svg-inline--fa fa-users fa-w-20" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="users" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path 
+                    fill="currentColor" d="M96 224c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm448 0c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm32 32h-64c-17.6 0-33.5 7.1-45.1 18.6 40.3 22.1 68.9 62 75.1 109.4h66c17.7 0 32-14.3 32-32v-32c0-35.3-28.7-64-64-64zm-256 0c61.9 0 112-50.1 112-112S381.9 32 320 32 208 82.1 208 144s50.1 112 112 112zm76.8 32h-8.3c-20.8 10-43.9 16-68.5 16s-47.6-6-68.5-16h-8.3C179.6 288 128 339.6 128 403.2V432c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48v-28.8c0-63.6-51.6-115.2-115.2-115.2zm-223.7-13.4C161.5 263.1 145.6 256 128 256H64c-35.3 0-64 28.7-64 64v32c0 17.7 14.3 32 32 32h65.9c6.3-47.4 34.9-87.3 75.2-109.4z"></path></svg>
+                <div>Customers</div>
+            </div>
+            <div class="header-right">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z"></path>
+                    <path d="M13.73 21C13.5542 21.3031 13.3019 21.5547 12.9982 21.7295C12.6946 21.9044 12.3504 21.9965 12 21.9965C11.6496 21.9965 11.3054 21.9044 11.0018 21.7295C10.6982 21.5547 10.4458 21.3031 10.27 21"></path>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="content-header">
+                <div class="page-title">Customers</div>
+                
+            </div>
+
+            <div class="search-filter">
+                <div class="search-bar">
+                    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" value="<%=search%>" id="search" class="search-input" placeholder="Search">
+                
+                </div>
+                <%if(search){%>
+                <button id="searchClearButton" class="filter-btn">clear</button>
+                <%}%>
+                <!-- <button class="filter-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                    </svg>
+                    Filter
+                </button> -->
+                <!-- <button class="add-customer" data-bs-toggle="modal" data-bs-target="#addCustomerModal">Add New Customer</button> -->
+                <div class="sort-by">
+                    Sort by
+                    <svg class="sort-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Customer Table -->
+            <table class="customer-table">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Created on</th>
+                        <th>Action</th>
+                        <!-- <th>Active/Deleted</th>
+                        <th>Actions</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <%for( let i=0;i<data.length;i++){%>
+                    <tr>
+                        <td><%=data[i].name%></td>
+                        <td><%=data[i].phone%></td>
+                        <td><%=data[i].email%></td>
+                        <td><%=data[i].createdOn.toString().split(" ").slice(1,4).join(" ")%></td>
+                        <td>
+                            <%if(data[i].isVerified==true){%>
+                                <a href="" onclick="deleteCustemers(`<%=data[i]._id%>`)" data-bs-toggle="modal" data-bs-target="#confirmationModal" >
+                                <button class="allowed">Allowed</button>
+                                </a>
+                                <%}else{%>
+                                    <a href="/admin/unblockCustomer?id=<%=data[i]._id%>">
+                                    <button class="blocked">Blocked</button>
+                                </a>
+                                    <%}%>
+                        </td>
+                        <!-- <td> <%if(data[i].isDeleted==true){%>
+                            
+                            <button class="blocked">Deleted</button>
+                            <%}else{%>
+                                <button class="allowed">Active</button>
+                                
+                                <%}%></td>
+                        <td> -->
+                            
+                            <!-- <div class="action-btns">
+                                <a href=""  data-bs-toggle="modal" data-bs-target="#editCustomerModal"onclick=" editCustemers(`<%=data[i]._id%>`)">
+                                <svg class="action-btn" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                                 </a>
+                                 <a href="" onclick="deleteCustemers(`<%=data[i]._id%>`)" class="material-icons" data-bs-toggle="modal" data-bs-target="#confirmationModal" >
+                                <svg class="action-btn" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                </svg>
+                                </a>
+                                 -->
+                            </div>
+                        </td>
+                    </tr>
+                   <%}%>
+                </tbody>
+            </table>
+
+
+<!-- --------------pagination----------------->
+            <div class="pagination">
+                <div class="pagination-info"><%=startItem%>- <%=endItem%>of <%=totalUsers%></div>
+                <div class="pagination-controls">
+                    <div class="pagination-button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15 18l-6-6 6-6" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <%for(let i=1;i<=totalPages;i++){%>
+                        <%if(i==currentPage){%>
+                        <a class="page" href="/admin/users?page=<%=i%>&search=<%= search %>"><div class="pagination-button active"><%=i%></div></a>
+                            <%} else {%>
+                         <a class="page" href="/admin/users?page=<%=i%>&search=<%= search %>"><div class="pagination-button "><%=i%></div></a>
+                    <%}}%>
+                    <div class="pagination-button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 18l6-6-6-6" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    <!-- Add Customer Modal -->
+<div class="modal fade" id="addCustomerModal" tabindex="-1"  aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <!-- Changed modal structure to match the image exactly -->
+            <div class="modal-custom-title">
+                Add New Customer
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="firstName" class="form-label required">First Name</label>
+                        <input type="text" class="form-control" id="firstName" placeholder="Product name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastName" class="form-label required">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" placeholder="Product description">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label required">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Product unit like KG or PCs">
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="address" placeholder="Product unit like KG or PCs">
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="blockUser" checked>
+                        <label class="form-check-label" for="blockUser">Block user</label>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="submit" class="btn btn-danger">Add Customer</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+   <!-- Edit Customer Modal -->
+   <div class="modal fade" id="editCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <!-- Changed modal structure to match the image exactly -->
+            <div class="modal-custom-title">
+                Add New Customer
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="firstName" class="form-label required">First Name</label>
+                        <input type="text" class="form-control" id="firstName" placeholder="Product name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastName" class="form-label required">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" placeholder="Product description">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label required">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Product unit like KG or PCs">
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="address" placeholder="Product unit like KG or PCs">
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="blockUser" checked>
+                        <label class="form-check-label" for="blockUser">Block user</label>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="submit" class="btn btn-danger">Add Customer</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ----------------delete confirmation modal------------------- -->
+
+<div id="confirmationModal" class="modal">
+    <div class="modal-content" id="modal-content-delete">
+        <h2 class="deletmodalc" >Confirmation</h2>
+        <p>Are you sure you want to Block this user?</p>
+        <div class="modal-buttons"style="display:flex; gap:10px;">
+            <form action="/admin/blockCustomer" method="post" >
+            <input type="hidden" name="id" id="dcmodal"  >
+            <button type="submit" class="btn btn-primary" >Block</button>
+            </form>
+            <a href=""class="btn btn-secondary">Cancel</a>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+
+    <script>
+
+
+document.getElementById("search").addEventListener("keydown",function(event){
+    if(event.key=="Enter"){
+        const searchValue=document.getElementById("search").value
+        if(searchValue){
+            window.location.href='/admin/users?search='+encodeURIComponent(searchValue)
+            
+        }
+    }
+})
+
+
+document.getElementById("searchClearButton").addEventListener("click",function (){
+    const searchValue=document.getElementById("search").value
+    if(searchValue){
+    window.location.href='/admin/users'
+    }
+})
+
+
+        function actionTwo(){
+            document.getElementById("confirmationModal").style.display="none"
+
+        }
+        function deleteCustemers(id){
+            document.getElementById("dcmodal").value=id
+            
+            console.log("eeee")
+            console.log(id)
+        }
+
+   
+    </script>
+</body>
+</html>

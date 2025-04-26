@@ -1,0 +1,285 @@
+
+
+
+:root {
+    --primary-color: #f44336;
+    --secondary-color: #333;
+}
+
+.top-bar {
+    background-color: #333;
+    color: white;
+    padding: 5px 0;
+    font-size: 0.8rem;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.8rem;
+}
+
+.category-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.category-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.category-list li:last-child {
+    border-bottom: none;
+}
+
+.category-list a {
+    color: #333;
+    text-decoration: none;
+}
+
+.banner {
+    background-color: #222;
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.banner-content {
+    max-width: 50%;
+}
+
+.voucher-text {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.shop-now-btn {
+    background-color: transparent;
+    border: 1px solid white;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.shop-now-btn:hover {
+    background-color: white;
+    color: #222;
+}
+
+.indicator {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.indicator .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin: 0 3px;
+    background-color: #bbb;
+    border-radius: 50%;
+}
+
+.indicator .dot.active {
+    background-color: var(--primary-color);
+}
+
+.flash-sale-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.flash-icon {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 5px 10px;
+    margin-right: 10px;
+}
+
+.countdown {
+    display: flex;
+    margin-left: auto;
+}
+
+.countdown-item {
+    background-color: #333;
+    color: white;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 3px;
+    border-radius: 3px;
+}
+
+.product-card {
+    border: 1px solid #eee;
+    border-radius: 5px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.product-card:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.favorite-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.sale-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 3px 8px;
+    font-size: 0.7rem;
+    border-radius: 3px;
+}
+
+.product-img {
+    height: 180px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.product-info {
+    padding: 10px;
+}
+
+.price-container {
+    display: flex;
+    align-items: center;
+}
+
+.current-price {
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.old-price {
+    color: #888;
+    text-decoration: line-through;
+    font-size: 0.9rem;
+}
+
+.view-all-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 3px;
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto;
+    display: block;
+}
+/* ---------------------footer-------------- */
+.footer {
+    background-color: #000;
+    color: white;
+    padding: 50px 0 20px;
+}
+
+.footer h4 {
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.footer-input-group {
+    position: relative;
+    margin-top: 20px;
+}
+
+.footer-input {
+    background-color: transparent;
+    border: 1px solid #333;
+    color: white;
+    padding: 10px;
+    width: 100%;
+}
+
+.footer-input::placeholder {
+    color: #666;
+}
+
+.footer-input-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: white;
+}
+
+.footer ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer li {
+    margin-bottom: 15px;
+}
+
+.footer a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+.download-section {
+    margin-bottom: 20px;
+}
+
+.app-badges img {
+    height: 40px;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.qr-code {
+    max-width: 150px;
+    margin-bottom: 15px;
+}
+
+.social-icons a {
+    color: white;
+    margin-right: 15px;
+    font-size: 1.2rem;
+}
+
+.copyright {
+    text-align: center;
+    color: #666;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #333;
+}
+i{
+    cursor: pointer;
+    color: blue;
+}

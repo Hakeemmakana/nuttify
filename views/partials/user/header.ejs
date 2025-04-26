@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutify - Premium Dried Fruits </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="/users/css/home.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 120px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.dropdown:hover .dropdown-menu {
+  display: block;
+ }
+                        
+ /* Add a small delay to prevent accidental triggers */
+ .dropdown-menu {
+     margin-top: 0;
+     transition-delay: 0.1s;
+  }
+
+
+</style>
+</head>
+<body>
+    
+ 
+ 
+ 
+<!-- Top Bar -->
+<div class="top-bar">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <small>Minimum Sale for All Orders and Free Express Delivery - OFF 30%</small>
+            </div>
+            <div class="col-md-6 text-end">
+                <small>Trustpilot</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light py-3" 
+     style="border-bottom: .5px solid black; color: black;">
+
+    <div class="container">
+        <a class="navbar-brand" href="#">Nutify</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a> 
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/shoap">Shop</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+            </ul>
+            <div class="d-flex align-items-center">
+                <form class="d-flex me-3">
+                    <div class="input-group">
+                        <input class="form-control form-control-sm" type="text" id="partialSearch"  value="<%=locals.search%>" placeholder="What are you looking for" aria-label="Search">
+                        <span  class="input-group-text"><i id="partialSearchButton" class="bi bi-search"></i>
+                      </div>
+                </form>
+                <a href="#" class="me-3"><i class="far fa-bell"></i></a>
+                <a href="/wishlist" class="me-3"><i class="far fa-heart"></i></a>
+                <a href="/cart" class="me-3"><i class="fas fa-shopping-cart"></i></a>
+                <%if(locals.user){%>
+                    <div class="dropdown">
+                        <button class="btn bg-transparent border-0 dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <script>
+                                document.write('<%= locals.user.name %>'.split(' ')[0]);
+                            </script>
+                        </button>
+                        
+                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="/account"><i class="bi bi-person-circle" style="color: black; padding-right: 12px;"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="/logout"><i class="fas fa-power-off" style="color: black; padding-right: 12px;"></i>Logout</a></li>
+                        </ul>
+                    </div>
+                <%}else{%>
+                    <a href="/singin" class="me-3"><i class="far fa-user"></i></a>
+               <% }%>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    
+    function toggleDropdown() {
+        var dropdown = document.getElementById("dropdownMenu");
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+
+function showsinup(){
+    Swal.fire({
+    title: "Do you want to save the changes?",
+    showDenyButton: true,
+    showCancelButton: true,
+    confirmButtonText: "Save",
+    denyButtonText: `Don't save`
+  }).then((result) => {
+    /* Read more about isConfirmed, isDenied below */
+    if (result.isConfirmed) {
+      Swal.fire("Saved!", "", "success");
+    } else if (result.isDenied) {
+      Swal.fire("Changes are not saved", "", "info");
+    }
+  });
+}
+
+
+</script>
+

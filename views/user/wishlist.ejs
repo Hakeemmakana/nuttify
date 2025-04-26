@@ -1,0 +1,406 @@
+
+<%-include("../../views/partials/user/header")%>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Sidebar</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .body-divv {
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: flex-start;
+      padding: 30px;
+    }
+
+    .sidebar-wrapper {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-name {
+      width: 280px;
+      background-color: white;
+      height: 13vh;
+      padding: 13px;
+      margin-bottom: 18px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+    }
+
+    .profile-pic {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #FFD700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+    }
+
+    .profile-pic img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+
+    .user-name {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .user-greeting {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .sidebar {
+      width: 280px;
+      background-color: white;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 14px 8px;
+      margin-bottom: 5px;
+      border-radius: 8px;
+      color: #444;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .menu-item:hover {
+      background-color: #f0f7ff;
+      color: #2874f0;
+    }
+
+    .menu-item.active {
+      background-color: #e6f2ff;
+      color: #2874f0;
+      font-weight: 500;
+    }
+
+    .menu-item i {
+      margin-right: 12px;
+      font-size: 18px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .submenu-item {
+      padding: 10px 0 10px 36px;
+      color: #666;
+      cursor: pointer;
+      font-size: 14px;
+      border-radius: 8px;
+    }
+
+    .submenu-item:hover {
+      background-color: #f0f7ff;
+      color: #2874f0;
+    }
+
+    .submenu-item.active {
+      color: #2874f0;
+      font-weight: 500;
+    }
+
+    a {
+      text-decoration: none;
+    }
+   
+
+    * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        
+       
+        
+        
+        .wishlist-container {
+    
+            width: 100%;
+            margin-left: 30px;
+            background-color: white;
+            border-radius: 2px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            border-radius: 8PX;
+        }
+        
+        .wishlist-header {
+            padding: 20px;
+            font-size: 18px;
+            font-weight: 500;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .wishlist-item {
+            padding: 20px;
+            display: flex;
+            border-bottom: 1px solid #f0f0f0;
+            position: relative;
+        }
+        
+        .item-image {
+            width: 80px;
+            margin-right: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .item-image img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+        
+        .unavailable-text {
+            font-size: 11px;
+            color: #ff6161;
+            text-align: center;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+        
+        .item-details {
+            flex: 1;
+        }
+        
+        .item-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #2874f0;
+            cursor: pointer;
+        }
+        
+        .item-title:hover {
+            text-decoration: underline;
+        }
+        
+        .assured-badge {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 5px;
+        }
+        
+        .assured-badge img {
+            height: 16px;
+            margin-right: 5px;
+        }
+        
+        .price-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        .current-price {
+            font-size: 18px;
+            font-weight: 500;
+            margin-right: 10px;
+        }
+        
+        .original-price {
+            text-decoration: line-through;
+            color: #878787;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        
+        .discount {
+            color: #388e3c;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .not-available {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .remove-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #878787;
+            font-size: 16px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
+        .confirmation-dialog {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            border-radius: 2px;
+            padding: 15px;
+            text-align: center;
+            display: none;
+            z-index: 10;
+        }
+        
+        .confirmation-text {
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .confirmation-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .cancel-button {
+            background: none;
+            border: none;
+            color: #878787;
+            font-size: 14px;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .remove-confirm-button {
+            background: none;
+            border: none;
+            color: #ff6161;
+            font-size: 14px;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+  </style>
+</head>
+<body>
+    <div class="body-divv">
+  <div class="sidebar-wrapper">
+    <div class="sidebar-name">
+      <div class="profile-header">
+        <div class="profile-pic">
+          <img src="/api/placeholder/60/60" alt="User" />
+        </div>
+        <div>
+          <div class="user-greeting">Hello,</div>
+          <div class="user-name">Hakeem M</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <a href="/account/orders">
+        <div class="menu-item">
+          <i class="fas fa-box"></i> MY ORDERS
+        </div>
+      </a>
+
+      <div class="menu-item ">
+        <i class="fas fa-user-cog"></i> ACCOUNT SETTINGS
+      </div>
+
+      <a href="/account"><div class="submenu-item ">Profile Information</div></a>
+      <a href="/account/addresses"><div class="submenu-item ">Manage Addresses</div></a>
+      <div class="submenu-item">Change Password</div>
+
+      <div class="menu-item active">
+        <i class="fas fa-heart"></i> WISHLIST
+      </div>
+
+      <div class="menu-item">
+        <i class="fas fa-wallet"></i> WALLET
+      </div>
+
+      <div class="menu-item">
+        <i class="fas fa-star"></i> RATINGS & REVIEWS
+      </div>
+
+      <div class="menu-item">
+        <i class="fas fa-power-off"></i> Logout
+      </div>
+    </div>
+  </div>
+  <div class="wishlist-container">
+    <div class="wishlist-header">
+        My Wishlist (<%=wishlistLength%>)
+    </div>
+    <%locals.product.forEach((data)=>{%>
+    <div class="wishlist-item" id="item1">
+        <div class="item-image">
+            <img src="<%=data.productId.productImage[0]%>" alt="<%=data.productId.productName%>">
+        </div>
+        <div class="item-details">
+            <div class="item-title"><%=data.productId.productName%></div>
+            <div class="price-container">
+                <div class="current-price">₹<%=data.productId.regularPrice%></div>
+                <div class="original-price">₹999</div>
+                <div class="discount">0% off</div>
+            </div>
+        </div>
+        <button class="remove-button" onclick="showConfirmation('<%=data.productId._id%>')"><i class="fas 2 fa-trash" ></i></button>
+        <div class="confirmation-dialog" id="confirm-<%=data.productId._id%>">
+            <div class="confirmation-text">
+                Are you sure you want to remove this product?
+            </div>
+            <div class="confirmation-buttons">
+                <button class="cancel-button" onclick="hideConfirmation('<%=data.productId._id%>')">CANCEL</button>
+                <button class="remove-confirm-button" onclick="removeItem('<%=data.productId._id%>')">YES, REMOVE</button>
+            </div>
+        </div>
+    </div>
+    <%})%>
+    
+</div>
+</div>
+  <script>
+ function showConfirmation(itemId) {
+            // Hide all other confirmation dialogs first
+            document.querySelectorAll('.confirmation-dialog').forEach(dialog => {
+                dialog.style.display = 'none';
+            });
+            
+            // Show the clicked item's confirmation dialog
+            document.getElementById('confirm-' + itemId).style.display = 'block';
+        }
+        
+        function hideConfirmation(itemId) {
+            document.getElementById('confirm-' + itemId).style.display = 'none';
+        }
+        
+        function removeItem(itemId) {
+            // Remove the item
+            document.getElementById(itemId).style.display = 'none';
+            
+            // Update wishlist count
+            const header = document.querySelector('.wishlist-header');
+            let count = parseInt(header.textContent.match(/\d+/)[0]);
+            count--;
+            header.textContent = 'My Wishlist (' + count + ')';
+        }
+    
+  </script>
+    <%-include("../../views/partials/user/footer")%>
+

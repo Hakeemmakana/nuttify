@@ -1,0 +1,759 @@
+
+<%-include("../../views/partials/user/header")%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Cashews</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: #fff;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        .breadcrumb {
+            display: flex;
+            padding: 15px 0;
+            font-size: 14px;
+            color: #666;
+        }
+        .breadcrumb a {
+            color: #666;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .breadcrumb span {
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        .product-section {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+            position: relative; /* For zoom positioning */
+        }
+        .product-image {
+            flex: 0 0 45%;
+            background-color: #f8f8f8;
+            padding: 0px;
+            position: relative; /* For lens positioning */
+        }
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        #zoom-lens {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid #000;
+            pointer-events: none;
+            display: none; /* Hidden until hover */
+        }
+        #zoom-preview {
+            width: 500px;
+            height: 500px;
+            border: 1px solid #ddd;
+            background-repeat: no-repeat;
+            display: none; /* Hidden until hover */
+            background-size: 1200px 1200px; /* 3x zoom */
+            position: absolute;
+            top: 3px;
+            left: 47%; /* Positioned to the right of product image */
+        }
+        .product-image:hover #zoom-lens,
+        .product-image:hover ~ #zoom-preview {
+            display: block;
+        }
+        .product-details {
+            flex: 0 0 55%;
+            padding-left: 30px;
+        }
+        .product-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .stars {
+            color: #ffc107;
+            font-size: 14px;
+            letter-spacing: 2px;
+        }
+        .review-count {
+            margin-left: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+        .in-stock {
+            color: #2ecc71;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .out-of-stock{
+            color: #cc2e2e;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .price {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        .current-price {
+            font-size: 22px;
+            font-weight: 600;
+        }
+        .original-price {
+            text-decoration: line-through;
+            color: #999;
+            margin-left: 10px;
+        }
+        .description {
+            margin: 15px 0;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+        }
+        .quantity {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .quantity-btn {
+            width: 40px;
+            height: 40px;
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .quantity-input {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #ddd;
+            border-left: none;
+            border-right: none;
+            text-align: center;
+            font-size: 16px;
+        }
+        .add-to-cart {
+            height: 40px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .add-to-cart:hover {
+            background-color: hwb(355 11% 40%);
+        }
+        .wishlist-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #ddd;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: xx-large;
+        }
+        .wishlist-btn:hover {
+            background-color: hwb(355 11% 40%);
+            color: #ddd;
+        }
+        .delivery-info {
+            margin: 30px 0;
+        }
+        .delivery-box {
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .delivery-icon {
+            margin-right: 15px;
+            color: #333;
+        }
+        .delivery-text {
+            font-size: 14px;
+        }
+        .delivery-text strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .related {
+            margin-top: 40px;
+        }
+        .related-header {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .related-title {
+            background: #ff4757;
+            color: white;
+            display: inline-block;
+            padding: 5px 15px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .related-products {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .product-card {
+            border: 1px solid #f0f0f0;
+            border-radius: 3px;
+            position: relative;
+            overflow: hidden;
+        }
+        .product-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        .product-label {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            background: #ff4757;
+            color: white;
+            font-size: 12px;
+            padding: 2px 8px;
+        }
+        .card-wishlist {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .product-info {
+            padding: 10px;
+        }
+        .product-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        .product-price {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .product-price .current {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .product-price .original {
+            font-size: 13px;
+            color: #999;
+            text-decoration: line-through;
+            margin-left: 8px;
+        }
+        .product-rating {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+        }
+        .product-rating .stars {
+            color: #ffc107;
+            margin-right: 5px;
+        }
+        .product-rating .count {
+            color: #666;
+        }
+        .card-add-to-cart {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: #333;
+            color: white;
+            border: none;
+            padding: 3px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        /* Add these adjustments to your existing styles */
+    .product-section {
+        display: flex;
+        justify-content: center; /* Center align the content */
+        gap: 20px; /* Add spacing between image and details */
+    }
+
+    .product-image {
+        flex: 0 0 45%;
+        position: relative;
+        overflow: hidden; /* Prevent lens from overflowing */
+    }
+
+    #zoom-preview {
+        width: 650px; /* Reduced width for better visibility */
+        height: 500px;
+        position: absolute;
+        top: 0; /* Align with top of image */
+       
+        margin-left: 20px; /* Add spacing from main image */
+        z-index: 1000; /* Ensure it appears above other content */
+    }
+
+    .product-details {
+        flex: 0 0 50%; /* Adjusted width */
+        padding-left: 20px;
+        
+    }
+    #thumbnail-gallery {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+    padding: 5px 0;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.thumbnail {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid #f0f0f0;
+    transition: border-color 0.3s ease;
+}
+
+.thumbnail:hover,
+.thumbnail.active {
+    border-color: #ff4757;
+}
+
+.product-image {
+    flex: 0 0 45%;
+    position: relative;
+    overflow: hidden;
+    text-align: center; /* Center the image and thumbnails */
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/">Home</a>
+            <span>/</span>
+            <a href="shop/?category=<%=product.category.name%>"><%=product.category.name%></a>
+            <span>/</span>
+            <span><%=product.productName%></span>
+        </div>
+        
+        <div class="product-image">
+            <img src="<%=product.productImage[0]%>" alt="<%=product.productName%>" id="product-image">
+            <div id="zoom-lens"></div>
+            <div id="thumbnail-gallery">
+                <% product.productImage.forEach(function(img, index) { %>
+                    <img src="<%= img %>" alt="Thumbnail <%= index + 1 %>" class="thumbnail" onclick="changeImage('<%= img %>')">
+                <% }); %>
+            </div>
+        </div>
+        <div id="zoom-preview"></div>
+            
+            <div class="product-details">
+                <h1 class="product-title"><%=product.productName%></h1>
+                
+                <div class="rating">
+                    <div class="stars">★★★★☆</div>
+                    <div class="review-count">(107 Reviews)</div>
+                    <%if(product.stock==0){%>
+                        <div class="out-of-stock">Out Of Stock</div>
+                    <%} else{%>
+                        <div class="in-stock">In Stock</div>
+                        <%}%>
+                </div>
+                
+                <div class="price">
+                    <div class="current-price"><%=product.regularPrice%></div>
+                    <div class="original-price">₹000</div>
+                </div>
+                
+                <div class="description">
+                    <p><%=product.productDescription%></p>
+                    <!-- <p>Cashews are rich in proteins.</p>
+                    <p>Smooth touch, fully processed by machines.</p>
+                    <p>Quality checked.</p> -->
+                </div>
+
+                <div class="quantity">
+                    <button onclick="dncqnty()" class="quantity-btn">−</button>
+                    <input type="text" id="quantity" class="quantity-input" value="1">
+                    <button onclick="incqnty()" class="quantity-btn">+</button>
+                    <button class="add-to-cart">Add to Cart</button>
+                    <div class="wishlist-btn">♡</div>
+                </div>
+                
+                <div class="delivery-info">
+                    <div class="delivery-box">
+                        <div class="delivery-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="1" y="3" width="15" height="13"></rect>
+                                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                            </svg>
+                        </div>
+                        <div class="delivery-text">
+                            <strong>Free Delivery</strong>
+                            <span>On all orders above ₹500</span>
+                        </div>
+                    </div>
+                    <div class="delivery-box">
+                        <div class="delivery-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="23 4 23 10 17 10"></polyline>
+                                <polyline points="1 20 1 14 7 14"></polyline>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                            </svg>
+                        </div>
+                        <div class="delivery-text">
+                            <strong>Return Delivery</strong>
+                            <span>Free 7 Days Delivery Returns</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="related">
+            <div class="related-header">
+                <div class="related-title">Related Item</div>
+            </div>
+            
+            <div class="related-products">
+                <div class="product-card">
+                    <div class="product-label">40% OFF</div>
+                    <div class="card-wishlist">♡</div>
+                    <img src="https://via.placeholder.com/500x500" alt="Pineapple dry">
+                    <div class="product-info">
+                        <h3 class="product-name">Pineapple dry</h3>
+                        <div class="product-price">
+                            <span class="current">₹599</span>
+                            <span class="original">₹999</span>
+                        </div>
+                        <div class="product-rating">
+                            <div class="stars">★★★★★</div>
+                            <div class="count">(86)</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-label">25% OFF</div>
+                    <div class="card-wishlist">♡</div>
+                    <img src="https://via.placeholder.com/250x250" alt="Papaya dry">
+                    <div class="product-info">
+                        <h3 class="product-name">Papaya dry</h3>
+                        <div class="product-price">
+                            <span class="current">₹1240</span>
+                            <span class="original">₹1585</span>
+                        </div>
+                        <div class="product-rating">
+                            <div class="stars">★★★★★</div>
+                            <div class="count">(75)</div>
+                        </div>
+                    </div>
+                    <button class="card-add-to-cart">Add to Cart</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-label">35% OFF</div>
+                    <div class="card-wishlist">♡</div>
+                    <img src="https:" alt="Black Berry">
+                    <div class="product-info">
+                        <h3 class="product-name">Black Berry</h3>
+                        <div class="product-price">
+                            <span class="current">₹970</span>
+                            <span class="original">₹1500</span>
+                        </div>
+                        <div class="product-rating">
+                            <div class="stars">★★★★★</div>
+                            <div class="count">(91)</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="card-wishlist">♡</div>
+                    <img src="https://via.placeholder.com/250x250" alt="Cardamom Kerala">
+                    <div class="product-info">
+                        <h3 class="product-name">Cardamom Kerala</h3>
+                        <div class="product-price">
+                            <span class="current">₹1890</span>
+                            <span class="original">₹4700</span>
+                        </div>
+                        <div class="product-rating">
+                            <div class="stars">★★★★★</div>
+                            <div class="count">(68)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%-include("../../views/partials/user/footer")%>
+    <script>
+        // Quantity Increment/Decrement Functions
+        function incqnty() {
+            let quantity = document.getElementById("quantity");
+            let currentValue = parseInt(quantity.value);
+            if (currentValue < 3) {
+                quantity.value = currentValue + 1;
+            }
+        }
+
+        function dncqnty() {
+            let quantity = document.getElementById("quantity");
+            let currentValue = parseInt(quantity.value);
+            if (currentValue > 1) {
+                quantity.value = currentValue - 1;
+            }
+        }
+
+        // Zoom Functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const productImage = document.getElementById('product-image');
+            const zoomLens = document.getElementById('zoom-lens');
+            const zoomPreview = document.getElementById('zoom-preview');
+            const imageContainer = document.querySelector('.product-image');
+
+            // Set the zoom preview background to the product image
+            zoomPreview.style.backgroundImage = `url(${productImage.src})`;
+
+            // Zoom factor (3x magnification)
+            const zoomFactor = 3;
+
+            imageContainer.addEventListener('mousemove', (e) => {
+                const rect = productImage.getBoundingClientRect();
+                const imgWidth = rect.width;
+                const imgHeight = rect.height;
+
+                // Mouse position relative to the image
+                let x = e.clientX - rect.left;
+                let y = e.clientY - rect.top;
+
+                // Lens dimensions
+                const lensWidth = zoomLens.offsetWidth;
+                const lensHeight = zoomLens.offsetHeight;
+
+                // Keep lens within image bounds
+                x = Math.max(lensWidth / 2, Math.min(x, imgWidth - lensWidth / 2));
+                y = Math.max(lensHeight / 2, Math.min(y, imgHeight - lensHeight / 2));
+
+                // Position the lens
+                zoomLens.style.left = `${x - lensWidth / 2}px`;
+                zoomLens.style.top = `${y - lensHeight / 2}px`;
+
+                // Calculate the zoomed background position
+                const bgX = ((x / imgWidth) * (imgWidth * zoomFactor)) - (lensWidth * zoomFactor / 2);
+                const bgY = ((y / imgHeight) * (imgHeight * zoomFactor)) - (lensHeight * zoomFactor / 2);
+                zoomPreview.style.backgroundPosition = `-${bgX}px -${bgY}px`;
+            });
+
+            imageContainer.addEventListener('mouseleave', () => {
+                zoomLens.style.display = 'none';
+                zoomPreview.style.display = 'none';
+            });
+
+            imageContainer.addEventListener('mouseenter', () => {
+                zoomLens.style.display = 'block';
+                zoomPreview.style.display = 'block';
+            });
+        });
+        // Quantity Increment/Decrement Functions remain the same
+    function incqnty() {
+        let quantity = document.getElementById("quantity");
+        let currentValue = parseInt(quantity.value);
+        if (currentValue < 3) {
+            quantity.value = currentValue + 1;
+        }
+    }
+
+    function dncqnty() {
+        let quantity = document.getElementById("quantity");
+        let currentValue = parseInt(quantity.value);
+        if (currentValue > 1) {
+            quantity.value = currentValue - 1;
+        }
+    }
+
+    // Improved Zoom Functionality
+    document.addEventListener('DOMContentLoaded', () => {
+        const productImage = document.getElementById('product-image');
+        const zoomLens = document.getElementById('zoom-lens');
+        const zoomPreview = document.getElementById('zoom-preview');
+        const imageContainer = document.querySelector('.product-image');
+
+        // Set initial styles
+        zoomLens.style.display = 'none';
+        zoomPreview.style.display = 'none';
+        zoomPreview.style.backgroundImage = `url(${productImage.src})`;
+
+        const zoomFactor = 3;
+        let imageWidth, imageHeight, rect;
+
+        // Update dimensions on load and resize
+        function updateDimensions() {
+            rect = productImage.getBoundingClientRect();
+            imageWidth = rect.width;
+            imageHeight = rect.height;
+            zoomPreview.style.backgroundSize = `${imageWidth * zoomFactor}px ${imageHeight * zoomFactor}px`;
+        }
+
+        updateDimensions();
+        window.addEventListener('resize', updateDimensions);
+
+        imageContainer.addEventListener('mousemove', (e) => {
+            // Get mouse position relative to image
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            // Lens dimensions
+            const lensWidth = zoomLens.offsetWidth;
+            const lensHeight = zoomLens.offsetHeight;
+
+            // Calculate lens position with boundaries
+            let lensX = mouseX - lensWidth / 2;
+            let lensY = mouseY - lensHeight / 2;
+
+            lensX = Math.max(0, Math.min(lensX, imageWidth - lensWidth));
+            lensY = Math.max(0, Math.min(lensY, imageHeight - lensHeight));
+
+            // Update lens position
+            zoomLens.style.left = `${lensX}px`;
+            zoomLens.style.top = `${lensY}px`;
+
+            // Calculate zoom preview background position
+            const bgX = (lensX * zoomFactor) / imageWidth * imageWidth;
+            const bgY = (lensY * zoomFactor) / imageHeight * imageHeight;
+
+            zoomPreview.style.backgroundPosition = `-${bgX}px -${bgY}px`;
+        });
+
+        imageContainer.addEventListener('mouseenter', () => {
+            zoomLens.style.display = 'block';
+            zoomPreview.style.display = 'block';
+        });
+
+        imageContainer.addEventListener('mouseleave', () => {
+            zoomLens.style.display = 'none';
+            zoomPreview.style.display = 'none';
+        });
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+    const productImage = document.getElementById('product-image');
+    const zoomLens = document.getElementById('zoom-lens');
+    const zoomPreview = document.getElementById('zoom-preview');
+    const imageContainer = document.querySelector('.product-image');
+    const thumbnails = document.querySelectorAll('.thumbnail');
+
+    // Set initial styles
+    zoomLens.style.display = 'none';
+    zoomPreview.style.display = 'none';
+    zoomPreview.style.backgroundImage = `url(${productImage.src})`;
+
+    const zoomFactor = 3;
+    let imageWidth, imageHeight, rect;
+
+    // Update dimensions on load and resize
+    function updateDimensions() {
+        rect = productImage.getBoundingClientRect();
+        imageWidth = rect.width;
+        imageHeight = rect.height;
+        zoomPreview.style.backgroundSize = `${imageWidth * zoomFactor}px ${imageHeight * zoomFactor}px`;
+    }
+
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+
+    // Function to change the main image
+    window.changeImage = function(imgSrc) {
+        productImage.src = imgSrc;
+        zoomPreview.style.backgroundImage = `url(${imgSrc})`;
+        thumbnails.forEach(thumb => thumb.classList.remove('active'));
+        document.querySelectorAll('.thumbnail').forEach(thumb => {
+            if (thumb.src === imgSrc) thumb.classList.add('active');
+        });
+        updateDimensions(); // Recalculate dimensions for the new image
+    };
+
+    // Set the first thumbnail as active
+    thumbnails[0].classList.add('active');
+
+    imageContainer.addEventListener('mousemove', (e) => {
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+
+        const lensWidth = zoomLens.offsetWidth;
+        const lensHeight = zoomLens.offsetHeight;
+
+        let lensX = mouseX - lensWidth / 2;
+        let lensY = mouseY - lensHeight / 2;
+
+        lensX = Math.max(0, Math.min(lensX, imageWidth - lensWidth));
+        lensY = Math.max(0, Math.min(lensY, imageHeight - lensHeight));
+
+        zoomLens.style.left = `${lensX}px`;
+        zoomLens.style.top = `${lensY}px`;
+
+        const bgX = (lensX * zoomFactor) / imageWidth * imageWidth;
+        const bgY = (lensY * zoomFactor) / imageHeight * imageHeight;
+
+        zoomPreview.style.backgroundPosition = `-${bgX}px -${bgY}px`;
+    });
+
+    imageContainer.addEventListener('mouseenter', () => {
+        zoomLens.style.display = 'block';
+        zoomPreview.style.display = 'block';
+    });
+
+    imageContainer.addEventListener('mouseleave', () => {
+        zoomLens.style.display = 'none';
+        zoomPreview.style.display = 'none';
+    });
+});
+    </script>
+</body>
+</html>

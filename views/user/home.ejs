@@ -1,0 +1,527 @@
+
+
+<%-include("../../views/partials/user/header")%>
+<style>
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.red-bar {
+    display: inline-block;
+    background-color: #e74c3c;
+    color: white;
+    padding: 3px 8px;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.view-all {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.product-card {
+    position: relative;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.product-image {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.product-title {
+    font-size: 14px;
+    margin-top: 8px;
+    font-weight: normal;
+}
+
+.product-price {
+    color: #e74c3c;
+    font-weight: bold;
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.product-original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+.stars {
+    color: #f39c12;
+    font-size: 14px;
+    margin-right: 5px;
+}
+
+.reviews {
+    color: #777;
+    font-size: 12px;
+}
+
+.heart-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.rating-container {
+    display: flex;
+    align-items: center;
+}
+
+.deal-banner {
+    display: flex;
+    background-color: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 200px;
+    margin-top: 30px;
+}
+
+.deal-content {
+    flex: 1;
+    padding: 30px;
+    color: white;
+}
+
+.deal-title {
+    color: #e74c3c;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.deal-heading {
+    font-size: 26px;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.deal-options {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.deal-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #333;
+    border-radius: 50%;
+    font-size: 12px;
+}
+
+.deal-value {
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.deal-label {
+    font-size: 10px;
+    color: #999;
+}
+
+.buy-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.deal-image {
+    flex: 1;
+    background-size: cover;
+    background-position: center;
+}
+.banner {
+    height: 190px;
+}
+a{
+    text-decoration: none;
+}
+
+</style>
+    
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Categories Sidebar -->
+            <div class="col-md-3">
+                <h5 class="mb-3">Product Categories</h5>
+                <ul class="category-list">
+                <%for(let i=0;i<=category.length;i++){%>
+                    
+                    <%}%>
+                    <li><a href="#">Dates</a></li>
+                    <li><a href="#">Dry Fruits</a></li>
+                    <li><a href="#">Raisins</a></li>
+                    <li><a href="#">Nuts</a></li>
+                    <li><a href="#">Seeds</a></li>
+                    <li><a href="#">Spices</a></li>
+                    <li><a href="#">Chocolates</a></li>
+                </ul>
+            </div>
+            
+            <!-- Main Content Area -->
+            <div class="col-md-9">
+                <!-- Banner -->
+                <div class="banner mb-4" style="background-image:url('users/image/home/bannerMabroom.jpg') ;">
+                    <div class="banner-content" >
+                        <h6>Medjool Jumbo Dates</h6>
+                        <div class="voucher-text">Up to 10% off Voucher</div>
+                        <a href="#" class="shop-now-btn mt-2">
+                            Shop Now <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                    <!-- <img src="" alt="Medjool Dates" class="banner-img position-absolute end-0 top-0 h-100"> -->
+                </div>
+                
+                <!-- Indicator Dots -->
+                <div class="indicator mb-4">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+                
+                <!-- Flash Sales Section -->
+                <div class="flash-sales mt-5">
+                    <div class="flash-sale-header">
+                        <div class="flash-icon">Today's</div>
+                        <h5 class="mb-0 ms-2">Flash Sales</h5>
+                        <div class="countdown">
+                            <div class="countdown-item">03</div>
+                            <div class="countdown-item">23</div>
+                            <div class="countdown-item">19</div>
+                            <div class="countdown-item">56</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Products Grid -->
+                    <div class="row">
+                        <!-- Product 1 -->
+
+                        <%for(let i=0;i<products.length;i++){%>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="product-card">
+                                <div class="position-relative">
+                                    <div class="sale-badge">SALE</div>
+                                    <a class="favorite-btn" href="/addToWishlist?id=<%=products[i]._id%>"><i class="far fa-heart"></i></a>
+                                    <a href="/productDetails?id=<%=products[i]._id%>">
+                                    <img src="<%=products[i].productImage[0]%>" alt="<%=products[i].productName%>" class="product-img">
+                                </a>
+                                </div>
+                                <div class="product-info">
+                                    <h6><%=products[i].productName%></h6>
+                                    <div class="price-container">
+                                        <span class="current-price"><%=products[i].regularPrice%></span>
+                                        <span class="old-price">₹000</span>
+                                    </div>
+                                    <div class="ratings">
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <small class="text-muted">(56)</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <%}%>
+                        
+                      
+                    
+                    <!-- View All Button -->
+                    <div class="text-center mt-4 mb-5">
+                       <a href="/shoap"> <button class="view-all-btn">View All Products</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <div class="container">
+        <!-- Best Selling Products Section -->
+        <div class="section-header">
+            <div>
+                <div class="red-bar">This Month</div>
+                <h2>Best Selling Products</h2>
+            </div>
+            <a href="/shoap" class="view-all">View All</a>
+        </div>
+
+        <div class="product-grid">
+            <!-- Mabroom -->
+            <div class="product-card">
+                <img src="/api/placeholder/400/320" alt="Mabroom" class="product-image">
+                <div class="heart-icon">♡</div>
+                <div class="product-title">Mabroom</div>
+                <div class="product-price">₹1030 <span class="product-original-price">₹1410</span></div>
+                <div class="rating-container">
+                    <span class="stars">★★★★★</span>
+                    <span class="reviews">(88)</span>
+                </div>
+            </div>
+
+            <!-- Safawi Soft Dates (Saudi) -->
+            <div class="product-card">
+                <img src="/api/placeholder/400/320" alt="Safawi Soft Dates" class="product-image">
+                <div class="heart-icon">♡</div>
+                <div class="product-title">Safawi Soft Dates (Saudi)</div>
+                <div class="product-price">₹239 <span class="product-original-price">₹325</span></div>
+                <div class="rating-container">
+                    <span class="stars">★★★★★</span>
+                    <span class="reviews">(45)</span>
+                </div>
+            </div>
+
+            <!-- Cardamom Kerala -->
+            <div class="product-card">
+                <img src="/api/placeholder/400/320" alt="Cardamom Kerala" class="product-image">
+                <div class="heart-icon">♡</div>
+                <div class="product-title">Cardamom Kerala</div>
+                <div class="product-price">₹1300 <span class="product-original-price">₹2400</span></div>
+                <div class="rating-container">
+                    <span class="stars">★★★★★</span>
+                    <span class="reviews">(34)</span>
+                </div>
+            </div>
+
+            <!-- Raisins (Seedless) -->
+            <div class="product-card">
+                <img src="/api/placeholder/400/320" alt="Raisins Seedless" class="product-image">
+                <div class="heart-icon">♡</div>
+                <div class="product-title">Raisins (Seedless)</div>
+                <div class="product-price">₹290 <span class="product-original-price">₹390</span></div>
+                <div class="rating-container">
+                    <span class="stars">★★★★☆</span>
+                    <span class="reviews">(40)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deal of the Day Banner -->
+        <div class="deal-banner">
+            <div class="deal-content">
+                <div class="deal-title">Deal of the Day</div>
+                <div class="deal-heading">Enhance Your<br>Bite Experience</div>
+                <div class="deal-options">
+                    <div class="deal-option">
+                        <div class="deal-value">10</div>
+                        <div class="deal-label">D</div>
+                    </div>
+                    <div class="deal-option">
+                        <div class="deal-value">05</div>
+                        <div class="deal-label">H</div>
+                    </div>
+                    <div class="deal-option">
+                        <div class="deal-value">43</div>
+                        <div class="deal-label">M</div>
+                    </div>
+                    <div class="deal-option">
+                        <div class="deal-value">32</div>
+                        <div class="deal-label">S</div>
+                    </div>
+                </div>
+                <button class="buy-button">Buy Now</button>
+            </div>
+            <div class="deal-image">
+                <img src="/api/placeholder/400/320" alt="Cashews" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <!-- Best Selling Products Section -->
+        <div class="section-header">
+            <div>
+                <div class="red-bar">This Month</div>
+                <h2>Best Selling Products</h2>
+            </div>
+            <a href="/shoap" class="view-all">View All</a>
+        </div>
+
+        <div class="product-grid">
+            <!-- Mabroom -->
+            <div class="product-card">
+                <img src="/api/placeholder/400/320" alt="Mabroom" class="product-image">
+                <div class="heart-icon">♡</div>
+                <div class="product-title">Mabroom</div>
+                <div class="product-price">₹1030 <span class="product-original-price">₹1410</span></div>
+                <div class="rating-container">
+                    <span class="stars">★★★★★</span>
+                    <span class="reviews">(88)</span>
+                </div>
+            </div>
+
+            <!-- Safawi Soft Dates (Saudi) -->
+            <div class="product-card">
+                <img src="/api/placeholder/400/320" alt="Safawi Soft Dates" class="product-image">
+                <div class="heart-icon">♡</div>
+                <div class="product-title">Safawi Soft Dates (Saudi)</div>
+                <div class="product-price">₹239 <span class="product-original-price">₹325</span></div>
+                <div class="rating-container">
+                    <span class="stars">★★★★★</span>
+                    <span class="reviews">(45)</span>
+                </div>
+            </div>
+
+            <!-- Cardamom Kerala -->
+            <div class="product-card">
+                <img src="/api/placeholder/400/320" alt="Cardamom Kerala" class="product-image">
+                <div class="heart-icon">♡</div>
+                <div class="product-title">Cardamom Kerala</div>
+                <div class="product-price">₹1300 <span class="product-original-price">₹2400</span></div>
+                <div class="rating-container">
+                    <span class="stars">★★★★★</span>
+                    <span class="reviews">(34)</span>
+                </div>
+            </div>
+
+            <!-- Raisins (Seedless) -->
+            <div class="product-card">
+                <img src="/api/placeholder/400/320" alt="Raisins Seedless" class="product-image">
+                <div class="heart-icon">♡</div>
+                <div class="product-title">Raisins (Seedless)</div>
+                <div class="product-price">₹290 <span class="product-original-price">₹390</span></div>
+                <div class="rating-container">
+                    <span class="stars">★★★★☆</span>
+                    <span class="reviews">(40)</span>
+                </div>
+            </div>
+
+            <!-- nnnnnn -->
+            <div class="product-card">
+                <img src="/api/placeholder/400/320" alt="Raisins Seedless" class="product-image">
+                <div class="heart-icon">♡</div>
+                <div class="product-title">Raisins (Seedless)</div>
+                <div class="product-price">₹290 <span class="product-original-price">₹390</span></div>
+                <div class="rating-container">
+                    <span class="stars">★★★★☆</span>
+                    <span class="reviews">(40)</span>
+                </div>
+            </div>
+
+            
+            <!-- nnnnnn -->
+            <div class="product-card">
+                <img src="/api/placeholder/400/320" alt="Raisins Seedless" class="product-image">
+                <div class="heart-icon">♡</div>
+                <div class="product-title">Raisins (Seedless)</div>
+                <div class="product-price">₹290 <span class="product-original-price">₹390</span></div>
+                <div class="rating-container">
+                    <span class="stars">★★★★☆</span>
+                    <span class="reviews">(40)</span>
+                </div>
+            </div>
+
+
+            <!-- nnnnnn -->
+            <div class="product-card">
+                <img src="/api/placeholder/400/320" alt="Raisins Seedless" class="product-image">
+                <div class="heart-icon">♡</div>
+                <div class="product-title">Raisins (Seedless)</div>
+                <div class="product-price">₹290 <span class="product-original-price">₹390</span></div>
+                <div class="rating-container">
+                    <span class="stars">★★★★☆</span>
+                    <span class="reviews">(40)</span>
+                </div>
+            </div>
+
+
+            <!-- nnnnnn -->
+            <div class="product-card">
+                <img src="/api/placeholder/400/320" alt="Raisins Seedless" class="product-image">
+                <div class="heart-icon">♡</div>
+                <div class="product-title">Raisins (Seedless)</div>
+                <div class="product-price">₹290 <span class="product-original-price">₹390</span></div>
+                <div class="rating-container">
+                    <span class="stars">★★★★☆</span>
+                    <span class="reviews">(40)</span>
+                </div>
+            </div>
+
+        </div>
+
+        
+       
+    </div>
+    
+            
+
+   
+    <a href="/shoap"><button class="view-all-btn">View All Products</button></a>
+    <!-- Scripts -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Simple script to handle favorite buttons
+        document.querySelectorAll('.favorite-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                if (icon.classList.contains('far')) {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    icon.style.color = '#f44336';
+                } else {
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    icon.style.color = '';
+                }
+            });
+        });
+    </script> -->
+    <%-include("../../views/partials/user/footer")%>

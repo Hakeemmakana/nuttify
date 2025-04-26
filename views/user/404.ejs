@@ -1,0 +1,144 @@
+
+<%-include("../../views/partials/user/header")%>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #212529;
+            line-height: 1.6;
+        }
+        
+        .error-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .error-header {
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 0;
+            background-color: #fff;
+        }
+        
+        .error-nav {
+            display: flex;
+            justify-content: flex-start;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .error-nav a {
+            color: #495057;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .error-nav a:hover {
+            color: #0d6efd;
+        }
+        
+        .breadcrumb-separator {
+            margin: 0 8px;
+            color: #6c757d;
+        }
+        
+        .error-code {
+            font-size: 120px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            color: #343a40;
+        }
+        
+        .error-message {
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .error-description {
+            font-size: 18px;
+            margin-bottom: 40px;
+            color: #6c757d;
+        }
+        
+        .error-back-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        
+        .error-back-button:hover {
+            background-color: #c82333;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .error-code {
+                font-size: 80px;
+            }
+            
+            .error-message {
+                font-size: 28px;
+            }
+            
+            .error-description {
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .error-code {
+                font-size: 60px;
+            }
+            
+            .error-message {
+                font-size: 24px;
+            }
+            
+            .error-description {
+                font-size: 14px;
+            }
+            
+            .error-back-button {
+                padding: 10px 20px;
+            }
+        }
+    </style>
+
+
+    <header class="error-header">
+        <nav class="error-nav">
+            <a href="/">Home</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>404 Error</span>
+        </nav>
+    </header>
+
+    <div class="error-container">
+        <h1 class="error-code">404</h1>
+        <h2 class="error-message">Not Found</h2>
+        <p class="error-description">Your visited page not found. You may go home page.</p>
+        <a href="/" class="error-back-button">Back to home page</a>
+    </div>
+
+    <%-include("../../views/partials/user/footer")%>
