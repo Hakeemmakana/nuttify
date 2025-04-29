@@ -1111,6 +1111,8 @@ document.getElementById("search").addEventListener('keydown',function(e){
                 const blob = await fetch(editCroppedImages[i]).then(res => res.blob());
                 formData.append('images', blob, `image-${i}.jpg`);
             }
+            console.log("lllllllllllllllll")
+            console.log(formData)
 
             fetch('/admin/editProduct', {
                 method: 'POST',

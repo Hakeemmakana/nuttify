@@ -168,6 +168,7 @@ const addProduct = async (req, res) => {
 
 const editProduct = async (req, res) => {
     try {
+        console.log("171---------",req.body)
         upload.array("images", 4)(req, res, async (err) => {
             if (err) {
                 console.log("Multer Error:", err.message);

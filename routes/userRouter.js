@@ -59,9 +59,11 @@ router.post("/delete-address",userAuth,addressController.deleteAddress)
 
 // -------------prodife edit------------------
 router.post('/edit-name',userAuth,userProfileController.editName)
+router.get('/changePassword',userAuth,userProfileController.changePassword)
 
 // -----------checkout------------------
-router.post('/cartToCheckout',userAuth,checkoutController.cartToCheckout)
+router.get('/checkout',userAuth,checkoutController.loadCheckout)
+router.post('/checkout',userAuth,checkoutController.checkout)
 
 
 

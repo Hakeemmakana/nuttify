@@ -1,17 +1,22 @@
-const mongoose=require(mongoose)
+const mongoose=require('mongoose')
 const {Schema}=mongoose
-const {v4:uuidv4}=require("uuid")
+
 
 const orderSchema=new Schema({
     orderId:{
         type:String,
-        default:()=>uuidv4(),
+        default:()=> Math.random().toString(36).substring(2, 10).toUpperCase(),
         unique:true
     },
+    userId:{
+        type:Schema.Types.ObjectId,
+        ref:'User',
+        required:true
+    },
     orderItems:[{
-        product:{
-            type:Schema.Type.ObjectId,
-            ref:"product",
+        productId:{
+            type:Schema.Types.ObjectId,
+            ref:"Product",
             required:true
         },
         quantity:{
@@ -21,9 +26,13 @@ const orderSchema=new Schema({
         price:{
             type:Number,
             default:0
+        },
+        totalPrice:{
+            type:Number,
+            default:0
         }
     }],
-    totalPrice:{
+    totalAmount:{
         type:Number,
         required:true
     },
@@ -36,28 +45,28 @@ const orderSchema=new Schema({
         required:true
      },
      address:{
-        type:Schema.Type.ObjectId,
-        ref:"user",
+        type:Schema.Types.ObjectId,
+        ref:"User",
         required:true
      },
      invoiceDate:{
         type:Date
      },
      status:{
-        type:string,
+        type:String,
         required:true,
-        enum:["Pending","Processing","Shipped","Deliverd","Cancelled"]
+        enum:["Pending","Shipped","Deliverd","Cancelled"]
      },
-     createdOn:{
-        type:Date,
-        defalt:Date.now,
-        required:true
+     paymentMetherd:{
+        type:String,
+        required:true,
+        enum:['razorpay','cashOnDelivery','wallet']
      },
      couponApp:{
         type:Boolean,
         default:false
      }
-})
+},{timestamps:true})
 
 const Order= mongoose.model("Order",orderSchema)
 module.exports=Order

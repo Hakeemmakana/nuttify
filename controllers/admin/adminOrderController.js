@@ -1,11 +1,20 @@
 
-
+const Order=require('../../models/orderSchema')
+const Product=require('../../models/productSchema')
 
 const loadOrders= async (req,res)=>{
     try {
-        res.render("adminOrders")
+        console.log(req.use)
+        const order=await Order.find()
+        .populate('orderItems.productId')
+        .populate('userId')
+        console.log(order)
+        res.render("adminOrders",{
+            order,
+        })
+
     } catch (error) {
-        console.log("error in loadOrders")
+        console.log("error in loadOrders",error)
     }
 }
 module.exports={

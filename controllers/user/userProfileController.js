@@ -51,7 +51,9 @@ const editName=async(req,res)=>{
     }
    
 }
-
+const changePassword=async(req,res)=>{
+    
+}
 
 
 
@@ -59,5 +61,6 @@ module.exports={
     loadProfile,
     loadOrders,
     editName,
+    changePassword
     
 }

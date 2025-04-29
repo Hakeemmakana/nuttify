@@ -54,7 +54,7 @@ const productSchema= new Schema({
     },
     status:{
         type:String,
-        enum:["Listed,UnListed"],
+        enum:["Listed","UnListed"],
         required:true,
         default:"Listed"
     }

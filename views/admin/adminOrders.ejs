@@ -253,7 +253,7 @@
       <table class="table">
         <thead>
           <tr>
-            <th>Order Items</th>
+            <th>Order Id</th>
             <th>Customer</th>
             <th>Order Date</th>
             <th>Order Total</th>
@@ -264,19 +264,20 @@
         </thead>
         <tbody>
           <tr>
+            <%order.forEach(item=>{%>
             <td>
               <div class="product-item">
-                <div class="product-image">R</div>
-                <span>Raisin</span>
+                
+                <span><%=item.orderId%></span>
               </div>
             </td>
-            <td>Fasalu Rahman</td>
-            <td>2025-01-31</td>
-            <td>₹700</td>
-            <td>Cash on delivery</td>
+            <td><%=item.userId.name%></td>
+            <td><%=item.createdAt.toDateString()%></td>
+            <td>₹<%=item.totalAmount%></td>
+            <td><%=item.paymentMetherd%></td>
             <td>
               <div class="status-container">
-                <span class="status-badge status-processing">Processing</span>
+                <span class="status-badge status-processing"><%=item.status%></span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-down dropdown-icon" viewBox="0 0 16 16">
                   <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
                 </svg>
@@ -286,98 +287,9 @@
               <button class="update-btn">Update Status</button>
             </td>
           </tr>
-          <tr>
-            <td>
-              <div class="product-item">
-                <div class="product-image">PC</div>
-                <span>Premium Cashew</span>
-              </div>
-            </td>
-            <td>John Doe</td>
-            <td>2025-01-23</td>
-            <td>₹2350</td>
-            <td>UPI</td>
-            <td>
-              <div class="status-container">
-                <span class="status-badge status-shipped">Shipped</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-down dropdown-icon" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
-                </svg>
-              </div>
-            </td>
-            <td>
-              <button class="update-btn">Update Status</button>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="product-item">
-                <div class="product-image">PB</div>
-                <span>Pistachio (Pista)</span>
-              </div>
-            </td>
-            <td>Fatima Begum</td>
-            <td>2025-01-18</td>
-            <td>₹1000</td>
-            <td>Cash on delivery</td>
-            <td>
-              <div class="status-container">
-                <span class="status-badge status-delivered">Delivered</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-down dropdown-icon" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
-                </svg>
-              </div>
-            </td>
-            <td>
-              <button class="update-btn">Update Status</button>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="product-item">
-                <div class="product-image">DS</div>
-                <span>Dates Safva</span>
-              </div>
-            </td>
-            <td>Shafin N</td>
-            <td>2025-01-18</td>
-            <td>₹1200</td>
-            <td>Debit/Credit Card</td>
-            <td>
-              <div class="status-container">
-                <span class="status-badge status-cancelled">Cancelled</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-down dropdown-icon" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
-                </svg>
-              </div>
-            </td>
-            <td>
-              <button class="update-btn">Update Status</button>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="product-item">
-                <div class="product-image">C</div>
-                <span>Cinnamon</span>
-              </div>
-            </td>
-            <td>Fasalu Rahman</td>
-            <td>2025-01-15</td>
-            <td>₹600</td>
-            <td>Net Banking</td>
-            <td>
-              <div class="status-container">
-                <span class="status-badge status-delivered">Delivered</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-down dropdown-icon" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
-                </svg>
-              </div>
-            </td>
-            <td>
-              <button class="update-btn">Update Status</button>
-            </td>
-          </tr>
+          <%})%>
+          
+          
         </tbody>
       </table>
     </div>
