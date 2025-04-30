@@ -425,6 +425,121 @@
                 margin: 0 10px;
             }
         }
+       
+
+    .product-item {
+    display: flex;
+    padding: 20px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.product-imag {
+    width: 120px;
+    height: 120px;
+    margin-right: 20px;
+}
+
+.imgProduct {
+    width: 114px;
+    margin-right: 14px;
+}
+
+.product-imag img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.product-details {
+    flex: 1;
+}
+
+.product-title {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.product-price {
+    font-weight: 600;
+    font-size: 20px;
+    color: #070606;
+    margin-bottom: 0px;
+}
+.product-span-price {
+    font-size: 14px;
+   
+}
+
+.product-weight {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.out-of-stock {
+    color: #ff4d4f;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.action-buttons {
+    display: flex;
+    margin-top: 15px;
+}
+
+.save-btn, .remove-btn {
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+.remove-btn {
+    color: #333;
+    margin-left: 30px;
+}
+
+.containerCartButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.control-btn {
+    width: 25px;
+    height: 25px;
+    border: none;
+    border-radius: 50%;
+    background-color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.control-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.display {
+    width: 30px;
+    height: 23px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+        
         </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -474,6 +589,41 @@
                         <%})%>
                         <button id="confirm-address-btn" class="button-primary">CONFIRM ADDRESS</button>
                     </div>
+                </div>
+
+
+                <div class="checkout-section">
+                    <div class="section-header">
+                        <div class="section-title"></div>
+                    </div>
+                    <div class="left-section">
+                        <% cart.items.forEach(item=>{ %>
+                        <div class="product-item">
+                            <div class="product-imag">
+                               
+                                    <img class="imgProduct" src="<%=item.productId.productImage[0]%>" alt="Product">
+                                
+                            </div>
+                            <div class="product-details">
+                                
+                                    <h3 class="product-title"><%=item.productId.productName%></h3>
+                                    
+                                
+                                <p class="product-price">₹<%=item.totalPrice%><span class="product-span-price">   (<%=item.quantity%> x <%=item.price%>) </span></p>  
+                                
+                                <p class="product-weight"><%=item.productId.varient%></p>
+                    
+                                <% if(item.productId.stock == 0) { %>
+                                    <p class="out-of-stock">Currently out of stock</p>
+                                <% } %>
+                    
+                                
+                            </div>
+                        </div>
+                        <% }) %>
+                    </div>
+                    
+
                 </div>
                 
                 <div class="checkout-section">
@@ -1026,6 +1176,7 @@
                     timerProgressBar: true,
                     toast: true
                         })
+                      window.location.href=data.redirectUrl  
             }else{
                 Swal.fire({
                     position: 'bottom',

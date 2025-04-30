@@ -64,6 +64,7 @@ router.get('/changePassword',userAuth,userProfileController.changePassword)
 // -----------checkout------------------
 router.get('/checkout',userAuth,checkoutController.loadCheckout)
 router.post('/checkout',userAuth,checkoutController.checkout)
+router.get('/orderSuccess', userAuth,checkoutController.orderSuccess)
 
 
 

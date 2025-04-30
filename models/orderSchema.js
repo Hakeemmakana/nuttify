@@ -45,9 +45,15 @@ const orderSchema=new Schema({
         required:true
      },
      address:{
-        type:Schema.Types.ObjectId,
-        ref:"User",
-        required:true
+        name: { type: String, required: true },
+        phone: { type: String, required: true },
+        pincode: { type: String, required: true },
+        postOffice: { type: String, required: true },
+        address: { type: String, required: true },
+        district: { type: String, required: true },
+        state: { type: String, required: true },
+        altPhone: { type: String },
+        addressType: { type: String, enum: ['home', 'office'], default: 'home' }
      },
      invoiceDate:{
         type:Date

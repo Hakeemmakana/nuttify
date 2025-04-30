@@ -34,7 +34,7 @@ const loadCheckout=async (req,res) =>{
         // console .log("checkout address",address)
         res.render("checkout",{
             cart,
-            address,
+            address
             
             
         })
@@ -59,15 +59,20 @@ const checkout =async(req,res)=>{
         }
         
         const address= await Address.findOne({userId:req.user._id})
-       const cartAddress= address.address.find(item=>item._id.toString()==addressId.toString())
-    //    console.log(cartAddress)
+       const cartAddress = address.address.find(item=>item._id.toString()==addressId.toString())
+        console.log(cartAddress)
        if(!cartAddress){
-       
-        return res.json({
-            success:false,
-            msg:'address not exist'
-        })
+            return res.json({
+                success:false,
+                msg:'address not exist'
+            })
        }
+
+       
+
+    //    let address = {
+
+    //    }
        const cart=await Cart.findOne({userId:req.user._id}).populate('items.productId')
        cart.items.forEach(item=>{
         if(item.productId.stock<item.quantity){
@@ -98,24 +103,47 @@ const checkout =async(req,res)=>{
             totalPrice:cartItems.totalPrice
         })),
         totalAmount:totalAmount,
-        address:cartAddress._id,
+        address:cartAddress,
         paymentMetherd:paymentOption,
         finalAmount:totalAmount,
         status:'Pending'
        })
        await newOrder.save()
+       req.session.orderSuccess=true
        
-       return res.json({
+       res.json({
         success:true,
-        msg:'order compleated suceesfully '
+        msg:'order compleated suceesfully ',
+        redirectUrl: '/orderSuccess'
     })
 
+    // return res.render("orderSuccess")
     } catch (error) {
         console.log("error in checkout page",error)
     }
    
 }
+
+const orderSuccess=async (req, res) => {
+    console.log(req.user._id)
+    const order= await Order.findOne({ userId: req.user._id })
+    .sort({ createdAt: -1 })
+    .populate('orderItems.productId')
+    
+    console.log(order)
+    
+    if (req.session.orderSuccess) {
+        req.session.orderSuccess = false; 
+        
+        return res.render('orderSuccess',{
+            order
+        });  
+    } else {
+        return res.redirect('/'); 
+    }
+};
 module.exports={
     loadCheckout,
-    checkout
+    checkout,
+    orderSuccess
 }
