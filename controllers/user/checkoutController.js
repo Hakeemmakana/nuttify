@@ -17,7 +17,8 @@ const loadCheckout=async (req,res) =>{
         const cart=await Cart.findOne({userId:req.user._id}).populate('items.productId')
         
         if(!cart||cart.items.length==0){
-            return res.render("checkout",{
+            return res.json({
+                success:false,
                 msg:'cart is empty'
             })
         }
@@ -38,6 +39,7 @@ const loadCheckout=async (req,res) =>{
             
             
         })
+        
     } catch (error) {
         console.log("error in chekout page",error)
     }
@@ -106,9 +108,19 @@ const checkout =async(req,res)=>{
         address:cartAddress,
         paymentMetherd:paymentOption,
         finalAmount:totalAmount,
-        status:'Pending'
+        status:'Processing'
        })
        await newOrder.save()
+       await Cart.updateOne({userId:req.user._id},
+        {$set:{items:[],}}
+       )
+        for(let item of cart.items){
+            const product =await Product.findById(item.productId._id)
+            if(product){
+                product.stock-=item.quantity
+                await product.save()
+            }
+        }
        req.session.orderSuccess=true
        
        res.json({

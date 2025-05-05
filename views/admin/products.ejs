@@ -736,7 +736,7 @@ a{
                         </div>
                         <div class="form-group">
                             <label>Image</label>
-                            <input type="file" id="editImageInput" accept="image/jpeg,image/png" multiple style="display:none;" onchange="handleEditImageUpload(event)">
+                            <input type="file" id="editImageInput"   accept="image/jpeg,image/png" multiple style="display:none;" onchange="handleEditImageUpload(event)">
                             <div class="image-upload-placeholder" onclick="triggerEditFileInput()">
                                 + Upload Image
                             </div>
@@ -870,6 +870,7 @@ document.getElementById("search").addEventListener('keydown',function(e){
             document.getElementById('editCategory').value = product.category;
             document.getElementById('editProductVarient').value=product.varient
             document.getElementById('editProductStock').value=product.stock
+
 
             existingImages = [...product.productImage];
             editCroppedImages = [];

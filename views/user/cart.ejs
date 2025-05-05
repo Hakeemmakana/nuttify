@@ -270,6 +270,9 @@
         a{
             text-decoration:none;   
         }
+        .emptyCart{
+            margin-left: 35%;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -278,7 +281,7 @@
     <br>
     <div class="container1">
         <div class="left-section">
-            
+            <%if(cart.items.length>0){%>
             <% cart.items.forEach(item=>{ %>
             <div class="product-item">
                 <div class="product-imag">
@@ -302,6 +305,9 @@
                 </div>
             </div>
             <%})%>
+        <%} else{%>
+            <h1 class="emptyCart">cart is empty</h1>
+            <%}%>
            
         </div>
         
@@ -345,8 +351,12 @@
             </div>
             
             <p class="savings-message">You will save ₹0 on this order</p>
-            
-            <a href="/checkout"><button class="place-order-btn">PLACE ORDER</button></a>
+            <%if(cart.items.length==0){%>
+            <button onclick="checkout()" class="place-order-btn" >PLACE ORDER</button>
+            <%}else{%>
+                <a href="/checkout"><button  class="place-order-btn">PLACE ORDER</button></a>
+
+                <%}%>
             
             <div class="secure-message">
                 <img src="/users/image/cart/secure.png" alt="Shield icon">
@@ -356,6 +366,29 @@
     </div>
 
     <script>
+        function checkout(){
+            fetch("/checkout",)
+            .then(res=>res.json())
+            .then(data=>{
+                if(!data.success){
+                    Swal.fire({
+                    position: 'bottom', 
+                    icon: 'error',
+                    title: data.msg,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    background: '#000',
+                    color: '#fff',
+                    timerProgressBar: true,
+                    toast:true,
+                    didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+                   })
+                }
+            })
+        }
       
     function cartAddButton(productId){
             fetch("/addToCart",{

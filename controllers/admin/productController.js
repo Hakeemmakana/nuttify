@@ -129,7 +129,7 @@ const addProduct = async (req, res) => {
 
                 await sharp(inputPath)
                     .resize(800, 800, { fit: "inside", withoutEnlargement: true }) 
-                    .jpeg({ quality: 80 }) //reducing quality
+                    // .jpeg({ quality: 80 }) //reducing quality
                     .toFile(outputPath);
 
                 // to delete org file after oprimzed
@@ -168,7 +168,9 @@ const addProduct = async (req, res) => {
 
 const editProduct = async (req, res) => {
     try {
-        console.log("171---------",req.body)
+        console.log("171-------------------")
+        console.log(req.body)
+        console.log("-------------------")
         upload.array("images", 4)(req, res, async (err) => {
             if (err) {
                 console.log("Multer Error:", err.message);
@@ -176,6 +178,8 @@ const editProduct = async (req, res) => {
             }
 
             const { productId, productName, productDescription, category, regularPrice,varient,stock,status } = req.body;
+        console.log("181-------------------")
+
             console.log(req.body)
             let imagePaths = [];
 
@@ -222,7 +226,7 @@ const editProduct = async (req, res) => {
 
                     await sharp(inputPath)
                         .resize(800, 800, { fit: "inside", withoutEnlargement: true })
-                        .jpeg({ quality: 80 })
+                        // .jpeg({ quality: 80 })
                         .toFile(outputPath);
 
                     fs.unlinkSync(inputPath);

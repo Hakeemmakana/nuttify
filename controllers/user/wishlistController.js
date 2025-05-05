@@ -117,6 +117,7 @@ const addWishlist=async(req,res)=>{
     // return res.redirct("/wishlist")
     return res.json({
         redirect: '/wishlist',
+        success:true,
         msg: 'Product already in wishlis'
       });
 
@@ -126,7 +127,40 @@ const addWishlist=async(req,res)=>{
    }
 
 }
+const removeFromWishlist=async (req,res)=>{
+    try {
+        console.log("asjfdjfjdf")
+        const {productId,currentPageUrl}=req.body
+        if(!req.session.user){
+            return res.json({
+                success:false,
+                msg:'session time out'
+            })
+        }
+
+        const product =await Product.findById(productId)
+        if(!product){
+            res.json({
+                success:false,
+                msg:"product is not available"
+            })
+        }
+const userId=req.user._id
+        await Wishlist.findOneAndUpdate(
+            {userId},
+            {$pull:{products:{productId}}}
+        )
+        return res.json({
+            success:true,
+            msg:'product removed from wishlist'
+        })
+
+    } catch (error) {
+        console.log("error in removefrom wishlist page",error)
+    }
+}
 module.exports={
     loadWishlist,
     addWishlist,
+    removeFromWishlist
 }

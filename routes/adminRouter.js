@@ -27,6 +27,11 @@ router.post("/editProduct",adminAuth,productController.editProduct)
 router.post("/deleteProduct",adminAuth,productController.deleteProduct)
 //order Management
 router.get("/orders",adminAuth,adminOrderController.loadOrders)
+router.get("/orderEdit",adminAuth,adminOrderController.editOrder)
+router.post("/orderStatusChange",adminAuth,adminOrderController.orderStatusChange)
+
+router.post ("/returnedOrder",adminAuth,adminOrderController.returnedOrder)
+
 
 router.post("/login",adminController.login)
 

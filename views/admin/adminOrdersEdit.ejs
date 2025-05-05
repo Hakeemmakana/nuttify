@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kariat - Order Details</title>
+    <style>
+        :root {
+            --primary-color: #c7b299;
+            --primary-dark: #b6a288;
+            --secondary-color: #6c757d;
+            --light-gray: #f8f9fa;
+            --dark-gray: #343a40;
+            --danger-color: #dc3545;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --border-color: #e0e0e0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 220px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .logo {
+            text-align: center;
+            padding: 10px 0;
+            margin-bottom: 20px;
+        }
+        
+        .logo img {
+            height: 40px;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #555;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            margin-bottom: 5px;
+        }
+        
+        .nav-item i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .nav-item.active {
+            background-color: #f0f0f0;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .nav-item:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            margin-left: ;
+            background-color: #f8f9fa;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            padding: 15px 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            border-radius: 6px;
+        }
+        
+        .header h1 {
+            font-size: 20px;
+            color: #333;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .header-actions button {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #555;
+            cursor: pointer;
+        }
+        
+        .page-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .page-title h2 {
+            font-size: 24px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .page-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: #fff;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: #fff;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: #fff;
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        
+        .card {
+            background-color: #fff;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .card-header h3 {
+            font-size: 18px;
+            color: #444;
+            font-weight: 500;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .order-overview {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .overview-item {
+            background-color: #fff;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            padding: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .overview-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(199, 178, 153, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        
+        .overview-icon span {
+            font-size: 20px;
+            color: var(--primary-color);
+        }
+        
+        .overview-content h4 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .overview-content p {
+            font-size: 18px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .order-details-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-group {
+            margin-bottom: 15px;
+        }
+        
+        .detail-group label {
+            display: block;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .detail-group .value {
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .detail-group input, .detail-group select {
+            /* width: 100%; */
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 15px;
+            display: block;
+        }
+        
+        .detail-group.editing input, .detail-group.editing select {
+            display: block;
+        }
+        
+        .detail-group.editing .value {
+            display: none;
+        }
+        
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            color: #fff;
+            display: inline-block;
+        }
+        
+        .status-processing {
+            background-color: var(--warning-color);
+        }
+        
+        .status-completed {
+            background-color: var(--success-color);
+        }
+        
+        .status-cancelled {
+            background-color: var(--danger-color);
+        }
+        
+        .status-shipped {
+            background-color: var(--info-color);
+        }
+        
+        .status-delivered {
+            background-color: var(--primary-color);
+        }
+        
+        .status-returned {
+            background-color: var(--secondary-color);
+        }
+        
+        .payment-summary {
+            padding: 15px;
+            border-radius: 6px;
+            background-color: #f8f9fa;
+        }
+        
+        .payment-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        
+        .payment-row.total {
+            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+            margin-top: 10px;
+            font-weight: 500;
+            font-size: 16px;
+        }
+        
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .items-table th, .items-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .items-table th {
+            background-color: #f8f9fa;
+            font-weight: 500;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .items-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .product-cell {
+            display: flex;
+            align-items: center;
+        }
+        
+        .product-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+        
+        .product-name {
+            font-weight: 500;
+        }
+        
+        .toggle-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+        
+        .toggle-section h3 {
+            font-size: 18px;
+            color: #444;
+            font-weight: 500;
+        }
+        
+        .toggle-icon {
+            font-size: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .section-collapsed .toggle-icon {
+            transform: rotate(-90deg);
+        }
+        
+        .section-content {
+            transition: max-height 0.3s ease-out;
+            max-height: 1000px;
+            overflow: hidden;
+        }
+        
+        .section-collapsed .section-content {
+            max-height: 0;
+        }
+        
+        .returned-items {
+            margin-top: 10px;
+        }
+        
+        .returned-item {
+            background-color: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .returned-details {
+            flex: 1;
+            margin-left: 15px;
+        }
+        
+        .returned-product {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .returned-info {
+            display: flex;
+            color: #666;
+            font-size: 14px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .returned-status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+        
+        .returned-status.approved {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .returned-status.pending {
+            background-color: #fff8e1;
+            color: #ff8f00;
+        }
+        
+        .returned-status.rejected {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .add-item-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            width: 100%;
+            padding: 10px;
+            border: 1px dashed var(--border-color);
+            border-radius: 6px;
+            background-color: #f8f9fa;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .add-item-btn:hover {
+            background-color: #eee;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .editor-controls {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 20px;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+        
+        input:focus + .slider {
+            box-shadow: 0 0 1px var(--primary-color);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .edit-mode-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .edit-mode-toggle span {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .breadcrumb .separator {
+            color: #999;
+        }
+        
+        .logout-btn {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .logout-btn:hover {
+            background-color: #c82333;
+        }
+        .back-btn {
+  background-color: #007bff; 
+  color: white;              
+  padding: 10px 20px;        
+  border: none;              
+  border-radius: 5px;        
+  font-size: 16px;           
+  cursor: pointer;          
+  transition: background-color 0.3s ease; 
+}
+
+.back-btn:hover {
+  background-color: #0056b3; 
+}
+ 
+.msgSelect {
+ width: 39%;
+ height: 30px;
+ border-radius: 5px;
+}
+
+.reason{
+    margin: ;
+}
+
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="container">
+        
+        
+        <div class="main-content">
+            <div class="main-content">
+                <div class="header">
+                    <button class="back-btn" onclick="window.history.back()">Back</button>
+                    <h1>Order Management</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-danger">Print</button>
+                    </div>
+                </div>
+    
+                <div class="page-title">
+                    <h2>Order ID: <%=order.orderId%></h2>
+                   
+                </div>
+            
+            
+           
+            
+            <div class="order-overview">
+                <div class="overview-item">
+                    <div class="overview-icon">
+                        <span>📅</span>
+                    </div>
+                    <div class="overview-content">
+                        <h4>Order Date</h4>
+                        <p><%=order.createdAt.toDateString()%></p>
+                    </div>
+                </div>
+                <div class="overview-item">
+                    <div class="overview-icon">
+                        <span>💳</span>
+                    </div>
+                    <div class="overview-content">
+                        <h4>Payment Method</h4>
+                        <p><%=order.paymentMetherd%></p>
+                    </div>
+                </div>
+                <div class="overview-item">
+                    <div class="overview-icon">
+                        <span>📦</span>
+                    </div>
+                    <div class="overview-content">
+                        <h4>Status</h4>
+                        <p><span class="status-badge status-processing"><%=order.status%></span></p>
+                    </div>
+                </div>
+                <div class="overview-item">
+                    <div class="overview-icon">
+                        <span>💰</span>
+                    </div>
+                    <div class="overview-content">
+                        <h4>Total Amount</h4>
+                        <p>₹<%=order.totalAmount%></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Order Details</h3>
+                </div>
+                <div class="order-details-section">
+                    <div>
+                        <div class="detail-group">
+                            <label>Customer Name</label>
+                            <span class="value"><%=order.address.name%></span>
+                            
+                        </div>
+                        <div class="detail-group">
+                            <label>Order Date</label>
+                            <span class="value"><%=order.createdAt.toDateString()%></span>
+                            
+                        </div>
+                        <div class="detail-group">
+                            <label>Payment Method</label>
+                            <span class="value"><%=order.paymentMetherd%></span>
+                            
+                        </div>
+                    </div>
+                    <div>
+                        <div class="detail-group">
+                            <label>Order Status</label>
+                            <%if( order.status === 'Deliverd' || order.status === 'Cancelled') { %>
+                                <p><span class="status-badge status-processing"><%=order.status%></span></p>
+                                <%}else if(order.status === 'Return-requested'){%>
+                                    <span class="status-badge status-processing"><%=order.status%></span>
+                                    <div class="reason">
+                                        <p>Return reason:<span><%=order.returnReason%></span></p>
+                                    </div>
+                                    <span onclick="returned(`<%=order._id%>`)" class="status-badge status"  style="color: rgb(240, 231, 231);background-color:rgb(88, 88, 88) ;">Aprove</span>
+                                <%}else if(order.status === 'Returned'){%>
+                                <p><span class="status-badge status-processing"><%=order.status%></span></p>
+
+                                <%}else{%>
+                            <!-- <span class="value"><span class="status-badge status-processing">Processing</span></span> -->
+                            <select  name="status" id="orderStatusSelect" data-order-id="<%=order._id%>">
+                                <option value="Processing" <%= order.status === 'Processing' ? 'selected' : '' %>>Processing</option>
+                                <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+                                <option value="Deliverd" <%= order.status === 'Deliverd'  ? 'selected ' : '' %>>Delivered</option>
+                                <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected ' : '' %>>Cancelled</option>
+                                
+                              </select>
+                              <%}%>
+                        </div>
+                        
+                        <div class="detail-group">
+                            <label>Delivery Address</label>
+                            <span class="value"><%=order.address.address%>,<%=order.address.postOffice%>,<%=order.address.district%></span>
+                            <span class="value"><%=order.address.state%>,<%=order.address.pincode%></span>
+                        </div>
+                        <div class="detail-group">
+                            <label>Phone</label>
+                            <span class="value"><%=order.address.phone%></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="payment-summary">
+                    <div class="payment-row">
+                        <span>Subtotal:</span>
+                        <span>₹1150</span>
+                    </div>
+                    <div class="payment-row">
+                        <span>Shipping:</span>
+                        <span>₹0</span>
+                    </div>
+                    <div class="payment-row">
+                        <span>Promotion/Discount:</span>
+                        <span>-₹0</span>
+                    </div>
+                    <div class="payment-row total">
+                        <span>Total:</span>
+                        <span>₹<%=order.totalAmount%></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="toggle-section">
+                    <h3>Order Items</h3>
+                    
+                </div>
+                <div class="section-content">
+                    <table class="items-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Varient</th>
+                                <th>Quantity</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%order.orderItems.forEach(item=>{%>
+                            <tr>
+                                <td class="product-cell">
+                                    <img src="<%=item.productId.productImage[0]%>" alt="Premium Cashews" class="product-image">
+                                    <span class="product-name"><%=item.productId.productName%></span>
+                                </td>
+                                <td>₹<%=item.price%></td>
+                                <td><%=item.productId.varient%></td>
+                                <td><%=item.quantity%></td>
+                                <td>
+                                    <select class="msgSelect" name="status" id="orderProductStatusSelect">
+                                        <option value="Processing" <%= order.status === 'Processing' ? 'selected' : '' %>>Processing</option>
+                                        <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+                                        <option value="Deliverd" <%= order.status === 'Deliverd' ? 'selected' : '' %>>Delivered</option>
+                                        <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                                        
+                                      </select>
+                                </td>
+                            </tr>
+                            <%})%>
+                            
+                           
+                        </tbody>
+                    </table>
+                    
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="toggle-section">
+                    <h3>Returned Items</h3>
+                    
+                </div>
+                <div class="section-content">
+                    <div class="returned-items">
+                        <div class="returned-item">
+                            <img src="/api/placeholder/40/40" alt="Dates" class="product-image">
+                            <div class="returned-details">
+                                <div class="returned-product">Dates</div>
+                                <div class="returned-info">
+                                    <span>Return Date: 25-02-2025</span>
+                                    <span>Quantity: 1 (500 G)</span>
+                                    <span>Amount: ₹450.00</span>
+                                    <span>Reason: Product damaged during shipping</span>
+                                </div>
+                            </div>
+                            <span class="returned-status approved">Approved</span>
+                        </div>
+                        
+                        <div class="returned-item">
+                            <img src="/api/placeholder/40/40" alt="Mango Dry" class="product-image">
+                            <div class="returned-details">
+                                <div class="returned-product">Mango Dry</div>
+                                <div class="returned-info">
+                                    <span>Return Date: 25-02-2025</span>
+                                    <span>Quantity: 1 (1 KG)</span>
+                                    <span>Amount: ₹700.00</span>
+                                    <span>Reason: Wrong item received</span>
+                                </div>
+                            </div>
+                            <span class="returned-status pending">Pending</span>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+    
+    <script>
+        // Toggle sections
+        document.querySelectorAll('.toggle-section').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const section = toggle.parentElement;
+                section.classList.toggle('section-collapsed');
+            });
+        });
+       document.getElementById("orderStatusSelect").addEventListener("change",function (){
+        // console.log("gggggggg")
+        const status=this.value
+        const orderId=this.getAttribute("data-order-id")
+        console.log(status,orderId)
+
+        fetch("/admin/orderStatusChange",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json",
+            },
+            body:JSON.stringify({status,orderId}),
+        }).then(response => response.json())
+                .then(result => {
+                    console.log(result)
+                    if (result.success) {
+                        Swal.fire({
+                            position: 'bottom',
+                            icon: 'success',
+                            title: result.msg,
+                            showConfirmButton: false,
+                            timer: 1500,
+                            background: '#000',
+                            color: '#fff',
+                            timerProgressBar: true,
+                            toast: true
+                        }).then(() => {
+                                window.location.reload();
+                                });
+                    } else {
+                        Swal.fire({
+                            position: 'bottom',
+                            icon: 'error',
+                            title: result.msg || 'Failed to edit address',
+                            showConfirmButton: false,
+                            timer: 1500,
+                            background: '#000',
+                            color: '#fff',
+                            toast: true
+                        });
+                    }
+                });
+
+       })
+
+       function returned (id){
+        console.log(id)
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to approve return this order?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, approve it!',
+            cancelButtonText: 'No',
+            reverseButtons: true
+             }).then((result) => {
+            if (result.isConfirmed) {
+        fetch('/admin/returnedOrder', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        orderId:id,
+                        status:'Returned'
+                    })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    console.log(result)
+                    if (result.success) {
+                        Swal.fire({
+                            position: 'bottom',
+                            icon: 'success',
+                            title: result.msg,
+                            showConfirmButton: false,
+                            timer: 1500,
+                            background: '#000',
+                            color: '#fff',
+                            timerProgressBar: true,
+                            toast: true
+                        }).then(() => {
+                                window.location.reload();
+                                });
+                    } else {
+                        Swal.fire({
+                            position: 'bottom',
+                            icon: 'error',
+                            title: result.msg || 'Failed to edit address',
+                            showConfirmButton: false,
+                            timer: 1500,
+                            background: '#000',
+                            color: '#fff',
+                            toast: true
+                        });
+                    }
+                });
+            }
+            })
+       }
+
+        </script>
+       

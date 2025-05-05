@@ -1,4 +1,4 @@
-<%-include("../../views/partials/user/header")%>
+<%- include("../../views/partials/user/header") %>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -112,6 +112,7 @@
             cursor: pointer;
             display: flex;
             align-items: center;
+            margin-left: 10px;
         }
         
         .search-button i {
@@ -121,61 +122,40 @@
         .order-item {
             background-color: white;
             margin-bottom: 20px;
-            padding: 8px;
+            padding: 15px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.12);
             border-radius: 6px;
             display: flex;
+            align-items: center;
         }
         
-        .product-image {
-            width: 100px;
-            height: 100px;
-            object-fit: contain;
-            margin-right: 20px;
-        }
-        
-        .product-details {
+        .order-info {
             flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
         }
         
-        .product-name {
-            font-size: 16px;
-            font-weight: normal;
-            color: #212121;
-            margin-bottom: 5px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .order-detail {
+            display: flex;
+            flex-direction: column;
         }
         
-        .product-meta {
-            font-size: 14px;
+        .detail-label {
+            font-size: 12px;
             color: #878787;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
         }
         
-        .product-meta span {
-            margin-right: 15px;
-        }
-        
-        .product-price {
-            font-size: 16px;
+        .detail-value {
+            font-size: 15px;
             font-weight: 500;
-            margin-bottom: 15px;
-        }
-        
-        .error-message {
-            background-color: #fff8f8;
-            border: 1px solid #e0e0e0;
-            border-radius: 2px;
-            padding: 12px 15px;
-            font-size: 14px;
             color: #212121;
-            margin-top: 10px;
         }
         
         .order-status {
-            width: 250px;
+            width: 200px;
             text-align: right;
         }
         
@@ -198,22 +178,105 @@
         .status-indicator.not-placed .dot {
             background-color: #ff6161;
         }
+
+        .status-indicator.processing .dot {
+            background-color: #ffa41c;
+        }
+
+        .status-indicator.delivered .dot {
+            background-color: #388e3c;
+        }
         
         .status-text {
             font-size: 14px;
             color: #878787;
         }
+
+        .error-message {
+            background-color: #fff8f8;
+            border: 1px solid #e0e0e0;
+            border-radius: 2px;
+            padding: 12px 15px;
+            font-size: 14px;
+            color: #212121;
+            margin-top: 10px;
+            grid-column: span 3;
+        }
+
+        .view-details-btn {
+            background-color: #fff;
+            color: #2874f0;
+            border: 1px solid #2874f0;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .view-details-btn:hover {
+            background-color: #f5f5f5;
+        }
+
+        @media (max-width: 768px) {
+            .order-info {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .error-message {
+                grid-column: span 2;
+            }
+        }
+        .pagination {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-top: 20px;
+        font-size: 14px;
+    }
+    
+    .pagination-info {
+        margin-right: 20px;
+    }
+    
+    .pagination-controls {
+        display: flex;
+    }
+    
+    .pagination-button {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #ccc;
+        margin: 0 2px;
+        cursor: pointer;
+    }
+    
+    .pagination-button.active {
+        background-color: #2c3e50;
+        color: white;
+        border-color: #2c3e50;
+    }
+    a {
+      text-decoration: none;
+      color: black;
+    }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="body-divv">
     <div class="breadcrumb">
-        <a href="#">Home</a> > <a href="#">My Account</a> > <a href="#">My Orders</a>
+        <a href="#">Home</a> > <a href="/account">My Account</a> > <a href="/account/orders">My Orders</a>
     </div>
     
     <div class="container-1">
-        <div class="filters">
+        <!-- Filters section commented out but kept for future reference -->
+        <!-- <div class="filters">
             <h2>Filters</h2>
             
             <div class="filter-section">
@@ -263,92 +326,167 @@
                     <label for="older">Older</label>
                 </div>
             </div>
-        </div>
+        </div> -->
         
         <div class="orders-container">
             <div class="search-bar">
-                <input type="text" class="search-input" placeholder="Search your orders here">
-                <button class="search-button">
-                    <i class="fas fa-search"></i> Search Orders
+                <input type="text" id="searchOr" class="search-input" value="<%=search%>" placeholder="Search your orders here">
+                <%if(search){%>
+                <button id="searchClearButton"  class="search-button">
+                    <i class="fas fa-search"></i> Clear
                 </button>
+                <%}else{%>
+                    <button class="search-button">
+                        <i class="fas fa-search"></i> Search Orders
+                    </button>
+                    <%}%>
             </div>
             
-            <div class="order-item">
-                <img src="https://via.placeholder.com/100" class="product-image" alt="ChinuStyle Beard Mustache Trimmer">
-                
-                <div class="product-details">
-                    <h3 class="product-name">ChinuStyle Beard Mustache Trimmer High Performance</h3>
-                    <div class="product-meta">
-                        <span>Color: Black,Silver</span>
+            <% order.forEach(item => { %>
+                <a href="/account/orderDetails?id=<%= item._id %>" style="text-decoration: none; color: inherit;">
+                    <div class="order-item">
+                        <div class="order-info">
+                            <div class="order-detail">
+                                <span class="detail-label">Order ID</span>
+                                <span class="detail-value"><%= item.orderId%></span>
+                            </div>
+                            
+                            <div class="order-detail">
+                                <span class="detail-label">Date</span>
+                                <span class="detail-value"><%= new Date(item.createdAt).toLocaleDateString() %></span>
+                            </div>
+                            
+                            <div class="order-detail">
+                                <span class="detail-label">Total Amount</span>
+                                <span class="detail-value">₹<%= item.totalAmount %></span>
+                            </div>
+                            
+                            <div class="order-detail">
+                                <span class="detail-label">Items</span>
+                                <span class="detail-value"><%= item.orderItems.length %> item(s)</span>
+                            </div>
+                            
+                            <div class="order-detail">
+                                <span class="detail-label">Payment Method</span>
+                                <span class="detail-value"><%= item.paymentMetherd %></span>
+                            </div>
+                            
+                            <div class="order-detail">
+                                <button class="view-details-btn">View Details</button>
+                            </div>
+                            
+                            <% if (item.status === 'Order Not Placed') { %>
+                            <div class="error-message">
+                                Payment not successful. Please contact your bank for any money deducted.
+                            </div>
+                            <% } %>
+                        </div>
+                        
+                        <div class="order-status">
+                            <div class="status-indicator <%= item.status === 'Order Not Placed' ? 'not-placed' : 
+                                                             item.status === 'Delivered' ? 'delivered' : 'processing' %>">
+                                <div class="dot"></div>
+                                <%= item.status %>
+                            </div>
+                            <div class="status-text">
+                                <%= item.paymentMetherd %>
+                            </div>
+                        </div>
                     </div>
-                    <div class="product-price">₹414</div>
-                    <div class="error-message">
-                        Payment not successful. Please contact your bank for any money deducted.
-                    </div>
-                </div>
-                
-                <div class="order-status">
-                    <div class="status-indicator not-placed">
-                        <div class="dot"></div>
-                        Order Not Placed
-                    </div>
-                    <div class="status-text">
-                        Your Payment was not confirmed by the bank.
-                    </div>
-                </div>
-            </div>
-            
-            <div class="order-item">
-                <img src="https://via.placeholder.com/100" class="product-image" alt="EAZO Multipurpose">
-                
-                <div class="product-details">
-                    <h3 class="product-name">EAZO Multipurpose (for cars, balls, bike...)</h3>
-                    <div class="product-meta">
-                        <span>Color: Multicolor</span>
-                    </div>
-                    <div class="product-price">₹423</div>
-                    <div class="error-message">
-                        Payment not successful. Please contact your bank for any money deducted.
-                    </div>
-                </div>
-                
-                <div class="order-status">
-                    <div class="status-indicator not-placed">
-                        <div class="dot"></div>
-                        Order Not Placed
-                    </div>
-                    <div class="status-text">
-                        Your Payment was not confirmed by the bank.
-                    </div>
-                </div>
-            </div>
-            
-            <div class="order-item">
-                <img src="https://via.placeholder.com/100" class="product-image" alt="Grega Tech Play Redragon">
-                
-                <div class="product-details">
-                    <h3 class="product-name">Grega Tech Play Redragon Magic Wand SE K...</h3>
-                    <div class="product-meta">
-                        <span>Color: White,Grey</span>
-                        <span>Size: Standard</span>
-                    </div>
-                    <div class="product-price">₹3,818</div>
-                    <div class="error-message">
-                        Payment not successful. Please contact your bank for any money deducted.
-                    </div>
-                </div>
-                
-                <div class="order-status">
-                    <div class="status-indicator not-placed">
-                        <div class="dot"></div>
-                        Order Not Placed
-                    </div>
-                    <div class="status-text">
-                        Your Payment was not confirmed by the bank.
-                    </div>
-                </div>
-            </div>
+                </a>
+            <% }) %>
+
+
+            <!-- -------------------- pagination-------------- -->
+   <div class="pagination">
+    <div class="pagination-info"><%=startItem%>- <%=endItem%>of <%=totalCategories%></div>
+    <div class="pagination-controls">
+        <div class="pagination-button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 18l-6-6 6-6" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <%for(let i=1;i<=totalPages;i++){%>
+            <%if(i==currentPage){%>
+            <a class="page" href="/account/orders?page=<%=i%>&search=<%= search %>"><div class="pagination-button active"><%=i%></div></a>
+                    <%} else {%>
+            <a class="page" href="/account/orders?page=<%=i%>&search=<%= search %>"><div class="pagination-button "><%=i%></div></a>
+        <%}}%>
+        <div class="pagination-button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 18l6-6-6-6" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
         </div>
     </div>
 </div>
-    <%-include("../../views/partials/user/footer")%>
+            
+            <!-- Sample static orders (commented out for reference) -->
+            <!--
+            <div class="order-item">
+                <div class="order-info">
+                    <div class="order-detail">
+                        <span class="detail-label">Order ID</span>
+                        <span class="detail-value">ORD123456789</span>
+                    </div>
+                    
+                    <div class="order-detail">
+                        <span class="detail-label">Date</span>
+                        <span class="detail-value">May 1, 2025</span>
+                    </div>
+                    
+                    <div class="order-detail">
+                        <span class="detail-label">Total Amount</span>
+                        <span class="detail-value">₹3,818</span>
+                    </div>
+                    
+                    <div class="order-detail">
+                        <span class="detail-label">Items</span>
+                        <span class="detail-value">2 items</span>
+                    </div>
+                    
+                    <div class="order-detail">
+                        <span class="detail-label">Payment Method</span>
+                        <span class="detail-value">Card</span>
+                    </div>
+                    
+                    <div class="order-detail">
+                        <button class="view-details-btn">View Details</button>
+                    </div>
+                    
+                    <div class="error-message">
+                        Payment not successful. Please contact your bank for any money deducted.
+                    </div>
+                </div>
+                
+                <div class="order-status">
+                    <div class="status-indicator not-placed">
+                        <div class="dot"></div>
+                        Order Not Placed
+                    </div>
+                    <div class="status-text">
+                        Your Payment was not confirmed by the bank.
+                    </div>
+                </div>
+            </div>
+            -->
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById("searchOr").addEventListener("keydown",function (event){
+    if(event.key=="Enter"){
+        const searchValue=this.value
+        if(searchValue){
+            window.location.href='/account/orders?search='+encodeURIComponent(searchValue)
+        }
+    }
+})
+
+document.getElementById("searchClearButton").addEventListener("click",function (){
+    const searchValue=document.getElementById("searchOr").value
+    if(searchValue){
+        window.location.href='/account/orders'
+    }
+})
+</script>
+<%-include("../../views/partials/user/footer")%>

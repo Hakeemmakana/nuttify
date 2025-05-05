@@ -9,6 +9,7 @@ const cartController=require("../controllers/user/cartController")
 const {userAuth,adminAuth}=require("../middlewares/auth")
 const addressController = require("../controllers/user/addressController")
 const checkoutController = require("../controllers/user/checkoutController")
+const orderController=require("../controllers/user/orderController")
 
 
 router.get("/",userController.loadHomepage)
@@ -16,7 +17,6 @@ router.get("/shoap",userAuth,userController.loadShoppingPage)
 router.get("/filterProduct",userAuth,userController.filterProduct)
 router.get("/productDetails",userController.productDetails)
 router.get("/account",userAuth,userProfileController.loadProfile)
-router.get("/account/orders",userAuth,userProfileController.loadOrders)
 
 
 router.get("/singup",userController.loadSingup)
@@ -43,6 +43,7 @@ router.post("/resetPassword",profileController.resetPassword)
 // -----------whislists---------------------
 router.get("/wishlist",userAuth,wishlistController.loadWishlist)
 router.post("/addToWishlist",userAuth,wishlistController.addWishlist)
+router.post("/removeFromWishlist",userAuth,wishlistController.removeFromWishlist)
 
 // ------------cart-------------------------
 router.get("/cart",userAuth,cartController.loadCart)
@@ -65,6 +66,16 @@ router.get('/changePassword',userAuth,userProfileController.changePassword)
 router.get('/checkout',userAuth,checkoutController.loadCheckout)
 router.post('/checkout',userAuth,checkoutController.checkout)
 router.get('/orderSuccess', userAuth,checkoutController.orderSuccess)
+
+//-----------------order---------------------------
+router.get("/account/orders",userAuth,orderController.loadOrders)
+router.get('/account/orderDetails',userAuth,orderController.loadOrederDetails)
+router.post("/account/cancelOrder",userAuth,orderController.cancelOrder)
+router.post("/account/returnRequestOrder",userAuth,orderController.returnRequestOrder)
+
+// -----------------productOrder--------
+router.post("/account/cancelProduct",userAuth,orderController.cancelProduct)
+router.post("/account/returnRequestProduct",userAuth,orderController.returnRequestProduct)
 
 
 

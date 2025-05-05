@@ -194,6 +194,42 @@
     width: 100%;
     margin-left: 190px;
 }
+.pagination {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-top: 20px;
+        font-size: 14px;
+    }
+    
+    .pagination-info {
+        margin-right: 20px;
+    }
+    
+    .pagination-controls {
+        display: flex;
+    }
+    
+    .pagination-button {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #ccc;
+        margin: 0 2px;
+        cursor: pointer;
+    }
+    
+    .pagination-button.active {
+        background-color: #2c3e50;
+        color: white;
+        border-color: #2c3e50;
+    }
+    a {
+      text-decoration: none;
+      color: black;
+    }
   </style>
   
 </head>
@@ -236,15 +272,16 @@
               <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
             </svg>
           </span>
-          <input type="text" class="search-input" placeholder="Search">
+          
+          <input type="text" class="search-input" value="<%=search%>" id="search" placeholder="Search">
         </div>
-        
+        <%if(search){%>
         <div class="filter-dropdown">
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-funnel" viewBox="0 0 16 16">
-            <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2z"/>
-          </svg>
-          <span>Filter</span>
+          
+          <span id="searchClearButton" >Clear</span>
         </div>
+        <%}%>
+
       </div>
     </div>
 
@@ -278,13 +315,13 @@
             <td>
               <div class="status-container">
                 <span class="status-badge status-processing"><%=item.status%></span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-down dropdown-icon" viewBox="0 0 16 16">
+                <!-- <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-down dropdown-icon" viewBox="0 0 16 16">
                   <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
-                </svg>
+                </svg> -->
               </div>
             </td>
             <td>
-              <button class="update-btn">Update Status</button>
+              <a href="/admin/orderEdit?id=<%=item._id%>"><button   class="update-btn">Update </button></a>
             </td>
           </tr>
           <%})%>
@@ -294,42 +331,54 @@
       </table>
     </div>
 
-    <!-- Pagination -->
-    <div class="pagination-container">
-      <div class="page-info">
-        1-5 of 53
-      </div>
-      <nav aria-label="Page navigation">
-        <ul class="pagination">
-          <li class="page-item disabled">
-            <a class="page-link" href="#" aria-label="First">
-              <span aria-hidden="true">&laquo;</span>
-            </a>
-          </li>
-          <li class="page-item disabled">
-            <a class="page-link" href="#" aria-label="Previous">
-              <span aria-hidden="true">&lt;</span>
-            </a>
-          </li>
-          <li class="page-item active"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">&gt;</a></li>
-          <li class="page-item">
-            <a class="page-link" href="#" aria-label="Last">
-              <span aria-hidden="true">&raquo;</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
+   <!-- -------------------- pagination-------------- -->
+   <div class="pagination">
+    <div class="pagination-info"><%=startItem%>- <%=endItem%>of <%=totalCategories%></div>
+    <div class="pagination-controls">
+        <div class="pagination-button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 18l-6-6 6-6" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <%for(let i=1;i<=totalPages;i++){%>
+            <%if(i==currentPage){%>
+            <a class="page" href="/admin/orders?page=<%=i%>&search=<%= search %>"><div class="pagination-button active"><%=i%></div></a>
+                    <%} else {%>
+            <a class="page" href="/admin/orders?page=<%=i%>&search=<%= search %>"><div class="pagination-button "><%=i%></div></a>
+        <%}}%>
+        <div class="pagination-button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 18l6-6-6-6" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
     </div>
+</div>
   </div>
   </div>
+
 
   <!-- Bootstrap JS Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  
+  <script>
+
+document.getElementById("search").addEventListener("keydown",function (event){
+    if(event.key=="Enter"){
+        const searchValue=this.value
+        if(searchValue){
+            window.location.href='/admin/orders?search='+encodeURIComponent(searchValue)
+        }
+    }
+})
+
+document.getElementById("searchClearButton").addEventListener("click",function (){
+    const searchValue=document.getElementById("search").value
+    if(searchValue){
+        window.location.href='/admin/orders'
+    }
+})
+  </script>
 
 
 </body>

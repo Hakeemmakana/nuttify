@@ -381,7 +381,7 @@
           <span class="discount-badge">25% OFF</span>
         </a>
         <%if(wishlistProductIds.includes(products._id.toString())){%>
-          <a href="" onclick=" addToWishlist(`<%=products._id%>`)"><div class="wishlist-btn"><i class="bi bi-heart"  style="color: red; " ></i></div></a>
+          <a href="" onclick=" removeFromWishlist(`<%=products._id%>`)"><div class="wishlist-btn"><i class="bi bi-heart"  style="color: red; " ></i></div></a>
           <%}else{%>
             <a href="" onclick=" addToWishlist(`<%=products._id%>`)"><div class="wishlist-btn"><i class="bi bi-heart"></i></div></a>
             <%}%>
@@ -400,7 +400,7 @@
             <span class="stars">★★★★★</span>
             <span class="review-count">(75)</span>
           </div>
-          <button class="add-to-cart">Add to Cart</button>
+          <button onclick="cartAddButton('<%=products._id%>')" class="add-to-cart">Add to Cart</button>
         </div>
       </div>
         <%})%>
@@ -577,6 +577,74 @@ const currentPageUrl=window.location.href
         })
       .catch(error=>console.log(error))
     }
+    function removeFromWishlist(productId){
+      fetch('/removeFromWishlist',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify({productId:productId,currentPageUrl:currentPageUrl})
+      })
+        .then(response=>response.json())
+        .then(data=>{
+          console.log("=======")
+          console.log(data)
+        })
+      .catch(error=>console.log(error))
+    }
+
+
+
+
+    function cartAddButton(productId){
+            
+            fetch("/addToCart",{
+                method:'post',
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({productId,quantity:1})
+            })
+            .then(Response=>Response.json())
+            .then(data=>{
+                console.log(data)
+                if(data.success){
+                   Swal.fire({
+                    position: 'bottom', 
+                    icon: 'success',
+                    title: data.msg,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    background: '#000',
+                    color: '#fff',
+                    timerProgressBar: true,
+                    toast:true,
+                    didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+                   })
+                }else{
+                    Swal.fire({
+                    position: 'bottom', 
+                    icon: 'error',
+                    title: data.msg,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    background: '#000',
+                    color: '#fff',
+                    timerProgressBar: true,
+                    toast:true,
+                    didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+                   })
+                }
+            })
+            
+
+        }
 </script>
 
   

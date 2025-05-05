@@ -373,7 +373,7 @@ const loadShoppingPage=async (req,res)=>{
         const categoriesWithIds=categories.map(category=>({_id:category._id,name:category.name}))
 
         const wishlist =await Wishlist.findOne({ userId:user})
-        console.log("wishlist",wishlist)
+        // console.log("wishlist",wishlist)
 
         let wishlistProductIds=[]
         if(wishlist){
@@ -394,7 +394,8 @@ const loadShoppingPage=async (req,res)=>{
             startItem,
             endItem,
             totalProducts,
-            wishlistProductIds
+            wishlistProductIds,
+           
            
         })
     } catch (error) {
@@ -581,7 +582,9 @@ const filterProduct = async (req, res) => {
 
 const productDetails= async (req,res)=>{
     try {
-        const user=req.session.user
+
+        const user=req.user
+        console.log(user)
         const userName=user.name
         const id= req.query.id
      
@@ -591,12 +594,22 @@ const productDetails= async (req,res)=>{
         _id:{$ne:product._id}
     })
     .limit(4)
+    const wishlist =await Wishlist.findOne({ userId:user})
+
+    let wishlistProductIds=[]
+        if(wishlist){
+            wishlistProductIds = wishlist.products.map(item => item.productId.toString());
+  
+               
+        }
     console.log(relatedProducts)
     res.render("productDetail",{
         product:product,
         user:userName,
         category:product.category,
         relatedProducts:relatedProducts,
+        wishlistProductIds
+
 
     })
     } catch (error) {

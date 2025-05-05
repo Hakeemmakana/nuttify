@@ -1,4 +1,6 @@
 const User =require("../../models/userSchema")
+const Order =require("../../models/orderSchema")
+const Product=require("../../models/productSchema")
 
 const loadProfile=async (req,res)=>{
     try {
@@ -15,16 +17,7 @@ const loadProfile=async (req,res)=>{
         
     }
 }
-const loadOrders=async(req,res)=>{
-    try {
-        res.render("orders",{
-            
-        })
-        
-    } catch (error) {
-        
-    }
-}
+
 const editName=async(req,res)=>{
     // console.log("llllllllllllllll")
     // console.log(req.body)
@@ -52,14 +45,14 @@ const editName=async(req,res)=>{
    
 }
 const changePassword=async(req,res)=>{
-    
+
 }
+
 
 
 
 module.exports={
     loadProfile,
-    loadOrders,
     editName,
     changePassword
     

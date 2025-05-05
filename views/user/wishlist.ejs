@@ -162,7 +162,7 @@
         }
         
         .item-image {
-            width: 80px;
+            width: 100px;
             margin-right: 20px;
             display: flex;
             flex-direction: column;
@@ -293,6 +293,20 @@
             cursor: pointer;
             font-weight: 500;
         }
+        .add-to-cart {
+      background-color: #2ecc71;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+    .add-to-cart:hover{
+      cursor: pointer;
+    }
 
   </style>
 </head>
@@ -344,10 +358,17 @@
     </div>
   </div>
   <div class="wishlist-container">
-    <div class="wishlist-header">
-        My Wishlist (<%=wishlistLength%>)
+    
+    <%if(wishlistLength==0){%>
+      <div class="wishlist-header">
+         Wishlist is empty
     </div>
+      <%} else{%>
+        <div class="wishlist-header">
+          My Wishlist (<%=wishlistLength+1%>)
+      </div>
     <%locals.product.forEach((data)=>{%>
+      
     <div class="wishlist-item" id="item1">
         <div class="item-image">
             <img src="<%=data.productId.productImage[0]%>" alt="<%=data.productId.productName%>">
@@ -358,7 +379,8 @@
                 <div class="current-price">₹<%=data.productId.regularPrice%></div>
                 <div class="original-price">₹999</div>
                 <div class="discount">0% off</div>
-            </div>
+              </div>
+              <button onclick="cartAddButton('<%=data.productId._id%>')" class="add-to-cart">Add to Cart</button>
         </div>
         <button class="remove-button" onclick="showConfirmation('<%=data.productId._id%>')"><i class="fas 2 fa-trash" ></i></button>
         <div class="confirmation-dialog" id="confirm-<%=data.productId._id%>">
@@ -367,11 +389,11 @@
             </div>
             <div class="confirmation-buttons">
                 <button class="cancel-button" onclick="hideConfirmation('<%=data.productId._id%>')">CANCEL</button>
-                <button class="remove-confirm-button" onclick="removeItem('<%=data.productId._id%>')">YES, REMOVE</button>
+                <button class="remove-confirm-button" onclick="removeFromWishlist('<%=data.productId._id%>')">YES, REMOVE</button>
             </div>
         </div>
     </div>
-    <%})%>
+    <%})}%>
     
 </div>
 </div>
@@ -390,17 +412,86 @@
             document.getElementById('confirm-' + itemId).style.display = 'none';
         }
         
-        function removeItem(itemId) {
+        const currentPageUrl=window.location.href
+        function removeFromWishlist(productId){
+            console.log(productId)
+      fetch('/removeFromWishlist',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify({productId:productId,currentPageUrl:currentPageUrl})
+      })
+        .then(response=>response.json())
+        .then(data=>{
+          if(data.success){
+            window.location.reload()
+          }
+          console.log("=======")
+          console.log(data)
+        })
+      .catch(error=>console.log(error))
+    }
             // Remove the item
-            document.getElementById(itemId).style.display = 'none';
+            // document.getElementById(itemId).style.display = 'none';
             
             // Update wishlist count
             const header = document.querySelector('.wishlist-header');
             let count = parseInt(header.textContent.match(/\d+/)[0]);
             count--;
             header.textContent = 'My Wishlist (' + count + ')';
-        }
+        
     
+
+            function cartAddButton(productId){
+            
+            fetch("/addToCart",{
+                method:'post',
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({productId,quantity:1})
+            })
+            .then(Response=>Response.json())
+            .then(data=>{
+                console.log(data)
+                if(data.success){
+                   Swal.fire({
+                    position: 'bottom', 
+                    icon: 'success',
+                    title: data.msg,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    background: '#000',
+                    color: '#fff',
+                    timerProgressBar: true,
+                    toast:true,
+                    didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+                   })
+                }else{
+                    Swal.fire({
+                    position: 'bottom', 
+                    icon: 'error',
+                    title: data.msg,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    background: '#000',
+                    color: '#fff',
+                    timerProgressBar: true,
+                    toast:true,
+                    didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+                   })
+                }
+            })
+            
+
+        }
   </script>
     <%-include("../../views/partials/user/footer")%>
 

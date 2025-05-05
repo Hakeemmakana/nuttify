@@ -434,7 +434,12 @@
                     <input type="text" id="quantity" class="quantity-input" value="1">
                     <button onclick="incqnty()" class="quantity-btn">+</button>
                     <button class="add-to-cart" onclick="cartAddButton(`<%=product._id%>`)" >Add to Cart</button>
-                    <div class="wishlist-btn">♡</div>
+                    
+                    <% if (wishlistProductIds.includes(product._id.toString())) { %>
+                        <div onclick="removeFromWishlist('<%= product._id %>')"  id="redWish" class="wishlist-btn">❤️</div>
+                      <% } else { %>
+                        <div onclick="addToWishlist('<%= product._id %>')" id="whiteWish" class="wishlist-btn">♡</div>
+                      <% } %>
                 </div>
                 <div class="action-buttons">
                     <button class="buy-now">Buy Now</button>
@@ -657,6 +662,45 @@
             
 
         }
+
+        function addToWishlist(productId){
+      fetch('/addToWishlist',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify({productId:productId})
+      })
+        .then(response=>response.json())
+        .then(data=>{
+            console.log(data)
+            if(data.success){
+    
+            window.location.reload()
+         }
+        })
+      .catch(error=>console.log(error))
+    }
+
+
+    function removeFromWishlist(productId){
+      fetch('/removeFromWishlist',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify({productId:productId})
+      })
+        .then(response=>response.json())
+        .then(data=>{
+         if(data.success){
+    
+            window.location.reload()
+         }
+        })
+      .catch(error=>console.log(error))
+    }
+
     </script>
     <%-include("../../views/partials/user/footer")%>
 </body>

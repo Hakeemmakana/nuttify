@@ -4,19 +4,144 @@ const Product=require('../../models/productSchema')
 
 const loadOrders= async (req,res)=>{
     try {
-        console.log(req.use)
-        const order=await Order.find()
+
+        let search =""
+        if(req.query.search){
+            search=req.query.search
+        }
+        
+        const page =parseInt(req.query.page)||1
+        const limit =4
+        const skip=(page-1)*limit
+
+        const order=await Order.find({$or: [
+            { orderId: { $regex: search, $options: "i" } },
+        ]})
+        .sort({createdAt:-1})
+        .skip(skip)
+        .limit(limit)
         .populate('orderItems.productId')
         .populate('userId')
         console.log(order)
+
+        const count=await Order.find({$or: [
+            { orderId: { $regex: search, $options: "i" } },
+        ]}).countDocuments()
+
+        const totalCategories=count
+        const totalPages = Math.ceil(count/limit)
+        const startItem = skip + 1;
+        const endItem = Math.min(skip + limit, count);
         res.render("adminOrders",{
             order,
+            currentPage:page,
+            totalPages:totalPages,
+            totalCategories:totalCategories,
+            startItem:startItem,
+            endItem:endItem,
+            search:search,
         })
 
     } catch (error) {
         console.log("error in loadOrders",error)
     }
 }
+
+const editOrder=async(req,res)=>{
+    const id=req.query.id
+    const order= await Order.findById(id).populate('orderItems.productId')
+    console.log(order)
+    if(!order){
+        return res.json({
+            success:false,
+            msg:"not order as per id"
+        })
+    }
+    return res.render("adminOrdersEdit",{
+        order
+    })
+
+}
+const orderStatusChange=async (req,res)=>{
+    console.log(req.body)
+    const {status,orderId}=req.body
+    try {
+        const order= await Order.findById(orderId)
+        if(!order){
+           return res.json({
+                success:false,
+                msg:"order not found"
+            })
+        }
+        if(order.status=='Deliverd'||order.status=='Cancelled'){
+            console.log("dddddddddd")
+            return res.json({
+                success:false,
+                msg:"order already delivered or cancelled"
+            })
+        }
+        console.log("fjjjjjf",order)
+        order.status=status
+        await order.save()
+
+        res.json({
+            success:true,
+            msg:'order status updated successfully'
+        })
+
+    } catch (error) {
+        console.log("error in orderStatusChange",error)
+    }
+}
+
+const returnedOrder=async (req,res)=>{
+    try {
+    const {status,orderId}=req.body
+    const order= await Order.findById(orderId)
+        if(!order){
+           return res.json({
+                success:false,
+                msg:"order not found"
+            })
+        }        
+
+        if(order.status=='Deliverd'||order.status=='Cancelled'){
+            console.log("dddddddddd")
+            return res.json({
+                success:false,
+                msg:"order already delivered or cancelled"
+            })
+        }
+        if(status!=='Returned'){
+            // console.log("dddddddddd")
+            return res.json({
+                success:false,
+                msg:"invalid input "
+            })
+        }
+        order.status=status
+        await order.save()
+        for(let item of order.orderItems){
+            const product=await Product.findById(item.productId)
+            if(product){
+                product.stock+=item.quantity
+                await product.save()
+            }
+        }
+        res.json({
+            success:true,
+            msg:'order status updated successfully'
+        })
+
+
+    } catch (error) {
+        console.log("error in returned order page ",error)
+        
+    }
+}
 module.exports={
-    loadOrders
+    loadOrders,
+    editOrder,
+    orderStatusChange,
+    returnedOrder
 }

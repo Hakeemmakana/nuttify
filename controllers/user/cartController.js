@@ -53,7 +53,7 @@ if(existingItem){
     // console.log("--------------------------------49")
 console.log(existingItem)
     const newQuantity=existingItem.quantity+parseInt(quantity)
-    console.log("newwnt",newQuantity)
+    // console.log("newwnt",newQuantity)
     if(newQuantity>product.stock){
 
         return res.json({
@@ -99,11 +99,12 @@ cart.items.push({
 
 })
 console.log(cart.items)
-   await Wishlist.findOneAndUpdate(
-        {userId},
-        {$pull:{products:{productId}}}
-    )
+  
 }
+await Wishlist.findOneAndUpdate(
+    {userId},
+    {$pull:{products:{productId}}}
+)
     await cart.save()
     return res.json({
         redirect:'/cart',

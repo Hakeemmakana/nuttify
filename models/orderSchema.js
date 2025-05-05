@@ -30,6 +30,17 @@ const orderSchema=new Schema({
         totalPrice:{
             type:Number,
             default:0
+        },
+        status:{
+            type:String,
+            required:false,
+            enum:["Processing","Shipped","Deliverd","Cancelled","Returned","Return-requested"] 
+        },
+        cancelReason: {
+            type: String,
+        },
+        returnReason: {
+            type: String,
         }
     }],
     totalAmount:{
@@ -61,8 +72,16 @@ const orderSchema=new Schema({
      status:{
         type:String,
         required:true,
-        enum:["Pending","Shipped","Deliverd","Cancelled"]
+        enum:["Processing","Shipped","Deliverd","Cancelled","Returned","Return-requested"]
      },
+     cancelReason: {
+        type: String,
+        
+    },
+    returnReason: {
+        type: String,
+        
+    },
      paymentMetherd:{
         type:String,
         required:true,
