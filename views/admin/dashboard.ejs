@@ -1,513 +1,656 @@
+<%- include("../../views/partials/admin/sidebar") %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        /* Common/General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
 
-<%-include("../../views/partials/admin/sidebar")%>
+        body {
+            display: flex;
+            background-color: #f5f7fa;
+        }
 
-<style>
+        /* Dashboard Section */
+        .dashboard-wrapper {
+            width: 100%;
+            margin-left: 190px;
+        }
 
-/* Common/General Styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
+        /* Top Bar Styles */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background-color: #1e2b4e;
+            color: white;
+            position: fixed;
+            top: 0;
+            left: 190px;
+            right: 0;
+            z-index: 100;
+        }
 
-body {
-    display: flex;
-    background-color: #f5f7fa;
-}
+        .download-btn {
+            background-color: white;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            padding: 6px 12px;
+            font-size: 14px;
+            cursor: pointer;
+        }
 
+        .notification-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            margin-left: 15px;
+        }
 
-/* ========== DASHBOARD SECTION ========== */
-.dashboard-wrapper {
-    width: 100%;
-    margin-left: 190px;
-}
+        /* Main Content Area */
+        .main-content {
+            padding: 20px;
+            width: 100%;
+        }
 
-/* Top Bar Styles */
-.top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 16px;
-    background-color: #1e2b4e;
-    color: white;
-    position: fixed;
-    top: 0;
-    left: 190px;
-    right: 0;
-    z-index: 100;
-}
+        .dashboard-container {
+            margin-top: 60px;
+        }
 
-.download-btn {
-    background-color: white;
-    color: #333;
-    border: none;
-    border-radius: 5px;
-    padding: 6px 12px;
-    font-size: 14px;
-    cursor: pointer;
-}
+        .welcome {
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
 
-.notification-btn {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 18px;
-    cursor: pointer;
-    margin-left: 15px;
-}
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
 
-/* Main Content Area */
-.main-content {
-    padding: 20px;
-    margin-left: 190px;
-    width: 100%;
-}
+        .stat-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: relative;
+        }
 
-.dashboard-container {
-    margin-top: 60px;
-}
+        .stat-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
 
-.welcome {
-    font-size: 16px;
-    margin-bottom: 24px;
-}
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
 
-/* Stats Cards */
-.stats-container {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 16px;
-    margin-bottom: 24px;
-}
+        .stat-change {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
 
-.stat-card {
-    background-color: white;
-    border-radius: 10px;
-    padding: 16px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    position: relative;
-}
+        .positive {
+            color: #2ecc71;
+        }
 
-.stat-title {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 8px;
-}
+        .negative {
+            color: #e74c3c;
+        }
 
-.stat-value {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 4px;
-}
+        .icon-button {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            color: #666;
+            border: none;
+            cursor: pointer;
+            position: absolute;
+            right: 16px;
+            top: 16px;
+        }
 
-.stat-change {
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
+        /* Grid and Charts */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
 
-.positive {
-    color: #2ecc71;
-}
+        .chart-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
 
-.negative {
-    color: #e74c3c;
-}
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
 
-.icon-button {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: none;
-    color: #666;
-    border: none;
-    cursor: pointer;
-    position: absolute;
-    right: 16px;
-    top: 16px;
-}
+        .chart-title {
+            font-size: 16px;
+            font-weight: 500;
+        }
 
-/* Grid and Charts */
-.grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-}
+        .filter {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
 
-.chart-card {
-    background-color: white;
-    border-radius: 10px;
-    padding: 16px;
-    margin-bottom: 24px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
+        .more-options {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 18px;
+            cursor: pointer;
+        }
 
-.chart-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-}
+        /* Table Styles */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-.chart-title {
-    font-size: 16px;
-    font-weight: 500;
-}
+        .table th,
+        .table td {
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 14px;
+        }
 
-.filter {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-}
+        .table th {
+            border-bottom: 1px solid #eaeaea;
+            font-weight: 500;
+            color: #666;
+        }
 
-.more-options {
-    background: none;
-    border: none;
-    color: #666;
-    font-size: 18px;
-    cursor: pointer;
-}
+        .table tr:not(:last-child) td {
+            border-bottom: 1px solid #f5f5f5;
+        }
 
-/* Table Styles */
-.table {
-    width: 100%;
-    border-collapse: collapse;
-}
+        .product-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-.table th,
-.table td {
-    padding: 12px 16px;
-    text-align: left;
-    font-size: 14px;
-}
+        .product-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
 
-.table th {
-    border-bottom: 1px solid #eaeaea;
-    font-weight: 500;
-    color: #666;
-}
+        .status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
 
-.table tr:not(:last-child) td {
-    border-bottom: 1px solid #f5f5f5;
-}
+        .status-pending {
+            background-color: #fff5e6;
+            color: #e67e22;
+        }
 
-.product-name {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+        .status-processing {
+            background-color: #e9f7fe;
+            color: #007bff;
+        }
 
-.product-icon {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-}
+        .status-shipped {
+            background-color: #e6f7ff;
+            color: #3498db;
+        }
 
-.status {
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-}
+        .status-delivered {
+            background-color: #e6fff0;
+            color: #2ecc71;
+        }
 
-.status-pending {
-    background-color: #fff5e6;
-    color: #e67e22;
-}
+        .status-cancelled {
+            background-color: #ffe6e6;
+            color: #e74c3c;
+        }
 
-.status-shipped {
-    background-color: #e6f7ff;
-    color: #3498db;
-}
+        /* Filter Section */
+        .filter-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
 
-.status-delivered {
-    background-color: #e6fff0;
-    color: #2ecc71;
-}
+        .form-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
 
-.status-cancelled {
-    background-color: #ffe6e6;
-    color: #e74c3c;
-}
+        .form-control, .form-select {
+            border: 1px solid #eaedf3;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 14px;
+        }
 
-/* For mobile responsiveness */
-@media (max-width: 768px) {
-    .sidebar {
-        width: 60px;
-        overflow: hidden;
-    }
-    
-    .sidebar .menu-item span,
-    .sidebar .logo h2,
-    .sidebar .copyright {
-        display: none;
-    }
-    
-    .dashboard-wrapper,
-    .top-bar {
-        left: 60px;
-        width: calc(100% - 60px);
-    }
-    
-    .main-content {
-        margin-left: 0;
-    }
-    
-    .stats-container {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .grid {
-        grid-template-columns: 1fr;
-    }
-}
+        .btn-primary {
+            background-color: #5e5ce6;
+            border-color: #5e5ce6;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .btn-primary:hover {
+            background-color: #4b4ab3;
+            border-color: #4b4ab3;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            height: 200px;
+            position: relative;
+        }
+
+        /* For mobile responsiveness */
+        @media (max-width: 768px) {
+            .dashboard-wrapper,
+            .top-bar {
+                left: 60px;
+                width: calc(100% - 60px);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
-   
-
-    <div class="top-bar">
-        <div>
-            <i class="fas fa-th-large"></i>
-            <span>Dashboard</span>
-        </div>
-        <div>
-            <button class="download-btn">Download as PDF</button>
-            <button class="notification-btn">
-                <i class="fas fa-bell"></i>
-            </button>
-        </div>
-    </div>
-
-    <div class="main-content">
-        
-        <div class="dashboard-container">
-            <h2 class="welcome">Welcome Admin</h2>
-
-            <div class="stats-container">
-                <div class="stat-card">
-                    <div class="stat-title">Revenue</div>
-                    <div class="stat-value">$25k</div>
-                    <div class="stat-change positive">+11.01% <i class="fas fa-arrow-up"></i></div>
-                    <button class="icon-button">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </button>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-title">Visits</div>
-                    <div class="stat-value">367K</div>
-                    <div class="stat-change positive">+9.15% <i class="fas fa-arrow-up"></i></div>
-                    <button class="icon-button">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </button>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-title">Visits</div>
-                    <div class="stat-value">367K</div>
-                    <div class="stat-change positive">+9.15% <i class="fas fa-arrow-up"></i></div>
-                    <button class="icon-button">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </button>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-title">Orders</div>
-                    <div class="stat-value">56</div>
-                    <div class="stat-change negative">-0.56% <i class="fas fa-arrow-down"></i></div>
-                    <button class="icon-button">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </button>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-title">Active Users</div>
-                    <div class="stat-value">239K</div>
-                    <div class="stat-change negative">-1.48% <i class="fas fa-arrow-down"></i></div>
-                    <button class="icon-button">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </button>
-                </div>
+    <div class="dashboard-wrapper">
+        <div class="top-bar">
+            <div>
+                <i class="fas fa-th-large"></i>
+                <span>Dashboard</span>
             </div>
+            <div>
+                <button class="download-btn" id="downloadPdf">Download as PDF</button>
+                <button class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                </button>
+            </div>
+        </div>
 
-            <div class="grid">
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <div class="chart-title">Revenue</div>
-                        <div style="display: flex; align-items: center; gap: 15px;">
-                            <div class="filter">
-                                <span>This week</span>
-                                <i class="fas fa-chevron-down"></i>
+        <div class="main-content">
+            <div class="dashboard-container">
+                <h2 class="welcome">Welcome Admin</h2>
+
+                <!-- Filters Section -->
+                <div class="filter-card">
+                    <form action="/admin/" method="GET" class="row g-3 align-items-end">
+                        <div class="col-md-3">
+                            <label for="timeFilter" class="form-label">Time Period</label>
+                            <select class="form-select" id="timeFilter" name="timeFilter" onchange="toggleDateInputs(this.value)">
+                                <option value="today" <%= timeFilter === 'today' ? 'selected' : '' %>>Today</option>
+                                <option value="yesterday" <%= timeFilter === 'yesterday' ? 'selected' : '' %>>Yesterday</option>
+                                <option value="week" <%= timeFilter === 'week' ? 'selected' : '' %>>Last 7 Days</option>
+                                <option value="month" <%= timeFilter === 'month' ? 'selected' : '' %>>Last 30 Days</option>
+                                <option value="year" <%= timeFilter === 'year' ? 'selected' : '' %>>This Year</option>
+                                <option value="custom" <%= timeFilter === 'custom' ? 'selected' : '' %>>Custom Range</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 date-range" id="startDateContainer" style="<%= timeFilter === 'custom' ? '' : 'display: none;' %>">
+                            <label for="startDate" class="form-label">Start Date</label>
+                            <input type="text" class="form-control" id="startDate" name="startDate" value="<%= startDate || '' %>">
+                        </div>
+                        <div class="col-md-3 date-range" id="endDateContainer" style="<%= timeFilter === 'custom' ? '' : 'display: none;' %>">
+                            <label for="endDate" class="form-label">End Date</label>
+                            <input type="text" class="form-control" id="endDate" name="endDate" value="<%= endDate || '' %>">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="orderStatus" class="form-label">Order Status</label>
+                            <select class="form-select" id="orderStatus" name="orderStatus">
+                                <option value="all" <%= orderStatus === 'all' ? 'selected' : '' %>>All Statuses</option>
+                                <option value="Processing" <%= orderStatus === 'Processing' ? 'selected' : '' %>>Processing</option>
+                                <option value="Shipped" <%= orderStatus === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+                                <option value="Deliverd" <%= orderStatus === 'Deliverd' ? 'selected' : '' %>>Delivered</option>
+                                <option value="Cancelled" <%= orderStatus === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-title">Revenue</div>
+                        <div class="stat-value">₹<%= totalRevenue.toFixed(2) %></div>
+                        <div class="stat-change <%= revenueChange >= 0 ? 'positive' : 'negative' %>">
+                            <%= revenueChange.toFixed(2) %>% <i class="fas fa-arrow-<%= revenueChange >= 0 ? 'up' : 'down' %>"></i>
+                        </div>
+                        <button class="icon-button">
+                        </button>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Total Orders</div>
+                        <div class="stat-value"><%= totalOrders %></div>
+                        <div class="stat-change <%= ordersChange >= 0 ? 'positive' : 'negative' %>">
+                            <%= ordersChange.toFixed(2) %>% <i class="fas fa-arrow-<%= ordersChange >= 0 ? 'up' : 'down' %>"></i>
+                        </div>
+                        <button class="icon-button">
+                        </button>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Total Users</div>
+                        <div class="stat-value"><%= totalUsers %></div>
+                        <div class="stat-change <%= usersChange >= 0 ? 'positive' : 'negative' %>">
+                            <%= usersChange.toFixed(2) %>% <i class="fas fa-arrow-<%= usersChange >= 0 ? 'up' : 'down' %>"></i>
+                        </div>
+                        <button class="icon-button">
+                        </button>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Total Products</div>
+                        <div class="stat-value"><%= totalProducts %></div>
+                        <div class="stat-change <%= productsChange >= 0 ? 'positive' : 'negative' %>">
+                            <%= productsChange.toFixed(2) %>% <i class="fas fa-arrow-<%= productsChange >= 0 ? 'up' : 'down' %>"></i>
+                        </div>
+                        <button class="icon-button">
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Charts and Tables -->
+                <div class="grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">Revenue & Orders</div>
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <div class="filter">
+                                    <span><%= timeFilter.charAt(0).toUpperCase() + timeFilter.slice(1) %></span>
+                                </div>
+                                <button class="more-options">
+                                </button>
                             </div>
-                            <button class="more-options">
-                                <i class="fas fa-ellipsis-h"></i>
-                            </button>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="revenueChart"></canvas>
                         </div>
                     </div>
-                    <div style="padding: 20px 0;">
-                        <img src="/api/placeholder/500/200" alt="Revenue Chart" style="width: 100%; height: auto;" />
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">Top Selling Products</div>
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <div class="filter">
+                                    <span><%= timeFilter.charAt(0).toUpperCase() + timeFilter.slice(1) %></span>
+                                </div>
+                                <button class="more-options">
+                                </button>
+                            </div>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Price</th>
+                                    <th>Sales</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% topProducts.forEach(product => { %>
+                                <tr>
+                                    <td>
+                                        <div class="product-name">
+                                            <div class="product-icon" style="background-color: #f8e8d4;">
+                                                <i class="fas fa-box"></i>
+                                            </div>
+                                            <%= product.productName %>
+                                        </div>
+                                    </td>
+                                    <td>₹<%= product.price.toFixed(2) %></td>
+                                    <td>₹<%= product.totalSales.toFixed(2) %></td>
+                                </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
                 <div class="chart-card">
                     <div class="chart-header">
-                        <div class="chart-title">Top Selling Products</div>
+                        <div class="chart-title">Recent Orders</div>
                         <div style="display: flex; align-items: center; gap: 15px;">
                             <div class="filter">
-                                <span>This week</span>
-                                <i class="fas fa-chevron-down"></i>
+                                <span><%= timeFilter.charAt(0).toUpperCase() + timeFilter.slice(1) %></span>
                             </div>
                             <button class="more-options">
-                                <i class="fas fa-ellipsis-h"></i>
                             </button>
                         </div>
                     </div>
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Product name</th>
-                                <th>Price</th>
-                                <th>Sales</th>
+                                <th>
+                                        Item
+                                        <% if(sortBy === 'orderId') { %>
+                                        <i class="fas fa-sort-<%= sortOrder === 'asc' ? 'up' : 'down' %>"></i>
+                                        <% } else { %>
+                                        <% } %>
+                                </th>
+                                <th>
+                                    
+                                        Customer
+                                        <% if(sortBy === 'userId') { %>
+                                        <i class="fas fa-sort-<%= sortOrder === 'asc' ? 'up' : 'down' %>"></i>
+                                        <% } else { %>
+                                       
+                                        <% } %>
+                                    
+                                </th>
+                                <th>
+                                        Order Total
+                                        <% if(sortBy === 'finalAmount') { %>
+                                        <i class="fas fa-sort-<%= sortOrder === 'asc' ? 'up' : 'down' %>"></i>
+                                        <% } %>
+                                </th>
+                                <th>
+                                    
+                                        Order Status
+                                        <% if(sortBy === 'status') { %>
+                                        <i class="fas fa-sort-<%= sortOrder === 'asc' ? 'up' : 'down' %>"></i>
+                                      
+                                        <% } %>
+                                </th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
+                            <% recentOrders.forEach(order => { %>
                             <tr>
+                                <td><%= order.itemName %></td>
+                                <td><%= order.userId ? order.userId.name : 'Unknown' %></td>
+                                <td>₹<%= order.finalAmount.toFixed(2) %></td>
                                 <td>
-                                    <div class="product-name">
-                                        <div class="product-icon" style="background-color: #f8e8d4;">
-                                            <img src="/api/placeholder/18/18" alt="Premium Cashews" />
-                                        </div>
-                                        Premium Cashews
-                                    </div>
+                                    <span class="status status-<%= order.status.toLowerCase() %>">
+                                        <%= order.status %>
+                                    </span>
                                 </td>
-                                <td>₹960</td>
-                                <td>₹1,08,000</td>
-                            </tr>
-                            <tr>
                                 <td>
-                                    <div class="product-name">
-                                        <div class="product-icon" style="background-color: #f5e0d2;">
-                                            <img src="/api/placeholder/18/18" alt="Cinnamon" />
-                                        </div>
-                                        Cinnamon
-                                    </div>
+                                    <a href="/admin/orderEdit?id=<%= order._id %>" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
                                 </td>
-                                <td>₹1020</td>
-                                <td>₹88,000</td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <div class="product-name">
-                                        <div class="product-icon" style="background-color: #e0d2e0;">
-                                            <img src="/api/placeholder/18/18" alt="Raisin" />
-                                        </div>
-                                        Raisin
-                                    </div>
-                                </td>
-                                <td>₹260</td>
-                                <td>₹78,000</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="product-name">
-                                        <div class="product-icon" style="background-color: #e8d8c8;">
-                                            <img src="/api/placeholder/18/18" alt="Dates" />
-                                        </div>
-                                        Dates
-                                    </div>
-                                </td>
-                                <td>₹600</td>
-                                <td>₹78,000</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="product-name">
-                                        <div class="product-icon" style="background-color: #d4e8d4;">
-                                            <img src="/api/placeholder/18/18" alt="Pistachio" />
-                                        </div>
-                                        Pistachio (Pista)
-                                    </div>
-                                </td>
-                                <td>₹660</td>
-                                <td>₹77,000</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="product-name">
-                                        <div class="product-icon" style="background-color: #ffe0c0;">
-                                            <img src="/api/placeholder/18/18" alt="Mango Dry" />
-                                        </div>
-                                        Mango Dry
-                                    </div>
-                                </td>
-                                <td>₹700</td>
-                                <td>₹69,000</td>
-                            </tr>
+                            <% }) %>
                         </tbody>
                     </table>
                 </div>
             </div>
-
-            <div class="chart-card">
-                <div class="chart-header">
-                    <div class="chart-title">Recent Orders</div>
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <div class="filter">
-                            <span>This week</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </div>
-                        <button class="more-options">
-                            <i class="fas fa-ellipsis-h"></i>
-                        </button>
-                    </div>
-                </div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Customer</th>
-                            <th>Order Total</th>
-                            <th>Order Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Pistachio</td>
-                            <td>Fasalu</td>
-                            <td>₹1800.00</td>
-                            <td><span class="status status-pending">Pending</span></td>
-                        </tr>
-                        <tr>
-                            <td>Premium Cashews</td>
-                            <td>Sherif</td>
-                            <td>₹1000.00</td>
-                            <td><span class="status status-shipped">Shipped</span></td>
-                        </tr>
-                        <tr>
-                            <td>Dates</td>
-                            <td>John</td>
-                            <td>₹1400.00</td>
-                            <td><span class="status status-delivered">Delivered</span></td>
-                        </tr>
-                        <tr>
-                            <td>Raisin</td>
-                            <td>Fasalu</td>
-                            <td>₹850.00</td>
-                            <td><span class="status status-cancelled">Cancelled</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
         </div>
     </div>
 
-    <!-- Font Awesome for icons -->
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfkit/0.13.0/pdfkit.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blob-stream/0.1.3/blob-stream.min.js"></script>
+
+    <script>
+        // Initialize Flatpickr for date inputs
+        flatpickr("#startDate, #endDate", {
+            dateFormat: "Y-m-d",
+            maxDate: new Date()
+        });
+
+        // Toggle date inputs
+        function toggleDateInputs(value) {
+            const dateRangeInputs = document.querySelectorAll('.date-range');
+            if (value === 'custom') {
+                dateRangeInputs.forEach(el => el.style.display = 'block');
+            } else {
+                dateRangeInputs.forEach(el => el.style.display = 'none');
+            }
+        }
+
+        // Sort orders
+        function sortOrders(field) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentSortBy = urlParams.get('sortBy') || 'createdAt';
+            const currentOrder = urlParams.get('sortOrder') || 'desc';
+
+            if (field === currentSortBy) {
+                urlParams.set('sortOrder', currentOrder === 'asc' ? 'desc' : 'asc');
+            } else {
+                urlParams.set('sortBy', field);
+                urlParams.set('sortOrder', 'desc');
+            }
+
+            window.location.href = window.location.pathname + '?' + urlParams.toString();
+        }
+
+        // Initialize Revenue Chart
+        document.addEventListener('DOMContentLoaded', function() {
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            const labels = JSON.parse('<%- JSON.stringify(labels) %>');
+            new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Revenue',
+                        data: JSON.parse('<%- JSON.stringify(monthlyRevenue) %>'),
+                        borderColor: '#2ecc71',
+                        backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }, {
+                        label: 'Orders',
+                        data: JSON.parse('<%- JSON.stringify(monthlyOrders) %>'),
+                        borderColor: '#3498db',
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        fill: false,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    var label = context.dataset.label || '';
+                                    if (label === 'Revenue') {
+                                        return label + ': ₹' + context.parsed.y.toFixed(2);
+                                    } else {
+                                        return label + ': ' + context.parsed.y;
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        });
+
+        // Download PDF
+        document.getElementById('downloadPdf').addEventListener('click', () => {
+            const timeFilter = document.getElementById('timeFilter').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const orderStatus = document.getElementById('orderStatus').value;
+
+            const query = new URLSearchParams({ timeFilter, orderStatus });
+            if (timeFilter === 'custom' && startDate && endDate) {
+                query.append('startDate', startDate);
+                query.append('endDate', endDate);
+            }
+
+            window.location.href = `/admin/dashboard/pdf?${query}`;
+        });
+    </script>
 </body>
 </html>

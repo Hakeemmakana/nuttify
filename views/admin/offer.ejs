@@ -1,0 +1,1796 @@
+<%-include("../../views/partials/admin/sidebar")%>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutify - Offer Management</title>
+    <style>
+        :root {
+            --primary-color: #e74c3c;
+            --secondary-color: #344055;
+            --light-bg: #f8f9fa;
+            --border-color: #e1e5eb;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .main-content {
+            margin-left: 200px; /* Space for sidebar */
+            padding: 20px;
+            width: 100%;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .page-title i {
+            color: var(--primary-color);
+        }
+
+        .add-new {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .add-new:hover {
+            background-color: #c0392b;
+        }
+
+        .filters {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            display: flex;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-right: none;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+            outline: none;
+        }
+
+        .search-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0 15px;
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+            cursor: pointer;
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: white;
+            outline: none;
+        }
+
+        .offer-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .offer-table th {
+            background-color: var(--secondary-color);
+            color: white;
+            text-align: left;
+            padding: 12px 15px;
+            font-weight: 500;
+        }
+
+        .offer-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .offer-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .offer-table tr:hover {
+            background-color: var(--light-bg);
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-align: center;
+            width: 80px;
+        }
+
+        .active {
+            background-color: #e6f7e6;
+            color: var(--success-color);
+        }
+
+        .expired {
+            background-color: #f8e6e6;
+            color: var(--danger-color);
+        }
+        .disabled {
+            background-color: #f8e6e6;
+            color: var(--danger-color);
+        }
+        .scheduled {
+            background-color: #fff9e6;
+            color: var(--warning-color);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .edit-btn, .delete-btn, .view-btn {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+        }
+
+        .view-btn {
+            background-color: #e8f4f8;
+            color: #0275d8;
+        }
+
+        .edit-btn {
+            background-color: #fff9e6;
+            color: #d39e00;
+        }
+
+        .delete-btn {
+            background-color: #f8e6e6;
+            color: var(--danger-color);
+        }
+
+        .view-btn:hover {
+            background-color: #d1e7f0;
+        }
+
+        .edit-btn:hover {
+            background-color: #f7eccc;
+        }
+
+        .delete-btn:hover {
+            background-color: #f0d0d0;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .pagination-info {
+            margin-right: 20px;
+        }
+        
+        .pagination-controls {
+            display: flex;
+        }
+        
+        .pagination-button {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ccc;
+            margin: 0 2px;
+            cursor: pointer;
+        }
+        
+        .pagination-button.active {
+            background-color: #2c3e50;
+            color: white;
+            border-color: #2c3e50;
+        }
+           
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: 8px;
+            width: 600px;
+            max-width: 90%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 1;
+        }
+
+        .modal-title {
+            font-weight: 600;
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-col {
+            flex: 1;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            position: sticky;
+            bottom: 0;
+            background-color: white;
+        }
+
+        .btn-cancel {
+            background-color: #f5f5f5;
+            color: #333;
+            border: 1px solid #ddd;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-save {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-save:hover {
+            background-color: #c0392b;
+        }
+
+        .btn-cancel:hover {
+            background-color: #e9e9e9;
+        }
+
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        /* Offer Specific Styles */
+        .offer-type-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .offer-type-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .offer-target-options {
+            margin-top: 15px;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        .select2-container {
+            width: 100% !important;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-category {
+            background-color: #e3f2fd;
+            color: #0d6efd;
+        }
+
+        .badge-product {
+            background-color: #d1e7dd;
+            color: #198754;
+        }
+
+        /* Enhanced Selection Container */
+        .selection-container {
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .selection-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: #f5f5f5;
+        }
+
+        .selection-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .selection-actions button {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .selection-actions button:hover {
+            background-color: #f0f0f0;
+        }
+
+        .search-filter {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        .item-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .item-list li {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+
+        .item-list li:last-child {
+            border-bottom: none;
+        }
+
+        .item-list li:hover {
+            background-color: #f9f9f9;
+        }
+
+        .item-list li input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 1024px) {
+            .main-content {
+                margin-left: 0;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .search-box, .filter-options {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .offer-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+
+        /* Slider Style for Offer Type */
+        .offer-type-slider {
+            margin-bottom: 20px;
+        }
+        
+        .slider-container {
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .slider-label {
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            padding: 4px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .slider-label.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .slider-track {
+            height: 24px;
+            background-color: #f0f0f0;
+            border-radius: 24px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .slider-button {
+            position: absolute;
+            height: 24px;
+            width: 50%;
+            border-radius: 24px;
+            background-color: var(--primary-color);
+            left: 0;
+            transition: left 0.3s ease;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: #333;
+            color: white;
+            border-radius: 4px;
+            z-index: 2000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .toast.success {
+            background-color: var(--success-color);
+        }
+
+        .toast.error {
+            background-color: var(--danger-color);
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+        a{
+            text-decoration: none;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <!-- Your sidebar will be included here through the partial -->
+    <!-- <%-include("../../views/partials/admin/sidebar")%> -->
+
+    <div class="main-content">
+        <div class="page-header">
+            <div class="page-title">
+                <i class="fas fa-percentage"></i>
+                <span>Offers</span>
+            </div>
+            <button class="add-new" onclick="openAddModal()">
+                <i class="fas fa-plus"></i>
+                <span>Add New Offer</span>
+            </button>
+        </div>
+
+        <div class="filters">
+            <div class="search-box">
+                <input type="text" class="search-input" id="search" placeholder="Search offers..." value="<%=search%>">
+                <%if(search){%>
+                    <button class="search-btn" onclick="window.location.href='/admin/offers'">
+                        <i class="fas fa-times"></i> Clear
+                    </button>
+                
+               <% }else{%>
+                <button class="search-btn" onclick="searchOffers()">
+                    <i class="fas fa-search"></i> 
+                </button>
+            <%}%>
+            </div>
+            <!-- <div class="filter-options">
+                <select class="filter-select" id="statusFilter" onchange="filterOffers()">
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="expired">Expired</option>
+                    <option value="scheduled">Scheduled</option>
+                </select>
+                <select class="filter-select" id="typeFilter" onchange="filterOffers()">
+                    <option value="">All Types</option>
+                    <option value="product">Product Offer</option>
+                    <option value="category">Category Offer</option>
+                </select>
+                <select class="filter-select" id="sortFilter" onchange="sortOffers()">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="value-high">Highest Value</option>
+                    <option value="value-low">Lowest Value</option>
+                </select>
+            </div> -->
+        </div>
+
+        <table class="offer-table" id="offersTable">
+            <thead>
+                <tr>
+                    <th>Offer Name</th>
+                    <th>Type</th>
+                    <th>Discount</th>
+                    <th>Valid From</th>
+                    <th>Valid Until</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Sample offer data - This would be populated from your database -->
+                <% if (offers && offers.length > 0) { %>
+                    <% offers.forEach(offer => { %>
+                        <tr>
+                            <td><%= offer.offerName %></td>
+                            <td>
+                                <% if (offer.offerType === 'category') { %>
+                                    <span class="badge badge-category">Category</span>
+                                <% } else { %>
+                                    <span class="badge badge-product">Product</span>
+                                <% } %>
+                            </td>
+                            <td><%= offer.discountValue %>%</td>
+                            <td><%= new Date(offer.startDate).toLocaleDateString() %></td>
+                            <td><%= new Date(offer.endDate).toLocaleDateString() %></td>
+                            <td>
+                                <% 
+                                const now = new Date();
+                                const startDate = new Date(offer.startDate);
+                                const endDate = new Date(offer.endDate);
+                                let status = '';
+                                
+                                if (startDate > now) {
+                                    status = 'scheduled';
+                                } else if (endDate < now) {
+                                    status = 'expired';
+                                } else {
+                                    status = offer.status === 'Active' ? 'active' : 'disabled';
+                                }
+                                %>
+                                <span class="status <%= status %>">
+                                    <%= status.charAt(0).toUpperCase() + status.slice(1) %>
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="edit-btn" onclick="editOffer('<%= offer._id %>')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="delete-btn" onclick="deleteOffer('<%= offer._id %>', '<%= offer.offerName %>')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="7" style="text-align: center;">No offers found</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <div class="pagination-info"><%=startItem%>-<%=endItem%> of <%=totalProduct%></div>
+            <div class="pagination-controls">
+                <div class="pagination-button">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 18l-6-6 6-6"></path>
+                    </svg>
+                </div>
+                <%for(let i=1;i<=totalPages;i++){%>
+                    <%if(i==currentPage){%>
+                    <a class="page" href="/admin/offers?page=<%=i%>&search=<%= search %>"><div class="pagination-button active"><%=i%></div></a>
+                        <%} else {%>
+                     <a class="page" href="/admin/offers?page=<%=i%>&search=<%= search %>"><div class="pagination-button "><%=i%></div></a>
+                <%}}%>
+                <!-- <div class="pagination-button active">1</div>
+                <div class="pagination-button">2</div> -->
+                <div class="pagination-button">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 18l6-6-6-6"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+    <!-- Add Offer Modal -->
+    <div class="modal-overlay" id="offerModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Add New Offer</div>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="offerFormAdd">
+                    <div class="form-group">
+                        <label class="form-label" for="offerName">Offer Name*</label>
+                        <input type="text" name="offerName" class="form-control" id="offerName" required placeholder="Enter offer name">
+                        <p class="error" id="ErrorOfferName"></p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Offer Type*</label>
+                        <div class="offer-type-slider">
+                            <div class="slider-container">
+                                <div class="slider-labels">
+                                    <span id="productLabel" class="slider-label active">Product Offer</span>
+                                    <span id="categoryLabel" class="slider-label">Category Offer</span>
+                                </div>
+                                <div class="slider-track">
+                                    <div class="slider-button" id="sliderButton"></div>
+                                </div>
+                                <input type="hidden" name="offerType" id="offerTypeInput" value="product">
+                            </div>
+                        </div>
+                        <p class="error" id="errorOfferType"></p>
+                    </div>
+
+                    <div class="offer-target-options" id="productSelect">
+                        <div class="form-group">
+                            <label class="form-label">Select Products*</label>
+                            <div class="selection-container">
+                                <!-- <div class="selection-header">
+                                    <div class="selection-actions">
+                                        <button type="button" onclick="selectAllProducts()">Select All</button>
+                                        <button type="button" onclick="deselectAllProducts()">Deselect All</button>
+                                    </div>
+                                </div> -->
+                                <div style="padding: 10px;">
+                                    <input type="text" class="search-filter" id="productSearch" placeholder="Search products..." oninput="filterProducts()">
+                                    <ul class="item-list" id="productList">
+                                        <% if (products && products.length > 0) { %>
+                                            <% products.forEach(product => { %>
+                                                <li>
+                                                    <input type="radio" class="product-radio" name="products" value="<%= product._id %>" id="product<%= product._id %>">
+                                                    <label for="product<%= product._id %>"><%= product.productName %> </label>
+                                                </li>
+                                            <% }); %>
+                                        <% } else { %>
+                                            <li>No products available</li>
+                                        <% } %>
+                                    </ul>
+                                </div>
+                            </div>
+                            <p class="error" id="ErrorProductId"></p>
+                        </div>
+                    </div>
+
+                    <div class="offer-target-options" id="categorySelect" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label">Select Categories*</label>
+                            <div class="selection-container">
+                                <!-- <div class="selection-header">
+                                    <div class="selection-actions">
+                                        <button type="button" onclick="selectAllCategories()">Select All</button>
+                                        <button type="button" onclick="deselectAllCategories()">Deselect All</button>
+                                    </div>
+                                </div> -->
+                                <div style="padding: 10px;">
+                                    <input type="text" class="search-filter" id="categorySearch" placeholder="Search categories..." oninput="filterCategories()">
+                                    <ul class="item-list" id="categoryList">
+                                        <% if (categories && categories.length > 0) { %>
+                                            <% categories.forEach(category => { %>
+                                                <li>
+                                                    <input type="radio" name="categories" value="<%= category._id %>" id="category<%= category._id %>">
+                                                    <label for="category<%= category._id %>"><%= category.name %></label>
+                                                </li>
+                                            <% }); %>
+                                        <% } else { %>
+                                            <li>No categories available</li>
+                                        <% } %>
+                                    </ul>
+                                </div>
+                            </div>
+                            <p class="error" id="ErrorCategoryId"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label" for="discountValue">Discount Value (%)*</label>
+                                <input type="number" name="discountValue" class="form-control" id="discountValue" placeholder="Enter discount percentage">
+                                <p class="error" id="ErrorDiscountValue"></p>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label" for="startDate">Start Date*</label>
+                                <input type="date" name="startDate" class="form-control" id="startDate" required>
+                                <p class="error" id="ErrorStartDate"></p>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label" for="endDate">End Date*</label>
+                                <input type="date" name="endDate" class="form-control" id="endDate" required>
+                                <p class="error" id="ErrorEndDate"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="description">Description</label>
+                        <textarea class="form-control" name="description" id="description" rows="3" placeholder="Details about this offer..."></textarea>
+                        <p class="error" id="ErrorDescription"></p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Status*</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="status" id="statusActive" value="Active" checked>
+                            <label class="form-check-label" for="statusActive">Active</label>
+                            &nbsp;&nbsp;&nbsp;
+                            <input class="form-check-input" type="radio" name="status" id="statusDisabled" value="Disabled">
+                            <label class="form-check-label" for="statusDisabled">Disabled</label>
+                        </div>
+                        <p class="error" id="ErrorStatus"></p>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-save" onclick="saveOffer()">Save Offer</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Edit Offer Modal -->
+<div class="modal-overlay" id="offerModalEdit">
+  <div class="modal">
+      <div class="modal-header">
+          <div class="modal-title" id="modalTitleEdit">Edit Offer</div>
+          <button class="close-modal" onclick="closeEditModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+          <form id="offerFormEdit">
+              <input type="hidden" id="editOfferId" name="id">
+              <div class="form-group">
+                  <label class="form-label" for="editOfferName">Offer Name*</label>
+                  <input type="text" name="offerName" class="form-control" id="editOfferName" required placeholder="Enter offer name">
+                  <p class="error" id="editErrorOfferName"></p>
+              </div>
+
+              <div class="form-group">
+                  <label class="form-label">Offer Type*</label>
+                  <div class="offer-type-slider">
+                      <div class="slider-container">
+                          <div class="slider-labels">
+                              <span id="editProductLabel" class="slider-label active">Product Offer</span>
+                              <span id="editCategoryLabel" class="slider-label">Category Offer</span>
+                          </div>
+                          <div class="slider-track">
+                              <div class="slider-button" id="editSliderButton"></div>
+                          </div>
+                          <input type="hidden" name="offerType" id="editOfferTypeInput" value="product">
+                      </div>
+                  </div>
+                  <p class="error" id="editErrorOfferType"></p>
+              </div>
+
+              <div class="offer-target-options" id="editProductSelect">
+                  <div class="form-group">
+                      <label class="form-label">Select Products*</label>
+                      <div class="selection-container">
+                          <!-- <div class="selection-header">
+                              <div class="selection-actions">
+                                  <button type="button" onclick="selectAllEditProducts()">Select All</button>
+                                  <button type="button" onclick="deselectAllEditProducts()">Deselect All</button>
+                              </div>
+                          </div> -->
+                          <div style="padding: 10px;">
+                              <input type="text" class="search-filter" id="editProductSearch" placeholder="Search products..." oninput="filterEditProducts()">
+                              <ul class="item-list" id="editProductList">
+                                  <% if (products && products.length > 0) { %>
+                                      <% products.forEach(product => { %>
+                                          <li>
+                                              <input type="radio" name="products" value="<%= product._id %>" id="editProduct<%= product._id %>">
+                                              <label for="editProduct<%= product._id %>"><%= product.productName %> </label>
+                                          </li>
+                                      <% }); %>
+                                  <% } else { %>
+                                      <li>No products available</li>
+                                  <% } %>
+                              </ul>
+                          </div>
+                      </div>
+                      <p class="error" id="editErrorProductId"></p>
+                  </div>
+              </div>
+
+              <div class="offer-target-options" id="editCategorySelect" style="display: none;">
+                  <div class="form-group">
+                      <label class="form-label">Select Categories*</label>
+                      <div class="selection-container">
+                          <!-- <div class="selection-header">
+                              <div class="selection-actions">
+                                  <button type="button" onclick="selectAllEditCategories()">Select All</button>
+                                  <button type="button" onclick="deselectAllEditCategories()">Deselect All</button>
+                              </div>
+                          </div> -->
+                          <div style="padding: 10px;">
+                              <input type="text" class="search-filter" id="editCategorySearch" placeholder="Search categories..." oninput="filterEditCategories()">
+                              <ul class="item-list" id="editCategoryList">
+                                  <% if (categories && categories.length > 0) { %>
+                                      <% categories.forEach(category => { %>
+                                          <li>
+                                              <input type="radio" name="categories" value="<%= category._id %>" id="editCategory<%= category._id %>">
+                                              <label for="editCategory<%= category._id %>"><%= category.name %></label>
+                                          </li>
+                                      <% }); %>
+                                  <% } else { %>
+                                      <li>No categories available</li>
+                                  <% } %>
+                              </ul>
+                          </div>
+                      </div>
+                      <p class="error" id="editErrorCategoryId"></p>
+                  </div>
+              </div>
+
+              <div class="form-row">
+                  <div class="form-col">
+                      <div class="form-group">
+                          <label class="form-label" for="editDiscountValue">Discount Value (%)*</label>
+                          <input type="number" name="discountValue" class="form-control" id="editDiscountValue" placeholder="Enter discount percentage">
+                          <p class="error" id="editErrorDiscountValue"></p>
+                      </div>
+                  </div>
+                 
+              </div>
+
+              <div class="form-row">
+                  <div class="form-col">
+                      <div class="form-group">
+                          <label class="form-label" for="editStartDate">Start Date*</label>
+                          <input type="date" name="startDate" class="form-control" id="editStartDate" required>
+                          <p class="error" id="editErrorStartDate"></p>
+                      </div>
+                  </div>
+                  <div class="form-col">
+                      <div class="form-group">
+                          <label class="form-label" for="editEndDate">End Date*</label>
+                          <input type="date" name="endDate" class="form-control" id="editEndDate" required>
+                          <p class="error" id="editErrorEndDate"></p>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label class="form-label" for="editDescription">Description</label>
+                  <textarea class="form-control" name="description" id="editDescription" rows="3" placeholder="Details about this offer..."></textarea>
+                  <p class="error" id="editErrorDescription"></p>
+              </div>
+
+              <div class="form-group">
+                  <label class="form-label">Status*</label>
+                  <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="status" id="editStatusActive" value="Active" checked>
+                      <label class="form-check-label" for="editStatusActive">Active</label>
+                      &nbsp;&nbsp;&nbsp;
+                      <input class="form-check-input" type="radio" name="status" id="editStatusDisabled" value="Disabled">
+                      <label class="form-check-label" for="editStatusDisabled">Disabled</label>
+                  </div>
+                  <p class="error" id="editErrorStatus"></p>
+              </div>
+          </form>
+      </div>
+      <div class="modal-footer">
+          <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+          <button class="btn-save" onclick="updateOffer()">Update Offer</button>
+      </div>
+  </div>
+</div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay" id="deleteModal" >
+      <div class="modal" style="width: 400px;">
+          <div class="modal-header">
+              <div class="modal-title">Confirm Delete</div>
+              <button class="close-modal" onclick="closeDeleteModal()">&times;</button>
+          </div>
+          <div class="modal-body">
+              <input type="text" id="deleteOfferId">
+              <p>Are you sure you want to delete offer <strong id="deleteOfferName"></strong>?</p>
+              <p>This action cannot be undone.</p>
+          </div>
+          <div class="modal-footer">
+              <button class="btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+              <button class="btn-save" style="background-color: var(--danger-color);" onclick="confirmDelete()">Delete</button>
+          </div>
+      </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+<script>
+
+
+document.getElementById("search").addEventListener('keydown',function(e){
+            if(e.key==="Enter"){
+                const searchValue=document.getElementById("search").value
+                if(searchValue){
+
+                    window.location.href='/admin/offers?search='+encodeURIComponent(searchValue)
+                }
+            }
+        })
+
+function searchOffers(){
+    const searchValue=document.getElementById("search").value
+                if(searchValue){
+
+                    window.location.href='/admin/offers?search='+encodeURIComponent(searchValue)
+                }
+}
+  // Global variables
+let currentAction = 'add';
+let currentOfferId = null;
+
+// Toast notification function
+function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+        <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+        <span>${message}</span>
+    `;
+    document.body.appendChild(toast);
+    
+    // Show toast
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 100);
+    
+    // Hide toast after 3 seconds
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            document.body.removeChild(toast);
+        }, 300);
+    }, 3000);
+}
+
+// Offer Type Slider Logic
+document.addEventListener('DOMContentLoaded', function() {
+    // Slider for Add Modal
+    const productLabel = document.getElementById('productLabel');
+    const categoryLabel = document.getElementById('categoryLabel');
+    const sliderButton = document.getElementById('sliderButton');
+    const offerTypeInput = document.getElementById('offerTypeInput');
+    const productSelect = document.getElementById('productSelect');
+    const categorySelect = document.getElementById('categorySelect');
+    
+    productLabel.addEventListener('click', function() {
+        sliderButton.style.left = '0';
+        productLabel.classList.add('active');
+        categoryLabel.classList.remove('active');
+        offerTypeInput.value = 'product';
+        productSelect.style.display = 'block';
+        categorySelect.style.display = 'none';
+    });
+    
+    categoryLabel.addEventListener('click', function() {
+        sliderButton.style.left = '50%';
+        categoryLabel.classList.add('active');
+        productLabel.classList.remove('active');
+        offerTypeInput.value = 'category';
+        categorySelect.style.display = 'block';
+        productSelect.style.display = 'none';
+    });
+    
+    // Slider for Edit Modal
+    const editProductLabel = document.getElementById('editProductLabel');
+    const editCategoryLabel = document.getElementById('editCategoryLabel');
+    const editSliderButton = document.getElementById('editSliderButton');
+    const editOfferTypeInput = document.getElementById('editOfferTypeInput');
+    const editProductSelect = document.getElementById('editProductSelect');
+    const editCategorySelect = document.getElementById('editCategorySelect');
+    
+    editProductLabel.addEventListener('click', function() {
+        editSliderButton.style.left = '0';
+        editProductLabel.classList.add('active');
+        editCategoryLabel.classList.remove('active');
+        editOfferTypeInput.value = 'product';
+        editProductSelect.style.display = 'block';
+        editCategorySelect.style.display = 'none';
+    });
+    
+    editCategoryLabel.addEventListener('click', function() {
+        editSliderButton.style.left = '50%';
+        editCategoryLabel.classList.add('active');
+        editProductLabel.classList.remove('active');
+        editOfferTypeInput.value = 'category';
+        editCategorySelect.style.display = 'block';
+        editProductSelect.style.display = 'none';
+    });
+    
+    // Set min date for date inputs to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('startDate').min = today;
+    document.getElementById('endDate').min = today;
+    
+    if (document.getElementById('editStartDate')) {
+        document.getElementById('editStartDate').min = today;
+        document.getElementById('editEndDate').min = today;
+    }
+});
+
+// Modal Functions
+function openAddModal() {
+    currentAction = 'add';
+    resetForm('offerFormAdd');
+    document.getElementById('modalTitle').textContent = 'Add New Offer';
+    document.getElementById('offerModal').style.display = 'flex';
+    
+    // Set default dates
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('startDate').value = today;
+    
+    const nextMonth = new Date();
+    nextMonth.setMonth(nextMonth.getMonth() + 1);
+    document.getElementById('endDate').value = nextMonth.toISOString().split('T')[0];
+}
+
+function closeModal() {
+    document.getElementById('offerModal').style.display = 'none';
+    clearErrors();
+}
+
+function openEditModal(offerId) {
+    currentAction = 'edit';
+    currentOfferId = offerId;
+    document.getElementById('modalTitleEdit').textContent = 'Edit Offer';
+    document.getElementById('offerModalEdit').style.display = 'flex';
+    
+    // Fetch offer data and populate form
+    fetchOfferDetails(offerId);
+}
+
+function closeEditModal() {
+    document.getElementById('offerModalEdit').style.display = 'none';
+    clearEditErrors();
+}
+
+function resetForm(formId) {
+    document.getElementById(formId).reset();
+    
+    // Reset slider to product by default
+    if (formId === 'offerFormAdd') {
+        document.getElementById('sliderButton').style.left = '0';
+        document.getElementById('productLabel').classList.add('active');
+        document.getElementById('categoryLabel').classList.remove('active');
+        document.getElementById('offerTypeInput').value = 'product';
+        document.getElementById('productSelect').style.display = 'block';
+        document.getElementById('categorySelect').style.display = 'none';
+    } else if (formId === 'offerFormEdit') {
+        document.getElementById('editSliderButton').style.left = '0';
+        document.getElementById('editProductLabel').classList.add('active');
+        document.getElementById('editCategoryLabel').classList.remove('active');
+        document.getElementById('editOfferTypeInput').value = 'product';
+        document.getElementById('editProductSelect').style.display = 'block';
+        document.getElementById('editCategorySelect').style.display = 'none';
+    }
+    
+    clearErrors();
+}
+
+function clearErrors() {
+    const errorElements = document.querySelectorAll('#offerFormAdd .error');
+    errorElements.forEach(error => {
+        error.textContent = '';
+    });
+}
+
+function clearEditErrors() {
+    const errorElements = document.querySelectorAll('#offerFormEdit .error');
+    errorElements.forEach(error => {
+        error.textContent = '';
+    });
+}
+
+// Validation Functions
+function validateOfferForm(formId) {
+    let isValid = true;
+    const formData = new FormData(document.getElementById(formId));
+    const errorPrefix = formId === 'offerFormEdit' ? 'edit' : '';
+    
+    // Validate offer name
+    const offerName = formData.get('offerName').trim();
+    if (!offerName) {
+        document.getElementById(`${errorPrefix}ErrorOfferName`).textContent = 'Offer name is required';
+        isValid = false;
+    } else if (offerName.length < 3) {
+        document.getElementById(`${errorPrefix}ErrorOfferName`).textContent = 'Offer name must be at least 3 characters';
+        isValid = false;
+    }
+    const description = formData.get('description')?.trim();
+if (!description) {
+    document.getElementById(`${errorPrefix}ErrorDescription`).textContent = 'Description is required';
+    isValid = false;
+} else if (description.length < 10) {
+    document.getElementById(`${errorPrefix}ErrorDescription`).textContent = 'Description must be at least 10 characters';
+    isValid = false;
+}
+    
+    // Validate offer type and selections
+    const offerType = formData.get('offerType');
+    if (offerType === 'product') {
+        const selectedProducts = formData.getAll('products');
+        if (selectedProducts.length === 0||selectedProducts.length >1) {
+            document.getElementById(`${errorPrefix}ErrorProductId`).textContent = 'Please select  one product';
+            isValid = false;
+        }
+    } else if (offerType === 'category') {
+        const selectedCategories = formData.getAll('categories');
+        if (selectedCategories.length === 0||selectedCategories.length >1) {
+            document.getElementById(`${errorPrefix}ErrorCategoryId`).textContent = 'Please select one category';
+            isValid = false;
+        }
+    }
+    
+    // Validate discount value
+    const discountValue = formData.get('discountValue');
+    if (!discountValue || discountValue < 1 || discountValue > 30) {
+        document.getElementById(`${errorPrefix}ErrorDiscountValue`).textContent = 'Enter a valid discount value';
+        isValid = false;
+    } else if (isNaN(discountValue) || parseInt(discountValue) <= 0 || parseInt(discountValue) > 99) {
+        document.getElementById(`${errorPrefix}ErrorDiscountValue`).textContent = 'Discount value must be between 1 and 99';
+        isValid = false;
+    }
+    
+    // Validate max discount (optional)
+    
+    
+    // Validate dates
+    const startDate = new Date(formData.get('startDate'));
+    const endDate = new Date(formData.get('endDate'));
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    if (!formData.get('startDate')) {
+        document.getElementById(`${errorPrefix}ErrorStartDate`).textContent = 'Start date is required';
+        isValid = false;
+    } else if (startDate < today) {
+        document.getElementById(`${errorPrefix}ErrorStartDate`).textContent = 'Start date cannot be in the past';
+        isValid = false;
+    }
+    
+    if (!formData.get('endDate')) {
+        document.getElementById(`${errorPrefix}ErrorEndDate`).textContent = 'End date is required';
+        isValid = false;
+    } else if (endDate <= startDate) {
+        document.getElementById(`${errorPrefix}ErrorEndDate`).textContent = 'End date must be after start date';
+        isValid = false;
+    }
+    
+    return isValid;
+}
+
+// API Functions
+async function addOffer() {
+    console.log("dddddddd")
+    if (!validateOfferForm('offerFormAdd')) {
+        return;
+    }
+    
+    const formData = new FormData(document.getElementById('offerFormAdd'));
+    const formDataObj = {};
+    
+    formData.forEach((value, key) => {
+        // Handle products and categories arrays
+        if (key === 'products' || key === 'categories') {
+            if (!formDataObj[key]) {
+                formDataObj[key] = [];
+            }
+            formDataObj[key].push(value);
+        } else {
+            formDataObj[key] = value;
+        }
+    });
+    console.log(formDataObj)
+   fetch('/admin/add-offer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formDataObj)
+        }).then(res=>res.json())
+        .then(result=>{
+        
+        
+            if(result.success){
+                   Swal.fire({
+                    position: 'bottom', 
+                    icon: 'success',
+                    title: result.msg,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    background: '#000',
+                    color: '#fff',
+                    timerProgressBar: true,
+                    toast:true,
+                    didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+        
+                   }).then(()=>{
+                    window.location.reload()
+                   })
+                }else{
+                    Swal.fire({
+                    position: 'bottom', 
+                    icon: 'error',
+                    title: result.msg,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    background: '#000',
+                    color: '#fff',
+                    timerProgressBar: true,
+                    toast:true,
+                    didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+                   })
+                   
+                }
+    })
+}
+
+async function updateOffer() {
+    // Validate form
+    if (!validateOfferForm('offerFormEdit')) {
+        return;
+    }
+    
+    const formData = new FormData(document.getElementById('offerFormEdit'));
+    const formDataObj = {};
+    
+    formData.forEach((value, key) => {
+        // Handle products and categories arrays
+        if (key === 'products' || key === 'categories') {
+            if (!formDataObj[key]) {
+                formDataObj[key] = [];
+            }
+            formDataObj[key].push(value);
+        } else {
+            formDataObj[key] = value;
+        }
+    });
+    
+    // Add the offer ID
+    formDataObj.id = currentOfferId;
+    console.log(formDataObj)
+    
+    try {
+        const response = await fetch('/admin/edit-offer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formDataObj)
+        });
+        
+        const result = await response.json();
+        
+       if(result.success){
+                   Swal.fire({
+                    position: 'bottom', 
+                    icon: 'success',
+                    title: result.msg,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    background: '#000',
+                    color: '#fff',
+                    timerProgressBar: true,
+                    toast:true,
+                    didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+        
+                   }).then(()=>{
+                    window.location.reload()
+                   })
+                }else{
+                    Swal.fire({
+                    position: 'bottom', 
+                    icon: 'error',
+                    title: result.msg,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    background: '#000',
+                    color: '#fff',
+                    timerProgressBar: true,
+                    toast:true,
+                    didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+                   })
+                   
+                }
+    } catch (error) {
+        console.log('Error:', error);
+        showToast('An error occurred while updating the offer', 'error');
+    }
+}
+
+async function fetchOfferDetails(offerId) {
+    try {
+        const response = await fetch(`/admin/viewEditOffer/${offerId}`);
+        const result = await response.json();
+        
+        if (result.success) {
+            const offer = result.offer;
+            
+            // Populate edit form
+            document.getElementById('editOfferId').value = offer._id;
+            document.getElementById('editOfferName').value = offer.offerName;
+            document.getElementById('editDiscountValue').value = offer.discountValue;
+            document.getElementById('editStartDate').value = new Date(offer.startDate).toISOString().split('T')[0];
+            document.getElementById('editEndDate').value = new Date(offer.endDate).toISOString().split('T')[0];
+            document.getElementById('editDescription').value = offer.description || '';
+            
+            // Set offer type
+            if (offer.offerType === 'category') {
+                document.getElementById('editCategoryLabel').click();
+                
+                // Select categories
+                if (offer.targetId ) {
+                   
+                        const checkbox = document.getElementById(`editCategory${offer.targetId}`);
+                        if (checkbox) {
+                            checkbox.checked = true;
+                        }
+                   
+                }
+            } else {
+                document.getElementById('editProductLabel').click();
+                
+                // Select products
+                if (offer.targetId) {
+                    
+                        const checkbox = document.getElementById(`editProduct${offer.targetId}`);
+                        if (checkbox) {
+                            checkbox.checked = true;
+                        }
+                   
+                }
+            }
+
+            
+            // Set status
+            if (offer.status === 'Active') {
+                document.getElementById('editStatusActive').checked = true;
+            } else {
+                document.getElementById('editStatusDisabled').checked = true;
+            }
+        } else {
+            showToast(result.message || 'Failed to fetch offer details', 'error');
+        }
+    } catch (error) {
+        console.log('Error:', error);
+        showToast('An error occurred while fetching offer details', 'error');
+    }
+}
+
+function saveOffer() {
+    if (currentAction === 'add') {
+        addOffer();
+    } else {
+        updateOffer();
+    }
+}
+
+function closeDeleteModal(){
+    document.getElementById("deleteModal").style.display = 'none';
+
+}
+function deleteOffer(id, name) {
+
+    document.getElementById("deleteOfferName").innerText=name
+    document.getElementById("deleteOfferId").value=id   
+    document.getElementById("deleteModal").style.display = 'flex';
+}
+function confirmDelete(){
+    const offerId=document.getElementById("deleteOfferId").value
+    fetch('/admin/delete-offer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: offerId })
+            })
+            .then(res=>res.json())
+            .then(result=>{
+                if(result.success){
+                    closeDeleteModal()
+                   Swal.fire({
+                    position: 'bottom', 
+                    icon: 'success',
+                    title: result.msg,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    background: '#000',
+                    color: '#fff',
+                    timerProgressBar: true,
+                    toast:true,
+                    didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+        
+                   }).then(()=>{
+                    window.location.reload()
+                   })
+                }else{
+                    Swal.fire({
+                    position: 'bottom', 
+                    icon: 'error',
+                    title: result.msg,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    background: '#000',
+                    color: '#fff',
+                    timerProgressBar: true,
+                    toast:true,
+                    didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+                   })
+                   
+                }
+            })
+}
+
+// async function deleteOfferfinal(offerId) {
+    
+//         try {
+//             const response = await fetch('/admin/delete-offer', {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json'
+//                 },
+//                 body: JSON.stringify({ id: offerId })
+//             });
+            
+//             const result = await response.json();
+            
+//             if (result.success) {
+//                 showToast('Offer deleted successfully!', 'success');
+//                 // Reload page to reflect changes
+//                 setTimeout(() => {
+//                     window.location.reload();
+//                 }, 1000);
+//             } else {
+//                 showToast(result.message || 'Failed to delete offer', 'error');
+//             }
+//         } catch (error) {
+//             console.error('Error:', error);
+//             showToast('An error occurred while deleting the offer', 'error');
+//         }
+//     }
+// }
+
+function editOffer(offerId) {
+    openEditModal(offerId);
+}
+
+const productRadios = document.querySelectorAll('input[name="products"]');
+    const categoryRadios = document.querySelectorAll('input[name="categories"]');
+
+    productRadios.forEach(radio => {
+      radio.addEventListener("change", () => {
+        if (radio.checked) {
+          categoryRadios.forEach(catRadio => catRadio.checked = false);
+        }
+      });
+    });
+
+    categoryRadios.forEach(radio => {
+      radio.addEventListener("change", () => {
+        if (radio.checked) {
+          productRadios.forEach(prodRadio => prodRadio.checked = false);
+        }
+      });
+    });
+
+
+function filterOffers() {
+    searchOffers();
+}
+
+function sortOffers() {
+    const sortFilter = document.getElementById('sortFilter').value;
+    const tbody = document.querySelector('#offersTable tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    
+    rows.sort((a, b) => {
+        if (sortFilter === 'newest' || sortFilter === 'oldest') {
+            const dateA = new Date(a.cells[3].textContent);
+            const dateB = new Date(b.cells[3].textContent);
+            
+            return sortFilter === 'newest' ? dateB - dateA : dateA - dateB;
+        } else if (sortFilter === 'value-high' || sortFilter === 'value-low') {
+            const valueA = parseFloat(a.cells[2].textContent);
+            const valueB = parseFloat(b.cells[2].textContent);
+            
+            return sortFilter === 'value-high' ? valueB - valueA : valueA - valueB;
+        }
+    });
+    
+    // Clear and re-add sorted rows
+    while (tbody.firstChild) {
+        tbody.removeChild(tbody.firstChild);
+    }
+    
+    rows.forEach(row => {
+        tbody.appendChild(row);
+    });
+    
+    updatePagination();
+}
+
+function updatePagination() {
+    // This would be implemented for a real pagination system
+    // For now, we'll just update the count of visible items
+    const visibleRows = document.querySelectorAll('#offersTable tbody tr:not([style*="display: none"])');
+    const paginationInfo = document.querySelector('.pagination-info');
+    
+    if (paginationInfo) {
+        paginationInfo.textContent = `Showing 1 to ${visibleRows.length} of ${visibleRows.length} entries`;
+    }
+}
+
+// Product selection functions
+function selectAllProducts() {
+    const checkboxes = document.querySelectorAll('#productList input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = true;
+    });
+}
+
+function deselectAllProducts() {
+    const checkboxes = document.querySelectorAll('#productList input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+}
+
+function filterProducts() {
+    const searchInput = document.getElementById('productSearch').value.toLowerCase();
+    const items = document.querySelectorAll('#productList li');
+    
+    items.forEach(item => {
+        const label = item.querySelector('label');
+        if (label) {
+            const text = label.textContent.toLowerCase();
+            if (text.includes(searchInput)) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        }
+    });
+}
+
+// Category selection functions
+function selectAllCategories() {
+    const checkboxes = document.querySelectorAll('#categoryList input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = true;
+    });
+}
+function filterEditProducts() {
+    const searchInput = document.getElementById('editProductSearch').value.toLowerCase();
+    const items = document.querySelectorAll('#editProductList li');
+
+    items.forEach(item => {
+        const label = item.querySelector('label');
+        if (label) {
+            const text = label.textContent.toLowerCase();
+            item.style.display = text.includes(searchInput) ? '' : 'none';
+        }
+    });
+}
+
+function filterEditCategories() {
+    const searchInput = document.getElementById('editCategorySearch').value.toLowerCase();
+    const items = document.querySelectorAll('#editCategoryList li');
+
+    items.forEach(item => {
+        const label = item.querySelector('label');
+        if (label) {
+            const text = label.textContent.toLowerCase();
+            item.style.display = text.includes(searchInput) ? '' : 'none';
+        }
+    });
+}
+
+
+function deselectAllCategories() {
+    const checkboxes = document.querySelectorAll('#categoryList input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+}
+
+function filterCategories() {
+    const searchInput = document.getElementById('categorySearch').value.toLowerCase();
+    const items = document.querySelectorAll('#categoryList li');
+    
+    items.forEach(item => {
+        const label = item.querySelector('label');
+        if (label) {
+            const text = label.textContent.toLowerCase();
+            if (text.includes(searchInput)) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        }
+    });
+}
+
+// Initialize date inputs on load
+document.addEventListener('DOMContentLoaded', function() {
+    // Set default dates for add form
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('startDate').value = today;
+    
+    const nextMonth = new Date();
+    nextMonth.setMonth(nextMonth.getMonth() + 1);
+    document.getElementById('endDate').value = nextMonth.toISOString().split('T')[0];
+});
+</script>

@@ -1,15 +1,16 @@
 const User =require("../../models/userSchema");
 const Category=require("../../models/categorySchema")
 const Product=require("../../models/productSchema")
+const Offer=require("../../models/offerSchama")
 const Wishlist=require("../../models/whishlistSchema")
 const nodemailer=require("nodemailer")
 const env =require("dotenv").config()
-const mongoose=require("mongoose")
 
 const bcrypt=require("bcrypt")
 
 const loadHomepage=async (req,res)=>{
     try {
+        console.log(req.session.user)
         const user=req.session.user
         const categories=await Category.find({isListed:true})
          
@@ -28,7 +29,7 @@ const loadHomepage=async (req,res)=>{
         if(user){
             const userData=await User.findOne({_id:user._id})
             // console.log(user.name)
-            return res.render("home",{user:user,
+            return res.render("home",{userName:user.name,
                 products :productData,
                 category:categories
             })
@@ -121,7 +122,7 @@ async function sendVerificationEmail(email,otp){
       return info.accepted.length>0
     } catch (error) {
         console.error("Error sending email",error)
-        return false
+        return falser
     }
 }
 
@@ -346,6 +347,8 @@ const logout=async (req,res)=>{
 
 const loadShoppingPage=async (req,res)=>{
     try {
+        console.log("-------------")
+        console.log(req.session.user)
         const user=req.session.user
         const userData=await User.findOne({_id:user,isVerified:true})
         const categories =await Category.find({isDeleted:false})
@@ -383,9 +386,13 @@ const loadShoppingPage=async (req,res)=>{
         }
 
         console.log("wishlistProductIds",wishlistProductIds)
+
+        const currentDate=new Date()
+       
         // console.log("jjjjjjj",products)
+        console.log(user.name)
         res.render("shoap",{
-            user:user,
+            userName:user.name,
             products:products,
             category:categoriesWithIds,
             totalproducts:totalProducts,
@@ -395,6 +402,7 @@ const loadShoppingPage=async (req,res)=>{
             endItem,
             totalProducts,
             wishlistProductIds,
+
            
            
         })
@@ -556,6 +564,15 @@ const filterProduct = async (req, res) => {
   
                
         }
+        const currentDate=new Date()
+        const offer=await Offer.find({
+            status:'Active',
+            startDate:{$lt:currentDate},
+            endDate:{$gte:currentDate}
+        })
+
+       
+        console.log(products)
         // console.log(paginationCategory)
           res.render('shoap', {
              products, 
@@ -572,7 +589,9 @@ const filterProduct = async (req, res) => {
              paginationCategory,
              wishlistProductIds,
              paginationPriceRange,
-             user: req.user || null });
+             userName: user.name,
+             offer 
+            });
         } catch (err) {
           console.error(err);
           res.status(500).send('Server Error');
@@ -599,17 +618,45 @@ const productDetails= async (req,res)=>{
     let wishlistProductIds=[]
         if(wishlist){
             wishlistProductIds = wishlist.products.map(item => item.productId.toString());
-  
-               
+       
         }
+        const currentDate=new Date()
+        const allOffers=await Offer.find({
+            status:'Active',
+            startDate:{$lt:currentDate},
+            endDate:{$gte:currentDate}
+        })
+        const offers = allOffers.filter(offer => {
+            const targetId = offer.targetId?.toString();
+            const productId = product._id.toString();
+            const categoryId = product.category._id.toString(); // assuming populated or included
+        
+            return (
+                (offer.offerType === 'product' && targetId === productId) ||
+                (offer.offerType === 'category' && targetId === categoryId)
+            );
+        });
+        let discountAmount=0
+        console.log("offereeees:",offers)
+        const bestOffer = getBestOffer(offers, product);
+        if(bestOffer){
+            discountAmount=(product.regularPrice*bestOffer.discountValue)/100
+        }
+        console.log("discountAmount",discountAmount)
+const afterDiscountAmount=product.regularPrice-discountAmount
+
+console.log("{{{{{{{{{{{{{{{{{{{{{{")        
+console.log("discountamount: ",discountAmount)        
+console.log(bestOffer)        
+
     console.log(relatedProducts)
     res.render("productDetail",{
         product:product,
-        user:userName,
+        userName:userName,
         category:product.category,
         relatedProducts:relatedProducts,
-        wishlistProductIds
-
+        wishlistProductIds,
+        afterDiscountAmount
 
     })
     } catch (error) {
@@ -619,6 +666,31 @@ const productDetails= async (req,res)=>{
     
 }
 
+function getBestOffer(applicableOffers, product) {
+    if (!Array.isArray(applicableOffers) || applicableOffers.length === 0) return null;
+  
+    let bestOffer = null;
+    let maxDiscount = 0;
+  
+    const price = product.price || product.regularPrice || 0;
+  
+    if (price <= 0) {
+      console.log(`Invalid price for product: ${product.productName}`);
+      return null;
+    }
+  
+    for (const offer of applicableOffers) {
+      const discount = (price * offer.discountValue) / 100;
+  
+      if (discount < price && discount > maxDiscount) {
+        maxDiscount = discount;
+        bestOffer = offer;
+      }
+    }
+  
+    return bestOffer;
+  }
+  
 
 
 

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Failed</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+    
+    body {
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px 0;
+    }
+    
+    .failure-card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      width: 75%;
+      padding: 40px 30px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 0.6s ease-out forwards;
+    }
+    
+    .failure-icon {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      margin: 0 auto 30px;
+    }
+    
+    .circle {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4px solid #f44336;
+      border-left-color: transparent;
+      transform: rotate(0deg);
+      opacity: 0;
+      animation: circleRotate 1s 0.3s forwards;
+    }
+    
+    .xmark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+      animation: xmarkAppear 0.5s 1.3s forwards;
+    }
+    
+    .xmark:before, .xmark:after {
+      content: "";
+      background-color: #f44336;
+      position: absolute;
+    }
+    
+    .xmark:before {
+      width: 4px;
+      height: 60px;
+      left: 0;
+      top: -30px;
+      transform: rotate(45deg);
+    }
+    
+    .xmark:after {
+      width: 4px;
+      height: 60px;
+      left: 0;
+      top: -30px;
+      transform: rotate(-45deg);
+    }
+    
+    .failure-message {
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeUp 0.6s 1.8s forwards;
+    }
+    
+    .failure-message h1 {
+      color: #333;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    
+    .failure-message p {
+      color: #777;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+    
+    .order-details {
+      margin-top: 20px;
+      text-align: left;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeUp 0.6s 2s forwards;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+    }
+    
+    .order-details h2 {
+      color: #333;
+      font-size: 20px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    
+    .order-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding: 0 10px;
+    }
+    
+    .order-info span:first-child {
+      color: #777;
+      font-weight: 600;
+    }
+    
+    .order-info span:last-child {
+      color: #333;
+    }
+    
+    .details-section {
+      margin-top: 20px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .details-section h3 {
+      color: #f44336;
+      font-size: 18px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #e3e3e3;
+      padding-bottom: 8px;
+    }
+    
+    .error-details {
+      color: #555;
+      line-height: 1.5;
+      padding: 10px 0;
+    }
+    
+    .error-code {
+      font-family: monospace;
+      background-color: #f1f1f1;
+      padding: 4px 8px;
+      border-radius: 4px;
+      color: #f44336;
+    }
+    
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeUp 0.6s 2.2s forwards;
+      margin-top: 20px;
+    }
+    
+    .btn {
+      padding: 14px 26px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: none;
+      outline: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-retry {
+      background-color: #f44336;
+      color: white;
+    }
+    
+    .btn-retry:hover {
+      background-color: #d32f2f;
+      transform: translateY(-2px);
+    }
+    
+    .btn-shop {
+      background-color: transparent;
+      color: #333;
+      border: 2px solid #333;
+    }
+    
+    .btn-shop:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+    
+    .icon {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .helpline {
+      margin-top: 30px;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeUp 0.6s 2.4s forwards;
+      color: #777;
+      font-size: 14px;
+    }
+    
+    .payment-issues {
+      margin-top: 20px;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeUp 0.6s 2.6s forwards;
+    }
+    
+    .payment-issues h3 {
+      color: #333;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    
+    .issues-list {
+      text-align: left;
+      width: 80%;
+      margin: 0 auto;
+      color: #555;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    
+    .issues-list li {
+      margin-bottom: 8px;
+      list-style-position: inside;
+    }
+    
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes circleRotate {
+      0% {
+        transform: rotate(0deg);
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      100% {
+        transform: rotate(720deg);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes xmarkAppear {
+      to {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* For responsive design */
+    @media (max-width: 600px) {
+      .failure-card {
+        padding: 30px 20px;
+        width: 90%;
+      }
+      
+      .buttons {
+        flex-direction: column;
+        width: 80%;
+        margin: 20px auto 0;
+      }
+      
+      .issues-list {
+        width: 95%;
+      }
+    }
+    
+    a {
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="failure-card">
+    <div class="failure-icon">
+      <div class="circle"></div>
+      <div class="xmark"></div>
+    </div>
+    <div class="failure-message">
+      <h1>Payment Failed</h1>
+      <p>We're sorry, but your payment could not be processed at this time. Please try again or use a different payment method.</p>
+    </div>
+    
+    <div class="order-details">
+      <h2>Order Information</h2>
+      <div class="order-info">
+        <span>Order Number:</span>
+        <span><%=order.orderId%></span>
+      </div>
+      <div class="order-info">
+        <span>Order Date:</span>
+        <span><%=new Date().toDateString()%></span>
+      </div>
+      <div class="order-info">
+        <span>Payment Method:</span>
+        <span><%=order.paymentMetherd%></span>
+      </div>
+      
+      <div class="details-section">
+        <h3>Error Details</h3>
+        <div class="error-details">
+          <p>Payment Status: <strong>Failed</strong></p>
+          <p>Error Code: <span class="error-code">errorCode</span></p>
+          <p>Error Message: errorMessage</p>
+        </div>
+      </div>
+      
+      <div class="details-section">
+        <h3>Total Amount</h3>
+        <div class="order-info">
+          <span>Total:</span>
+          <span>₹<%=order.finalAmount%></span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="buttons">
+      <a href="/retry-payment/<%=order.orderId%>">
+        <button class="btn btn-retry">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 2v6h-6"></path>
+            <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
+            <path d="M3 22v-6h6"></path>
+            <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
+          </svg>
+          Retry Payment
+        </button>
+      </a>
+      <a href="/shop">
+        <button class="btn btn-shop">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          Back to Shop
+        </button>
+      </a>
+    </div>
+    
+    <div class="helpline">
+      <p>Need help? Contact our customer support at <strong>support@nuttify.com</strong> or call <strong>+91 8137822686</strong></p>
+    </div>
+    
+    <div class="payment-issues">
+      <h3>Common Payment Issues</h3>
+      <ul class="issues-list">
+        <li>Insufficient funds in your account</li>
+        <li>Card has expired or is invalid</li>
+        <li>Bank may have declined the transaction</li>
+        <li>Network connectivity issues</li>
+      </ul>
+    </div>
+  </div>
+  
+  <script>
+    // Add click events to buttons
+    document.querySelector('.btn-retry').addEventListener('click', function(e) {
+      // You can add additional functionality here if needed
+      // The link will handle the navigation
+    });
+    
+    document.querySelector('.btn-shop').addEventListener('click', function(e) {
+      // You can add additional functionality here if needed
+      // The link will handle the navigation
+    });
+    
+    // Optional: You can add error sound or other effects here
+    function playErrorSound() {
+      // You could add an error sound if needed
+      // const audio = new Audio('error.mp3');
+      // audio.play();
+    }
+    
+    // Run when page loads
+    window.addEventListener('load', function() {
+      playErrorSound();
+    });
+  </script>
+</body>
+</html>

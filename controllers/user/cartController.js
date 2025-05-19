@@ -3,15 +3,85 @@ const User =require("../../models/userSchema")
 const Cart=require('../../models/cartSchema')
 const Product=require("../../models/productSchema")
 const Wishlist=require("../../models/whishlistSchema")
+const Offer=require("../../models/offerSchama")
+const Coupon=require("../../models/coupenSchema")
 
 const loadCart=async(req,res)=>{
     try {
         console.log(req.user._id.toString())
         const cart=await Cart.findOne({userId:req.user._id}).populate("items.productId")
-        
+        .populate({
+            path: 'items.productId',
+            populate: {
+              path: 'category'  // this populates productId.category
+            }
+          });
+          let subTotal=0
+                    cart.items.forEach(item=>{
+                        subTotal+=item.totalPrice
+                    })
+        console.log("ddddddddddddddddd")
+        cart.items.forEach(item => {
+            console.log("Product:", item.productId?.productName);
+            console.log("Category:", item.productId?.category?.name);
+          });
+        const product=cart.items
+        const currentDate=new Date()
+                const allOffers=await Offer.find({
+                    status:'Active',
+                    startDate:{$lt:currentDate},
+                    endDate:{$gte:currentDate}
+                })
+                console.log("alllofferssss :",allOffers)
+
+                const result=cart.items.map((item)=>{
+                    console.log("itme--",item.productId.category._id)
+                    console.log("itmiiiiie--",allOffers[0]._id)
+                const offers = allOffers.filter(offer => {
+                    const targetId = offer.targetId?.toString();
+                    const productId = item.productId._id.toString();
+                    const categoryId = item.productId.category._id.toString(); // assuming populated or included
+                
+                    return (
+                        (offer.offerType === 'product' && targetId === productId) ||
+                        (offer.offerType === 'category' && targetId === categoryId)
+                    );
+                });
+                console.log("offerssss :",offers)
+                const bestOffer = getBestOffer(offers, item);
+                return{
+                    product:item,
+                    bestOffer
+                }
+            })
+        const totalDiscountBF=result.reduce((sum,item)=>{
+            const {bestOffer,product}=item
+            let discount=0
+            if(bestOffer&&bestOffer.discountValue>0){
+                discount=(product.totalPrice*bestOffer.discountValue)/100
+            }
+            return sum+discount
+        },0)
+            const totalDiscount=Math.floor(totalDiscountBF)
+            let couponDiscount=0
+            if(req.session.appliedCoupon){
+               couponDiscount= Math.floor(((subTotal-totalDiscount)*req.session.appliedCoupon)/100)
+                
+            }
+            let couponCode=''
+            if(req.session.appliedCouponName){
+                couponCode=req.session.appliedCouponName
+            }
+
+            console.log("oooooooooooooooooooo")
+            console.log(result)
+            console.log(totalDiscount)
         res.render("cart",{
             cart,
-            user:req.user
+            user:req.user,
+            totalDiscount,
+            couponDiscount,
+            couponCode
             
         })
     } catch (error) {
@@ -77,7 +147,7 @@ console.log(existingItem)
     existingItem.totalPrice=product.regularPrice*newQuantity
 }else{
     if(quantity>product.stock){
-        returnres.json({
+        return res.json({
             redirect:'/cart',
             success:false,
             msg:"Quantity exeeds more than stock"
@@ -199,9 +269,74 @@ const removeCart =async (req,res)=>{
 }
 
 
+const applyCoupon=async (req,res)=>{
+    try {
+        // console.log(req.body)
+        const {couponCode}=req.body
+        const coupon=await Coupon.findOne({couponCode:couponCode.trim()})
+        console.log(coupon)
+      if(!coupon){
+        res.json({
+            success:false,
+            msg:"coupon not available"
+        })
+      }
+
+      req.session.appliedCoupon=coupon.discountValue
+      req.session.appliedCouponName=coupon.couponCode
+      res.json({
+        success:true,
+        msg:"coupen applied successfully"
+      })
+    } catch (error) {
+        console.log("errro in applyCoupon ",error)
+    }
+}
+
+const removeCoupon= async(req,res)=>{
+    try {
+        console.log(req.body)
+        req.session.appliedCoupon=null
+        req.session.appliedCouponName=''
+        res.json({
+            success:true,
+            msg:"coupen removed successfully"
+        })
+    } catch (error) {
+        console.log("error i  remove coupon",error)
+    }
+}
+
+function getBestOffer(applicableOffers, product) {
+    if (!Array.isArray(applicableOffers) || applicableOffers.length === 0) return null;
+  
+    let bestOffer = null;
+    let maxDiscount = 0;
+  
+    const price = product.price || product.regularPrice || 0;
+  
+    if (price <= 0) {
+      console.log(`Invalid price for product: ${product.productName}`);
+      return null;
+    }
+  
+    for (const offer of applicableOffers) {
+      const discount = (price * offer.discountValue) / 100;
+  
+      if (discount < price && discount > maxDiscount) {
+        maxDiscount = discount;
+        bestOffer = offer;
+      }
+    }
+  
+    return bestOffer;
+  }
+
 module.exports={
     loadCart,
     addToCart,
     removeFromCart,
-    removeCart
+    removeCart,
+    applyCoupon,
+    removeCoupon
 }

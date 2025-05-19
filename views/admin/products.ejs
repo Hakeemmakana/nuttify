@@ -433,7 +433,6 @@
         }
         .actions {
             display: flex;
-            justify-content: flex-end;
         }
         .action-icon {
             padding: 5px;
@@ -548,7 +547,7 @@ a{
                                 <%= product[i].productName %>
                             </div>
                         </td>
-                        <td><%= product[i].category %></td>
+                        <td><%= product[i].category.name %></td>
                         <td><%= product[i].regularPrice %></td>
                         <td><%= product[i].varient %></td>
                         <td><%= product[i].stock %></td>

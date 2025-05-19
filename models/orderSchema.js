@@ -31,6 +31,15 @@ const orderSchema=new Schema({
             type:Number,
             default:0
         },
+        totalDiscount:{
+             type:Number,
+             default:0
+        },
+        offerType: {
+            type: String,
+            enum: ['product', 'category'],
+            required: false
+          },
         status:{
             type:String,
             required:false,
@@ -47,7 +56,11 @@ const orderSchema=new Schema({
         type:Number,
         required:true
     },
-    discount:{
+    totalDiscount:{
+        type:Number,
+        default:0
+    },
+    couponDiscount:{
         type:Number,
         default:0
     },
@@ -72,7 +85,7 @@ const orderSchema=new Schema({
      status:{
         type:String,
         required:true,
-        enum:["Processing","Shipped","Deliverd","Cancelled","Returned","Return-requested"]
+        enum:["Processing","Shipped","Deliverd","Cancelled","Returned","Return-requested","paymentFailed",'orderFailed']
      },
      cancelReason: {
         type: String,
@@ -85,11 +98,21 @@ const orderSchema=new Schema({
      paymentMetherd:{
         type:String,
         required:true,
-        enum:['razorpay','cashOnDelivery','wallet']
+        enum:['razorpay','cashOnDelivery','wallet',]
      },
      couponApp:{
         type:Boolean,
         default:false
+     },
+     razorpayDetails: {
+        paymentId:{
+            type:String,
+            required:false
+        },
+        orderId:{
+            type:String,
+            required:false
+        }
      }
 },{timestamps:true})
 

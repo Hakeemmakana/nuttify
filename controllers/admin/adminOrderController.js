@@ -1,6 +1,7 @@
 
 const Order=require('../../models/orderSchema')
 const Product=require('../../models/productSchema')
+const Wallet =require("../../models/walletSchema")
 
 const loadOrders= async (req,res)=>{
     try {
@@ -121,17 +122,45 @@ const returnedOrder=async (req,res)=>{
         }
         order.status=status
         await order.save()
+        let refundAmount=0
         for(let item of order.orderItems){
+            if(item.status!=='Cancelled'||item.status!=='Returned'){
+                refundAmount+=(item.totalPrice-item.totalDiscount)
             const product=await Product.findById(item.productId)
             if(product){
                 product.stock+=item.quantity
                 await product.save()
             }
         }
+        }
         res.json({
             success:true,
             msg:'order status updated successfully'
         })
+        const userId=order.userId
+        let wallet= await Wallet.findOne({userId})
+        if (!wallet) {
+            wallet = new Wallet({
+                userId,
+                balance: refundAmount,
+                transactions: [{
+                    amount: refundAmount,
+                    type: 'Credit',
+                    method: 'Refund',
+                    orderId: orderId, // If available
+                    date: new Date()
+                }]
+            });
+        } else {
+            wallet.balance += refundAmount;
+            wallet.transactions.push({
+                amount: refundAmount,
+                type: 'Credit',
+                method: 'Refund',
+                orderId: orderId, 
+                date: new Date()
+            });
+        }
 
 
     } catch (error) {
@@ -139,9 +168,93 @@ const returnedOrder=async (req,res)=>{
         
     }
 }
+const productReturn=async(req,res)=>{
+    try {
+        console.log("ddddddddddd",req.body)
+        // return res.status(200).json({ success: true, msg:'jkdfkjdkfjkdj'});      
+        const {orderId,productId}=req.body
+
+const order= await Order.findById(orderId)
+        if(!order){
+           return res.json({
+                success:false,
+                msg:"order not found"
+            })
+        }
+        if(order.status=='Returned'||order.status=='Cancelled'){
+            console.log("dddddddddd")
+            return res.json({
+                success:false,
+                msg:"order already delivered or cancelled"
+            })
+        }
+        console.log("jjjjjjj",order)
+        const item=order.orderItems.find(item=>item.productId.toString()==productId)
+        if(!item){
+            return res.json({
+                success:false,
+                msg:"prodcut not found"
+            })
+        }
+
+        if(item.status=='Returned'){
+            return res.json({
+                success:false,
+                msg:"product already returnd"
+            })
+        }
+        item.status="Returned"
+        await order.save()
+       
+        const product =await Product.findById(item.productId)
+        if(product){
+            product.stock+=item.quantity
+            await product.save()
+        }
+
+         let refundAmount= (item.totalPrice-item.totalDiscount)
+                
+                let wallet= await Wallet.findOne({userId})
+                if (!wallet) {
+                    wallet = new Wallet({
+                        userId,
+                        balance: refundAmount,
+                        transactions: [{
+                            amount: refundAmount,
+                            type: 'Credit',
+                            method: 'Refund',
+                            orderId: orderId, // If available
+                            date: new Date()
+                        }]
+                    });
+                } else {
+                    wallet.balance += refundAmount;
+                    wallet.transactions.push({
+                        amount: refundAmount,
+                        type: 'Credit',
+                        method: 'Refund',
+                        orderId: orderId, 
+                        date: new Date()
+                    });
+                }
+                await wallet.save()
+        const allItemReterned=order.orderItems.every(item=>item.status=='Returned')
+        if(allItemReterned){
+            order.status="Returned"
+            await order.save()
+        }
+        res.json({
+            success:true,
+            msg:'product return approved '
+        })
+    } catch (error) {
+        console.log("error in product return page",error)
+    }
+}
 module.exports={
     loadOrders,
     editOrder,
     orderStatusChange,
-    returnedOrder
+    returnedOrder,
+    productReturn
 }

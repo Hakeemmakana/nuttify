@@ -200,6 +200,7 @@
             margin-top: 20px;
         }
         
+        
         .secure-message {
             display: flex;
             align-items: center;
@@ -273,6 +274,40 @@
         .emptyCart{
             margin-left: 35%;
         }
+        .place-coupon-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #couponCode {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        #couponCode:focus {
+            border-color: #ff6200;
+        }
+
+        .place-coupon-btn button {
+            padding: 10px 20px;
+            background-color: #ff6200;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .place-coupon-btn button:hover {
+            background-color: #e55a00;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -326,7 +361,7 @@
                 </div>
                 <div class="price-row">
                     <span>Discount</span>
-                    <span class="green-text">0</span>
+                    <span class="green-text"><%=totalDiscount%></span>
                 </div>
                 <!-- <div class="price-row">
                     <span>Coupons for you</span>
@@ -336,21 +371,30 @@
                     <span>Delivery Charges</span>
                     <span><span class="strike-through">₹120</span> Free</span>
                 </div>
-                <!-- <div class="price-row">
-                    <span>Secured Packaging Fee</span>
-                    <span>₹59</span>
-                </div> -->
+                <div class="price-row">
+                    <span>Coupon Discount</span> 
+                    <span>₹<%=couponDiscount%></span>
+                </div>
                 <!-- <div class="price-row">
                     <span>Protect Promise Fee <span class="info-icon">ⓘ</span></span>
                     <span>₹59</span>
                 </div> -->
                 <div class="price-row total">
                     <span>Total Amount</span>
-                    <span>₹<%=totalAmount%></span>
+                    <span>₹<%=totalAmount-totalDiscount-couponDiscount%></span>
                 </div>
             </div>
             
-            <p class="savings-message">You will save ₹0 on this order</p>
+            <p class="savings-message">You will save ₹<%=totalDiscount+couponDiscount%> on this order</p>
+            <div class="place-coupon-btn">
+                <%if(couponDiscount>0){%>
+                    <input id="couponCode" value="<%=couponCode%>"  style="width: 90%;"  type="text" placeholder="Enter coupon code" disabled>
+                    <button onclick="removeCoupon()">Remove coupon</button>
+                    <%}else {%>
+                        <input id="couponCode"type="text" placeholder="Enter coupon code">
+                        <button onclick="applyCoupon()">Apply coupon</button>
+                <%}%>
+            </div>
             <%if(cart.items.length==0){%>
             <button onclick="checkout()" class="place-order-btn" >PLACE ORDER</button>
             <%}else{%>
@@ -366,6 +410,115 @@
     </div>
 
     <script>
+
+    function applyCoupon(){
+       const couponCode= document.getElementById("couponCode").value
+       console.log(couponCode)
+       fetch("/applyCoupon",{
+                method:'post',
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({couponCode})
+            })
+            .then(Response=>Response.json())
+            .then(data=>{
+                if(data.success){
+                   Swal.fire({
+                    position: 'bottom', 
+                    icon: 'success',
+                    title: data.msg,
+                    showConfirmButton: false,
+                    timer: 1000,
+                    background: '#000',
+                    color: '#fff',
+                    timerProgressBar: true,
+                    toast:true,
+                    didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+                   }).then(()=>{
+                    window.location.reload();
+                   })
+                   
+                }else{
+                    Swal.fire({
+                    position: 'bottom', 
+                    icon: 'error',
+                    title: data.msg,
+                    showConfirmButton: false,
+                    timer: 1000,
+                    background: '#000',
+                    color: '#fff',
+                    timerProgressBar: true,
+                    toast:true,
+                    didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+                   })
+                   
+                }
+            })
+
+    }
+
+
+
+    function removeCoupon(){
+        console.log("lllllllllllllllll")
+       console.log(couponCode)
+       fetch("/removeCoupon",{
+                method:'post',
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify()
+            })
+            .then(Response=>Response.json())
+            .then(data=>{
+                if(data.success){
+                   Swal.fire({
+                    position: 'bottom', 
+                    icon: 'success',
+                    title: data.msg,
+                    showConfirmButton: false,
+                    timer: 1000,
+                    background: '#000',
+                    color: '#fff',
+                    timerProgressBar: true,
+                    toast:true,
+                    didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+                   }).then(()=>{
+                    window.location.reload();
+                   })
+                   
+                }else{
+                    Swal.fire({
+                    position: 'bottom', 
+                    icon: 'error',
+                    title: data.msg,
+                    showConfirmButton: false,
+                    timer: 1000,
+                    background: '#000',
+                    color: '#fff',
+                    timerProgressBar: true,
+                    toast:true,
+                    didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+                   })
+                   
+                }
+            })
+
+    }
+
         function checkout(){
             fetch("/checkout",)
             .then(res=>res.json())

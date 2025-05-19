@@ -1,0 +1,840 @@
+<%-include("../../views/partials/user/header")%>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Wallet</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .body-divv {
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: flex-start;
+      padding: 30px;
+    }
+
+    .sidebar-wrapper {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-name {
+      width: 280px;
+      background-color: white;
+      height: 13vh;
+      padding: 13px;
+      margin-bottom: 18px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+    }
+
+    .profile-pic {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #FFD700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+    }
+
+    .profile-pic img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+
+    .user-name {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .user-greeting {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .sidebar {
+      width: 280px;
+      background-color: white;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 14px 8px;
+      margin-bottom: 5px;
+      border-radius: 8px;
+      color: #444;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .menu-item:hover {
+      background-color: #f0f7ff;
+      color: #2874f0;
+    }
+
+    .menu-item.active {
+      background-color: #e6f2ff;
+      color: #2874f0;
+      font-weight: 500;
+    }
+
+    .menu-item i {
+      margin-right: 12px;
+      font-size: 18px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .submenu-item {
+      padding: 10px 0 10px 36px;
+      color: #666;
+      cursor: pointer;
+      font-size: 14px;
+      border-radius: 8px;
+    }
+
+    .submenu-item:hover {
+      background-color: #f0f7ff;
+      color: #2874f0;
+    }
+
+    .submenu-item.active {
+      color: #2874f0;
+      font-weight: 500;
+    }
+
+    a {
+      text-decoration: none;
+    }
+   
+    /* Wallet Specific Styles */
+    .wallet-container {
+      width: 100%;
+      margin-left: 30px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    }
+    
+    .wallet-header {
+      padding: 20px;
+      font-size: 18px;
+      font-weight: 500;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .wallet-balance-card {
+      margin: 20px;
+      background: linear-gradient(135deg, #2874f0, #5a9cff);
+      border-radius: 10px;
+      padding: 25px;
+      color: white;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .balance-title {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-bottom: 5px;
+    }
+    
+    .balance-amount {
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    
+    .balance-info {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+    
+    .wallet-actions {
+      display: flex;
+      gap: 15px;
+      padding: 0 20px 20px;
+    }
+    
+    .wallet-btn {
+      padding: 12px 20px;
+      border-radius: 5px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      flex: 1;
+    }
+    
+    .add-money-btn {
+      background-color: #2ecc71;
+      color: white;
+      border: none;
+    }
+    
+    .add-money-btn:hover {
+      background-color: #27ae60;
+    }
+    
+    .withdraw-btn {
+      background-color: white;
+      color: #2874f0;
+      border: 1px solid #2874f0;
+    }
+    
+    .withdraw-btn:hover {
+      background-color: #f0f7ff;
+    }
+    
+    .wallet-tab-section {
+      padding: 0 20px;
+    }
+    
+    .wallet-tabs {
+      display: flex;
+      border-bottom: 1px solid #f0f0f0;
+      margin-bottom: 20px;
+    }
+    
+    .wallet-tab {
+      padding: 15px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      position: relative;
+    }
+    
+    .wallet-tab.active {
+      color: #2874f0;
+    }
+    
+    .wallet-tab.active:after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background-color: #2874f0;
+    }
+    
+    .transaction-list {
+      margin-bottom: 20px;
+    }
+    
+    .transaction-item {
+      display: flex;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .transaction-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      color: white;
+    }
+    
+    .credit-icon {
+      background-color: #2ecc71;
+    }
+    
+    .debit-icon {
+      background-color: #e74c3c;
+    }
+    
+    .refund-icon {
+      background-color: #f39c12;
+    }
+    
+    .transaction-details {
+      flex: 1;
+    }
+    
+    .transaction-title {
+      font-weight: 500;
+      margin-bottom: 3px;
+    }
+    
+    .transaction-date {
+      font-size: 12px;
+      color: #888;
+    }
+    
+    .transaction-amount {
+      font-weight: 600;
+      font-size: 16px;
+    }
+    
+    .amount-credit {
+      color: #2ecc71;
+    }
+    
+    .amount-debit {
+      color: #e74c3c;
+    }
+    
+    .no-transactions {
+      text-align: center;
+      padding: 40px 0;
+      color: #888;
+    }
+    
+    .no-transactions i {
+      font-size: 48px;
+      margin-bottom: 10px;
+      opacity: 0.5;
+    }
+    
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+      gap: 5px;
+    }
+    
+    .page-btn {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .page-btn.active {
+      background-color: #2874f0;
+      color: white;
+      border-color: #2874f0;
+    }
+    
+    .wallet-footer {
+      padding: 20px;
+      border-top: 1px solid #f0f0f0;
+      font-size: 12px;
+      color: #888;
+    }
+    
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background-color: white;
+      border-radius: 8px;
+      width: 400px;
+      max-width: 90%;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .modal-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-title {
+      font-weight: 500;
+      font-size: 18px;
+    }
+    
+    .close-modal {
+      cursor: pointer;
+      font-size: 20px;
+    }
+    
+    .modal-body {
+      padding: 20px;
+    }
+    
+    .input-group {
+      margin-bottom: 15px;
+    }
+    
+    .input-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      font-size: 14px;
+    }
+    
+    .input-field {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    
+    .amount-presets {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .amount-preset {
+      padding: 8px 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+    
+    .amount-preset:hover, .amount-preset.active {
+      background-color: #f0f7ff;
+      border-color: #2874f0;
+      color: #2874f0;
+    }
+    
+    .modal-footer {
+      padding: 15px 20px;
+      border-top: 1px solid #f0f0f0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    
+    .modal-btn {
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    
+    .cancel-btn {
+      background-color: #f5f5f5;
+      color: #333;
+      border: none;
+    }
+    
+    .proceed-btn {
+      background-color: #2874f0;
+      color: white;
+      border: none;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .body-divv {
+        flex-direction: column;
+        padding: 15px;
+      }
+      
+      .sidebar-wrapper {
+        margin-bottom: 20px;
+      }
+      
+      .sidebar-name, .sidebar {
+        width: 100%;
+      }
+      
+      .wallet-container {
+        margin-left: 0;
+      }
+      
+      .wallet-actions {
+        flex-direction: column;
+      }
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+        font-size: 14px;
+    }
+    
+    .pagination-info {
+        margin-right: 20px;
+    }
+    
+    .pagination-controls {
+        display: flex;
+    }
+    
+    .pagination-button {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #ccc;
+        margin: 0 2px;
+        cursor: pointer;
+    }
+    
+    .pagination-button.active {
+        background-color: #2c3e50;
+        color: white;
+        border-color: #2c3e50;
+    }
+    a{
+      text-decoration: none;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+    <div class="body-divv">
+  <div class="sidebar-wrapper">
+    <div class="sidebar-name">
+      <div class="profile-header">
+        <div class="profile-pic">
+          <img src="/api/placeholder/60/60" alt="User" />
+        </div>
+        <div>
+          <div class="user-greeting">Hello,</div>
+          <div class="user-name">Hakeem M</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <a href="/account/orders">
+        <div class="menu-item">
+          <i class="fas fa-box"></i> MY ORDERS
+        </div>
+      </a>
+
+      <div class="menu-item ">
+        <i class="fas fa-user-cog"></i> ACCOUNT SETTINGS
+      </div>
+
+      <a href="/account"><div class="submenu-item ">Profile Information</div></a>
+      <a href="/account/addresses"><div class="submenu-item ">Manage Addresses</div></a>
+      
+
+      <div class="menu-item ">
+        <i class="fas fa-heart"></i> WISHLIST
+      </div>
+
+      <div class="menu-item active">
+        <i class="fas fa-wallet"></i> WALLET
+      </div>
+
+      <div class="menu-item">
+        <i class="fas fa-star"></i> RATINGS & REVIEWS
+      </div>
+
+      <div class="menu-item">
+        <i class="fas fa-power-off"></i> Logout
+      </div>
+    </div>
+  </div>
+  
+  <!-- Wallet Container (Converted from wishlist) -->
+  <div class="wallet-container">
+    <div class="wallet-header">
+      <div>My Wallet</div>
+      <div>
+        <a href="/wallet">
+        <i class="fas fa-sync-alt" style="cursor: pointer;" title="Refresh"></i>
+    </a>
+      </div>
+    </div>
+    
+    <div class="wallet-balance-card">
+      <div class="balance-title">AVAILABLE BALANCE</div>
+      <div class="balance-amount">₹<%=wallet.balance || 0 %></div>
+      <div class="balance-info">Last updated: <%=new Date().toLocaleString()%></div>
+    </div>
+    
+    <!-- <div class="wallet-actions">
+      <button class="wallet-btn add-money-btn" onclick="openAddMoneyModal()">
+        <i class="fas fa-plus"></i> Add Money
+      </button>
+      <button class="wallet-btn withdraw-btn" onclick="openWithdrawModal()">
+        <i class="fas fa-arrow-right"></i> Withdraw
+      </button>
+    </div> -->
+    
+    <div class="wallet-tab-section">
+      <div class="wallet-tabs">
+        <div class="wallet-tab active" onclick="switchTab('transactions')">Transactions</div>
+        <div class="wallet-tab" onclick="switchTab('pending')">Pending</div>
+      </div>
+      
+      <div id="transactions-tab" class="transaction-list">
+        <% if (wallet.transactions && wallet.transactions.length > 0) { %>
+          <% wallet.transactions.forEach(transaction => { %>
+            <div class="transaction-item">
+              <% if (transaction.type === 'Credit') { %>
+                <div class="transaction-icon credit-icon">
+                  <i class="fas fa-arrow-down"></i>
+                </div>
+              <% } else if (transaction.type === 'Debit') { %>
+                <div class="transaction-icon debit-icon">
+                  <i class="fas fa-arrow-up"></i>
+                </div>
+              <% } else if (transaction.type === 'refund') { %>
+                <div class="transaction-icon refund-icon">
+                  <i class="fas fa-undo"></i>
+                </div>
+              <% } %>
+              
+              <div class="transaction-details">
+                <div class="transaction-title"><%= transaction.description %></div>
+                <div class="transaction-date"><%= transaction.date %></div>
+              </div>
+              
+              <div class="transaction-amount <%= transaction.type === 'Credit' || transaction.type === 'refund' ? 'amount-credit' : 'amount-debit' %>">
+                <%= transaction.type === 'Credit' || transaction.type === 'Debit' ? '+' : '-' %>₹<%= transaction.amount %>
+              </div>
+            </div>
+          <% }); %>
+        <% } else { %>
+          <div class="no-transactions">
+            <i class="fas fa-exchange-alt"></i>
+            <div>No transactions yet</div>
+          </div>
+        <% } %>
+      </div>
+      
+      <div id="pending-tab" class="transaction-list" style="display: none;">
+        <div class="no-transactions">
+          <i class="fas fa-hourglass-half"></i>
+          <div>No pending transactions</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- --------------pagination--------- -->
+
+
+    <div class="pagination">
+        <div class="pagination-info"><%=startItem%>- <%=endItem%>of <%=totalTransaction%></div>
+        <div class="pagination-controls">
+            <div class="pagination-button">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 18l-6-6 6-6" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <%for(let i=1;i<=totalPages;i++){%>
+                <%if(i==currentPage){%>
+                <a class="page" href="/wallet?page=<%=i%>"><div class="pagination-button active"><%=i%></div></a>
+                        <%} else {%>
+                <a class="page" href="/wallet?page=<%=i%>"><div class="pagination-button "><%=i%></div></a>
+            <%}}%>
+            <div class="pagination-button">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 18l6-6-6-6" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="wallet-footer">
+      * Wallet money can be used for purchases on our platform. For any queries related to your wallet, please contact our support.
+    </div>
+  </div>
+</div>
+
+<!-- Add Money Modal -->
+<div id="add-money-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Add Money to Wallet</div>
+      <div class="close-modal" onclick="closeModal('add-money-modal')">&times;</div>
+    </div>
+    <div class="modal-body">
+      <div class="input-group">
+        <label class="input-label">Enter Amount (₹)</label>
+        <input type="number" class="input-field" id="add-amount" placeholder="Enter amount" min="1">
+      </div>
+      <div class="amount-presets">
+        <div class="amount-preset" onclick="setAmount(100)">₹100</div>
+        <div class="amount-preset" onclick="setAmount(500)">₹500</div>
+        <div class="amount-preset" onclick="setAmount(1000)">₹1000</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn cancel-btn" onclick="closeModal('add-money-modal')">Cancel</button>
+      <button class="modal-btn proceed-btn" onclick="addMoney()">Proceed</button>
+    </div>
+  </div>
+</div>
+
+<!-- Withdraw Money Modal -->
+<div id="withdraw-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Withdraw Money</div>
+      <div class="close-modal" onclick="closeModal('withdraw-modal')">&times;</div>
+    </div>
+    <div class="modal-body">
+      <div class="input-group">
+        <label class="input-label">Enter Amount (₹)</label>
+        <input type="number" class="input-field" id="withdraw-amount" placeholder="Enter amount" min="1">
+      </div>
+      <div class="input-group">
+        <label class="input-label">Select Bank Account</label>
+        <select class="input-field" id="bank-account">
+          <option value="" disabled selected>Select bank account</option>
+          <option value="account1">HDFC Bank - XXXX1234</option>
+          <option value="account2">SBI - XXXX5678</option>
+          <option value="add-new">+ Add new bank account</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn cancel-btn" onclick="closeModal('withdraw-modal')">Cancel</button>
+      <button class="modal-btn proceed-btn" onclick="withdrawMoney()">Proceed</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Function to switch between transaction tabs
+  function switchTab(tabName) {
+    const tabs = document.querySelectorAll('.wallet-tab');
+    const transactionsTab = document.getElementById('transactions-tab');
+    const pendingTab = document.getElementById('pending-tab');
+    
+    tabs.forEach(tab => tab.classList.remove('active'));
+    
+    if (tabName === 'transactions') {
+      event.currentTarget.classList.add('active');
+      transactionsTab.style.display = 'block';
+      pendingTab.style.display = 'none';
+    } else {
+      event.currentTarget.classList.add('active');
+      transactionsTab.style.display = 'none';
+      pendingTab.style.display = 'block';
+    }
+  }
+  
+  // Function to open add money modal
+  function openAddMoneyModal() {
+    document.getElementById('add-money-modal').style.display = 'flex';
+  }
+  
+  // Function to open withdraw modal
+  function openWithdrawModal() {
+    document.getElementById('withdraw-modal').style.display = 'flex';
+  }
+  
+  // Function to close modals
+  function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+  }
+  
+  // Function to set preset amount
+  function setAmount(amount) {
+    document.getElementById('add-amount').value = amount;
+    
+    // Reset all preset buttons
+    document.querySelectorAll('.amount-preset').forEach(btn => {
+      btn.classList.remove('active');
+    });
+    
+    // Highlight the selected preset
+    event.currentTarget.classList.add('active');
+  }
+  
+  // Function to process add money
+  function addMoney() {
+    const amount = document.getElementById('add-amount').value;
+    
+    if (!amount || amount <= 0) {
+      alert('Please enter a valid amount');
+      return;
+    }
+    
+    // Here you would typically make an API call to add money
+    // For now, we'll just close the modal and show an alert
+    alert(`Processing payment of ₹${amount}...`);
+    closeModal('add-money-modal');
+    
+    // Redirect to payment gateway (you would implement this)
+    // window.location.href = `/payment/add-wallet/${amount}`;
+  }
+  
+  // Function to process withdrawal
+  function withdrawMoney() {
+    const amount = document.getElementById('withdraw-amount').value;
+    const bankAccount = document.getElementById('bank-account').value;
+    
+    if (!amount || amount <= 0) {
+      alert('Please enter a valid amount');
+      return;
+    }
+    
+    if (!bankAccount) {
+      alert('Please select a bank account');
+      return;
+    }
+    
+    if (bankAccount === 'add-new') {
+      // Redirect to add bank account page
+      // window.location.href = '/account/add-bank';
+      alert('Redirecting to add bank account page...');
+      return;
+    }
+    
+    // Here you would typically make an API call to withdraw money
+    // For now, we'll just close the modal and show an alert
+    alert(`Processing withdrawal of ₹${amount}...`);
+    closeModal('withdraw-modal');
+  }
+  
+  // Close modals when clicking outside
+  window.onclick = function(event) {
+    const addMoneyModal = document.getElementById('add-money-modal');
+    const withdrawModal = document.getElementById('withdraw-modal');
+    
+    if (event.target === addMoneyModal) {
+      addMoneyModal.style.display = 'none';
+    }
+    
+    if (event.target === withdrawModal) {
+      withdrawModal.style.display = 'none';
+    }
+  }
+</script>
+<%-include("../../views/partials/user/footer")%>

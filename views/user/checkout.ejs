@@ -541,6 +541,8 @@
 
         
         </style>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -630,7 +632,7 @@
                     <div class="section-header">
                         <div class="section-title">PAYMENT OPTIONS</div>
                     </div>
-                    
+                    <a onclick="paymentOption()" >
                     <div class="payment-options">
                         <div class="payment-option selected">
                             <input type="radio" name="payment" class="payment-radio" checked>
@@ -640,8 +642,9 @@
                                 <div class="payment-description">Pay when your order is delivered</div>
                             </div>
                         </div>
-                        
-                        <!-- <div class="payment-option">
+                    </a>
+                        <a  onclick="paymentOption1()">
+                         <div  class="payment-option">
                             <input type="radio" name="payment" class="payment-radio">
                             <div class="payment-icon">💳</div>
                             <div class="payment-details">
@@ -649,15 +652,17 @@
                                 <div class="payment-description">Pay securely with Razorpay</div>
                             </div>
                         </div>
-                        
-                        <div class="payment-option">
+                    </a>
+                    <a  onclick="paymentOption2()">
+                       <div class="payment-option">
                             <input type="radio" name="payment" class="payment-radio">
                             <div class="payment-icon">👛</div>
                             <div class="payment-details">
                                 <div class="payment-title">Wallet</div>
                                 <div class="payment-description">Pay using your digital wallet</div>
                             </div>
-                        </div> -->
+                        </div>
+                            </a>
                     </div>
                 </div>
             </div>
@@ -676,16 +681,17 @@
                         <div>₹<%=totalAmount%></div>
                     </div>
                     <div class="price-row">
-                        <div>Delivery Charges</div>
-                        <div style="color: #388e3c;">FREE</div>
+                        <div>Discount</div>
+                        <div>₹<%=totalDiscount%></div>
                     </div>
                     <div class="price-row">
-                        <div>Discount</div>
-                        <div>₹0</div>
+                        <div>Coupon Discount</div>
+                        <div style="color: #388e3c;"><%=couponDiscount%></div>
                     </div>
+                    
                     <div class="price-row total-row">
                         <div>Amount Payable</div>
-                        <div>₹<%=totalAmount%></div>
+                        <div>₹<%=totalAmount-totalDiscount-couponDiscount%></div>
                     </div>
                     <input type="hidden" name="addressId" id="selectedAddressId">
                     <input type="hidden" name="paymentOption" id="selectedPaymentOption" value="cashOnDelivery">
@@ -835,7 +841,6 @@
             </div>
         </div>
     </div>
-
     <script>
         // Show address list when Change button is clicked
         document.getElementById('address-change-btn').addEventListener('click', function() {
@@ -1164,33 +1169,139 @@
             })
            }).then(response=> response.json())
            .then(data=>{
-            if(data.success){
-                Swal.fire({
-                    position: 'bottom',
-                    icon: 'success',
-                    title: data.msg,
-                    showConfirmButton: false,
-                    timer: 1500,
-                    background: '#000',
-                    color: '#fff',
-                    timerProgressBar: true,
-                    toast: true
-                        })
-                      window.location.href=data.redirectUrl  
-            }else{
-                Swal.fire({
-                    position: 'bottom',
-                    icon: 'error',
-                    title: data.msg,
-                    showConfirmButton: false,
-                    timer: 1500,
-                    background: '#000',
-                    color: '#fff',
-                    timerProgressBar: true,
-                    toast: true
-                        })
-            }
-           })
+            console.log(data)
+            
+            if (!data.success) {
+                    Swal.fire({
+                        position: 'bottom',
+                        icon: 'error',
+                        title: data.msg,
+                        showConfirmButton: false,
+                        timer: 1500,
+                        background: '#000',
+                        color: '#fff',
+                        toast: true
+                    });
+                    return;
+                }
+
+                if (selectedPaymentOption === 'razorpay') {
+                    console.log(data)
+                    const options = {
+                        key: data.razorpayOrder.key,
+                        amount: data.razorpayOrder.amount,
+                        currency: data.razorpayOrder.currency,
+                        order_id: data.razorpayOrder.id,
+                        name: 'Nutify',
+                        description: 'Order Payment',
+                        handler: function(response) {
+                            // Verify payment
+                            fetch('/verifyPayment', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_order_id: response.razorpay_order_id,
+                                    razorpay_signature: response.razorpay_signature,
+                                    orderDetails: data.orderDetails
+                                })
+                            })
+                            .then(res => res.json())
+                            .then(verifyData => {
+                                if (verifyData.success) {
+                                    Swal.fire({
+                                        position: 'bottom',
+                                        icon: 'success',
+                                        title: verifyData.msg,
+                                        showConfirmButton: false,
+                                        timer: 1500,
+                                        background: '#000',
+                                        color: '#fff',
+                                        toast: true
+                                    }).then(() => {
+                                        window.location.href = verifyData.redirectUrl;
+                                    });
+                                } else {
+                                    console.log("thissssssssssssss")
+                                    Swal.fire({
+                                        position: 'bottom',
+                                        icon: 'error',
+                                        title: verifyData.msg,
+                                        showConfirmButton: false,
+                                        timer: 1500,
+                                        background: '#000',
+                                        color: '#fff',
+                                        toast: true
+                                    }).then(()=>{
+                                        window.location.href="/orderFailed"
+                                    })
+                                }
+                            });
+                        },
+                        prefill: {
+                            name: '<%= address.address[0].name %>',
+                            contact: '<%= address.address[0].phone %>'
+                        },
+                        theme: {
+                            color: '#2874f0'
+                        }
+                    };
+
+                    const rzp = new Razorpay(options);
+                    rzp.open();
+                    
+rzp.on('payment.failed', function (response) {
+    console.log("Razorpay payment failed:", response.error);
+
+    fetch('/payment-failed', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderDetails: data.orderDetails })
+    })
+    .then(res=>res.json())
+    .then((data)=>{
+        if(data.success){
+           
+        window.location.href = "/orderFailed";
+    
+        }
+    })
+    
+});
+                } else {
+                    Swal.fire({
+                        position: 'bottom',
+                        icon: 'success',
+                        title: data.msg,
+                        showConfirmButton: false,
+                        timer: 1500,
+                        background: '#000',
+                        color: '#fff',
+                        toast: true
+                    }).then(() => {
+                        window.location.href = data.redirectUrl;
+                    });
+                }
+            })
+        }
+
+        function paymentOption(){
+            
+            document.getElementById("selectedPaymentOption").value='cashOnDelivery'
+
+           
+        }
+
+        function paymentOption1(){
+            
+            document.getElementById("selectedPaymentOption").value='razorpay'
+            
+        }
+        function paymentOption2(){
+            document.getElementById("selectedPaymentOption").value='wallet'
+
         }
     </script>
 </body>

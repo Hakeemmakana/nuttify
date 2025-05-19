@@ -34,3 +34,21 @@ module.exports = {
   userAuth,
   adminAuth,
 };
+
+
+
+
+// const userAuth = (req, res, next) => {
+//   req.session.user = "test-user-id";
+//   next();
+// };
+
+// const adminAuth = (req, res, next) => {
+//   req.session.admin = "test-admin-id";
+//   next();
+// };
+
+// module.exports = {
+//   userAuth,
+//   adminAuth,
+// };

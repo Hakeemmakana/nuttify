@@ -25,6 +25,7 @@ try {
     .sort({_id:-1})
     .skip(skip)
     .limit(limit)
+    .populate("category")
     .exec()
 
     const count =await Product.countDocuments({

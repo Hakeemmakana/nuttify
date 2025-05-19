@@ -1,6 +1,7 @@
 const User =require("../../models/userSchema")
 const Order =require("../../models/orderSchema")
 const Product=require("../../models/productSchema")
+const Wallet=require("../../models/walletSchema")
 
 const loadProfile=async (req,res)=>{
     try {
@@ -48,12 +49,46 @@ const changePassword=async(req,res)=>{
 
 }
 
+const loadWallet=async (req,res)=>{
+    try {
+        let page =1
+        if(req.query.page){
+            page=parseInt(req.query.page)
+        }
+        const limit=8
+        const skip=(page-1)*limit
 
+        const wallet=await Wallet.findOne(
+            {userId:req.user._id},
+            {transactions:{$slice:[skip,limit]}}
+        )
+        
+        const wallets=await Wallet.findOne({userId:req.user._id})
+        const count =wallets.transactions.length
+        // console.log(wallet)
+        const totalTransaction=count
+        const totalPages=Math.ceil(count/limit)
+        const startItem=skip+1
+        const endItem=Math.min(skip+limit,count)
+
+        res.render("wallet",{
+            wallet,
+            currentPage:page,
+            totalTransaction,
+            totalPages,
+            startItem,
+            endItem
+        })
+    } catch (error) {
+        console.log("error in wallet",error)
+    }
+}
 
 
 module.exports={
     loadProfile,
     editName,
-    changePassword
+    changePassword,
+    loadWallet
     
 }

@@ -265,6 +265,30 @@
       text-decoration: none;
       color: black;
     }
+
+    .retry-payment-btn {
+            padding: 9px 12px;
+            background-color: #ff6200; /* Orange color matching the "Place Order" button */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        .retry-payment-btn:hover {
+            background-color: #e55a00; /* Slightly darker orange on hover */
+            transform: scale(1.05); /* Subtle zoom effect */
+        }
+
+        .retry-payment-btn:active {
+            transform: scale(0.95); /* Slight shrink on click */
+        }
+
+        .status-container {
+            margin-top: 17px;
+            }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -383,13 +407,18 @@
                         </div>
                         
                         <div class="order-status">
-                            <div class="status-indicator <%= item.status === 'Order Not Placed' ? 'not-placed' : 
-                                                             item.status === 'Delivered' ? 'delivered' : 'processing' %>">
+                            <div class="status-indicator <%= item.status === 'Order Not Placed' ? 'not-placed' :    
+                                                             item.status === 'Deliverd' ? 'delivered' : 'processing' %>">
                                 <div class="dot"></div>
                                 <%= item.status %>
                             </div>
                             <div class="status-text">
                                 <%= item.paymentMetherd %>
+                            </div>
+                            <div class="status-container">
+                                <% if(item.status == 'paymentFailed') { %>
+                                    <button class="retry-payment-btn">Retry Payment</button>
+                                <% } %>
                             </div>
                         </div>
                     </div>

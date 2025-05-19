@@ -83,7 +83,7 @@
         .main-content {
             flex: 1;
             padding: 20px;
-            margin-left: ;
+            
             background-color: #f8f9fa;
         }
         
@@ -635,9 +635,7 @@
  border-radius: 5px;
 }
 
-.reason{
-    margin: ;
-}
+
 
 
     </style>
@@ -746,7 +744,6 @@
                                 <option value="Processing" <%= order.status === 'Processing' ? 'selected' : '' %>>Processing</option>
                                 <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
                                 <option value="Deliverd" <%= order.status === 'Deliverd'  ? 'selected ' : '' %>>Delivered</option>
-                                <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected ' : '' %>>Cancelled</option>
                                 
                               </select>
                               <%}%>
@@ -811,13 +808,14 @@
                                 <td><%=item.productId.varient%></td>
                                 <td><%=item.quantity%></td>
                                 <td>
-                                    <select class="msgSelect" name="status" id="orderProductStatusSelect">
-                                        <option value="Processing" <%= order.status === 'Processing' ? 'selected' : '' %>>Processing</option>
-                                        <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
-                                        <option value="Deliverd" <%= order.status === 'Deliverd' ? 'selected' : '' %>>Delivered</option>
-                                        <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
-                                        
-                                      </select>
+                                   <%if(item.status=='Returned'||item.status=='Cancelled'){%>
+                                <p><span class="status-badge status-processing"><%=item.status%></span></p>
+                                
+                                <%} else if(item.status=='Return-requested'){%>
+                                   <span class="status-badge status-processing"><%=item.status%></span>
+                                    <span onclick="approveProcutReturn('<%= order._id %>', '<%= item.productId._id %>')" class="status-badge status-processing">Approove</span>
+
+                                    <%}%>
                                 </td>
                             </tr>
                             <%})%>
@@ -829,44 +827,7 @@
                 </div>
             </div>
             
-            <div class="card">
-                <div class="toggle-section">
-                    <h3>Returned Items</h3>
-                    
-                </div>
-                <div class="section-content">
-                    <div class="returned-items">
-                        <div class="returned-item">
-                            <img src="/api/placeholder/40/40" alt="Dates" class="product-image">
-                            <div class="returned-details">
-                                <div class="returned-product">Dates</div>
-                                <div class="returned-info">
-                                    <span>Return Date: 25-02-2025</span>
-                                    <span>Quantity: 1 (500 G)</span>
-                                    <span>Amount: ₹450.00</span>
-                                    <span>Reason: Product damaged during shipping</span>
-                                </div>
-                            </div>
-                            <span class="returned-status approved">Approved</span>
-                        </div>
-                        
-                        <div class="returned-item">
-                            <img src="/api/placeholder/40/40" alt="Mango Dry" class="product-image">
-                            <div class="returned-details">
-                                <div class="returned-product">Mango Dry</div>
-                                <div class="returned-info">
-                                    <span>Return Date: 25-02-2025</span>
-                                    <span>Quantity: 1 (1 KG)</span>
-                                    <span>Amount: ₹700.00</span>
-                                    <span>Reason: Wrong item received</span>
-                                </div>
-                            </div>
-                            <span class="returned-status pending">Pending</span>
-                        </div>
-                    </div>
-                    
-                </div>
-            </div>
+           
             
             
         </div>
@@ -979,5 +940,71 @@
             })
        }
 
+
+
+       function approveProcutReturn (orderId,productId){
+        console.log(orderId,productId)
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to approve return this product?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, approve it!',
+            cancelButtonText: 'No',
+            reverseButtons: true
+             }).then((result) => {
+            if (result.isConfirmed) {
+        fetch('/admin/ProductReturn', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        orderId,
+                        productId
+                    })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    console.log(result)
+                    if (result.success) {
+                        Swal.fire({
+                            position: 'bottom',
+                            icon: 'success',
+                            title: result.msg,
+                            showConfirmButton: false,
+                            timer: 1500,
+                            background: '#000',
+                            color: '#fff',
+                            timerProgressBar: true,
+                            toast: true
+                        }).then(() => {
+                                window.location.reload();
+                                });
+                    } else {
+                        Swal.fire({
+                            position: 'bottom',
+                            icon: 'error',
+                            title: result.msg || 'Failed to edit address',
+                            showConfirmButton: false,
+                            timer: 1500,
+                            background: '#000',
+                            color: '#fff',
+                            toast: true
+                        });
+                    }
+                }).catch(error => {
+                console.log('Fetch error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Network Error',
+                    text: 'Something went wrong. Please try again.',
+                    background: '#000',
+                    color: '#fff',
+                    toast: true
+                });
+            });
+
+            }
+            })
+       }
         </script>
        
