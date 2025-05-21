@@ -6,6 +6,7 @@ const session=require("express-session")
 const passport=require("./config/passport")
 const env =require ("dotenv").config();
 const Razorpay=require("razorpay")
+const MongoStore=require("connect-mongo")
 const db= require ("./config/db")
 const userRouter=require("./routes/userRouter")
 const adminRouter=require("./routes/adminRouter")
@@ -17,6 +18,10 @@ app.use(session({
     secret:process.env.SESSION_SECRET,
     resave:false,
     saveUninitialized:true,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGODB_URI, 
+        ttl: 48 * 60 * 60 
+      }),
     cookie:{
         secure:false,
         maxAge:48*60*60*1000

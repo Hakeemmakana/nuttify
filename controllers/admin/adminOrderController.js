@@ -128,7 +128,7 @@ const returnedOrder=async (req,res)=>{
                 refundAmount+=(item.totalPrice-item.totalDiscount)
             const product=await Product.findById(item.productId)
             if(product){
-                product.stock+=item.quantity
+                product.stock+=item.quantity 
                 await product.save()
             }
         }

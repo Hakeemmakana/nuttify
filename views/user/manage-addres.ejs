@@ -494,6 +494,7 @@
       </div>
 
       <!-- Address Cards and Edit Forms -->
+       <%if(address){%>
       <% address.address.forEach(data => { %>
       <div class="address-card">
         <div class="address-type"><%= data.addressType %></div>
@@ -511,6 +512,7 @@
           </div>
         </div>
       </div>
+    
 
       <!-- Edit Address Form -->
       <div class="edit-address-form" id="editAddressForm_<%= data._id %>">
@@ -576,7 +578,7 @@
           </div>
         </form>
       </div>
-      <% }) %>
+      <% }) }%>
     </div>
   </div>
 
@@ -650,7 +652,7 @@
                   toast.addEventListener('mouseleave', Swal.resumeTimer);
                 }
               }).then(() => {
-                window.location.reload();
+                window.location.href=result.redirectUrl
               });
             } else {
               Swal.fire({

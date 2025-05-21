@@ -601,9 +601,10 @@ const filterProduct = async (req, res) => {
 
 const productDetails= async (req,res)=>{
     try {
-
-        const user=req.user
-        console.log(user)
+        // console.log('usergoogle',req.user)
+        // console.log('userNormal',req.session.user)
+        const user=req.session.user
+        // console.log(user)
         const userName=user.name
         const id= req.query.id
      
@@ -637,19 +638,19 @@ const productDetails= async (req,res)=>{
             );
         });
         let discountAmount=0
-        console.log("offereeees:",offers)
+        // console.log("offereeees:",offers)
         const bestOffer = getBestOffer(offers, product);
         if(bestOffer){
             discountAmount=(product.regularPrice*bestOffer.discountValue)/100
         }
-        console.log("discountAmount",discountAmount)
+        // console.log("discountAmount",discountAmount)
 const afterDiscountAmount=product.regularPrice-discountAmount
 
-console.log("{{{{{{{{{{{{{{{{{{{{{{")        
-console.log("discountamount: ",discountAmount)        
-console.log(bestOffer)        
+// console.log("{{{{{{{{{{{{{{{{{{{{{{")        
+// console.log("discountamount: ",discountAmount)        
+// console.log(bestOffer)        
 
-    console.log(relatedProducts)
+    // console.log(relatedProducts)
     res.render("productDetail",{
         product:product,
         userName:userName,
@@ -675,7 +676,7 @@ function getBestOffer(applicableOffers, product) {
     const price = product.price || product.regularPrice || 0;
   
     if (price <= 0) {
-      console.log(`Invalid price for product: ${product.productName}`);
+    //   console.log(`Invalid price for product: ${product.productName}`);
       return null;
     }
   

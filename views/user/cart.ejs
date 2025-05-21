@@ -186,6 +186,12 @@
             text-align: center;
             margin: 15px 0;
         }
+        .savings-message1 {
+            color: #00a650;
+            font-size: 14px;
+            text-align: center;
+            margin: 15px 0;
+        }
         
         .place-order-btn {
             width: 100%;
@@ -386,6 +392,8 @@
             </div>
             
             <p class="savings-message">You will save ₹<%=totalDiscount+couponDiscount%> on this order</p>
+            <a  class="savings-message1" href="/showCoupons"> Show Available coupon</a>
+
             <div class="place-coupon-btn">
                 <%if(couponDiscount>0){%>
                     <input id="couponCode" value="<%=couponCode%>"  style="width: 90%;"  type="text" placeholder="Enter coupon code" disabled>
@@ -408,6 +416,10 @@
             </div>
         </div>
     </div>
+
+
+
+    
 
     <script>
 

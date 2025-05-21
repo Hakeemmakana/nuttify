@@ -8,8 +8,8 @@ const Coupon=require("../../models/coupenSchema")
 
 const loadCart=async(req,res)=>{
     try {
-        console.log(req.user._id.toString())
-        const cart=await Cart.findOne({userId:req.user._id}).populate("items.productId")
+        console.log(req.session.user._id.toString())
+        const cart=await Cart.findOne({userId:req.session.user._id}).populate("items.productId")
         .populate({
             path: 'items.productId',
             populate: {
@@ -90,7 +90,7 @@ const loadCart=async(req,res)=>{
 }
 
 const addToCart = async (req,res)=>{
-    const userId=req.user._id
+    const userId=req.session.user._id
 try {
     const {productId,quantity}=req.body
   console.log(req.body)
@@ -191,7 +191,7 @@ const removeFromCart=async (req,res)=>{
     const {productId}=req.body
     try {
         
-        const cart= await Cart.findOne({userId:req.user._id}) 
+        const cart= await Cart.findOne({userId:req.session.user._id}) 
         if(!cart){
             return res.json({
                 sucsses:false,msg:"cart dosent exisist"
@@ -231,7 +231,7 @@ const removeCart =async (req,res)=>{
 
 
     try {
-        const findUser = await User.findOne({ _id: req.user._id });
+        const findUser = await User.findOne({ _id: req.session.user._id});
     if (!findUser) {
         return res.json({
             redirect: '/login',
@@ -239,7 +239,7 @@ const removeCart =async (req,res)=>{
         });
     }
 
-    let cart = await Cart.findOne({ userId:req.user._id });
+    let cart = await Cart.findOne({ userId:req.session.user._id });
     if (!cart) {
         return res.json({
             redirect: '/cart',
@@ -281,6 +281,68 @@ const applyCoupon=async (req,res)=>{
             msg:"coupon not available"
         })
       }
+      const cart=await Cart.findOne({userId:req.session.user._id}).populate("items.productId")
+        .populate({
+            path: 'items.productId',
+            populate: {
+              path: 'category'  // this populates productId.category
+            }
+          })
+          let subTotal=0
+          cart.items.forEach(item=>{
+              subTotal+=item.totalPrice
+          })
+
+      cart.items.forEach(item => {
+        console.log("Product:", item.productId?.productName);
+        console.log("Category:", item.productId?.category?.name);
+      });
+    const product=cart.items
+    const currentDate=new Date()
+            const allOffers=await Offer.find({
+                status:'Active',
+                startDate:{$lt:currentDate},
+                endDate:{$gte:currentDate}
+            })
+            console.log("alllofferssss :",allOffers)
+
+            const result=cart.items.map((item)=>{
+                console.log("itme--",item.productId.category._id)
+                console.log("itmiiiiie--",allOffers[0]._id)
+            const offers = allOffers.filter(offer => {
+                const targetId = offer.targetId?.toString();
+                const productId = item.productId._id.toString();
+                const categoryId = item.productId.category._id.toString(); // assuming populated or included
+            
+                return (
+                    (offer.offerType === 'product' && targetId === productId) ||
+                    (offer.offerType === 'category' && targetId === categoryId)
+                );
+            });
+            console.log("offerssss :",offers)
+            const bestOffer = getBestOffer(offers, item);
+            return{
+                product:item,
+                bestOffer
+            }
+        })
+    const totalDiscountBF=result.reduce((sum,item)=>{
+        const {bestOffer,product}=item
+        let discount=0
+        if(bestOffer&&bestOffer.discountValue>0){
+            discount=(product.totalPrice*bestOffer.discountValue)/100
+        }
+        return sum+discount
+    },0)
+        const totalDiscount=Math.floor(totalDiscountBF)
+       
+        if(coupon.minPurchase>(subTotal-totalDiscount)){
+            return res.json({
+                sucess:false,
+                msg:'minimum purchase not reached'
+            })
+        }
+
 
       req.session.appliedCoupon=coupon.discountValue
       req.session.appliedCouponName=coupon.couponCode
@@ -305,6 +367,19 @@ const removeCoupon= async(req,res)=>{
     } catch (error) {
         console.log("error i  remove coupon",error)
     }
+}
+const showCoupons=async(req,res)=>{
+try {
+    const coupon=await Coupon.find({status:'Active'})
+
+    res.render('showCoupons',{
+        coupon
+})
+    console.log("lllllllllllll",coupon)
+} catch (error) {
+    console.log("error in show coupon",error)
+}
+
 }
 
 function getBestOffer(applicableOffers, product) {
@@ -338,5 +413,6 @@ module.exports={
     removeFromCart,
     removeCart,
     applyCoupon,
-    removeCoupon
+    removeCoupon,
+    showCoupons
 }

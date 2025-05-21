@@ -22,9 +22,9 @@ const loadOrders=async(req,res)=>{
         const page =parseInt(req.query.page)||1
         const limit =10
         const skip=(page-1)*limit
-    //    console.log("userin ord", req.user._id)
+    //    console.log("userin ord", req.session.user._id)
         const order=await Order.find({
-            userId:req.user._id,
+            userId:req.session.user._id,
             $or: [
                 { orderId: { $regex: search, $options: "i" } },
             ]
@@ -44,7 +44,9 @@ const loadOrders=async(req,res)=>{
         }
         // console.log("order",order)
 
-        const count=await Order.find({$or: [
+        const count=await Order.find(
+            {userId:req.session._id},
+            {$or: [
             { orderId: { $regex: search, $options: "i" } },
                 ]}).countDocuments()
                 const totalCategories=count
@@ -88,7 +90,7 @@ const cancelOrder=async (req,res)=>{
     console.log("lllllllllllll")
     console.log(req.body)
 
-    const userId=req.user._id
+    const userId=req.session.user._id
 
     const {status,orderId,reason}=req.body
     try {
@@ -215,7 +217,7 @@ const returnRequestOrder=async (req,res)=>{
 
 const cancelProduct=async(req,res)=>{
     console.log("cancell product",req.body)
-    const userId=req.user._id
+    const userId=req.session.user._id
     const {status,orderId,reason,productId}=req.body
     try {
         const order= await Order.findById(orderId)
@@ -413,8 +415,8 @@ const downloadInvoice = async (req, res) => {
         return res.status(404).json({ success: false, message: 'Order not found' });
       }
       
-      // Check if user has permission to access this invoice (assuming req.user._id is available from auth middleware)
-      if (req.user && order.userId && order.userId._id.toString() !== req.user._id.toString()) {
+      // Check if user has permission to access this invoice (assuming req.session.user._id is available from auth middleware)
+      if (req.user && order.userId && order.userId._id.toString() !== req.session.user._id.toString()) {
         return res.status(403).json({ success: false, message: 'Access denied' });
       }
       

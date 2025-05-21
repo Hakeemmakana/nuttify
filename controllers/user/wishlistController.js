@@ -5,7 +5,7 @@ const Product=require("../../models/productSchema")
 
 const loadWishlist=async(req,res)=>{
     try {
-        const userId=req.user._id
+        const userId=req.session.user._id
         const wishlist=await Wishlist.findOne({userId})
         .populate("products.productId")
         .lean()
@@ -32,7 +32,7 @@ console.log(Wishlist.products)
 
 // const addWishlist=async(req,res)=>{
 //     try {
-//         const userId=req.user._id
+//         const userId=req.session.user._id
 //     const {productId}=req.body
 
 //     const product=await Product.findById(productId)
@@ -66,7 +66,7 @@ console.log(Wishlist.products)
 // }
 const addWishlist=async(req,res)=>{
     console.log("dddddddddd")
-    const findUser=await User.findOne({_id:req.user._id})
+    const findUser=await User.findOne({_id:req.session.user._id})
    try {
     if(!findUser){
         return res.json({
@@ -75,10 +75,10 @@ const addWishlist=async(req,res)=>{
           });
     }
     const {productId,currentPageUrl}=req.body
-    let wishlist=await Wishlist.findOne({userId:req.user._id}).populate("products.productId")
+    let wishlist=await Wishlist.findOne({userId:req.session.user._id}).populate("products.productId")
 
     if(!wishlist){
-        wishlist=new Wishlist({userId:req.user._id,product:[]})
+        wishlist=new Wishlist({userId:req.session.user._id,product:[]})
     }
     const product =await Product.findById({_id:productId})
     if(!product){
@@ -145,7 +145,7 @@ const removeFromWishlist=async (req,res)=>{
                 msg:"product is not available"
             })
         }
-const userId=req.user._id
+const userId=req.session.user._id
         await Wishlist.findOneAndUpdate(
             {userId},
             {$pull:{products:{productId}}}

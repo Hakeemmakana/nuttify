@@ -8,7 +8,7 @@ const addAddress=async(req,res)=>{
     const phoneRegex = /^[6-9]\d{9}$/;
     const pincodeRegex = /^\d{6}$/;
     try {
-    const findUser=await User.findOne({_id:req.user._id})
+    const findUser=await User.findOne({_id:req.session.user._id})
 
         if(!findUser){
             return res.json({
@@ -60,10 +60,10 @@ const addAddress=async(req,res)=>{
             state,
             postOffice:post
         }
-        const addressAlready=await Address.findOne({userId:req.user._id})
+        let addressAlready=await Address.findOne({userId:req.session.user._id})
 
         if(!addressAlready){
-            addressAlready=new Address({userId:req.user._id,address:[newAddress]})
+            addressAlready=new Address({userId:req.session.user._id,address:[newAddress]})
         }else{
             addressAlready.address.push(newAddress)
         }
@@ -71,7 +71,15 @@ const addAddress=async(req,res)=>{
         
         
         await addressAlready.save()
-        return res.json({ success: true, msg: "Address added successfully" })
+        if(req.session.addressCreate){
+            req.session.addressCreate=null
+            return res.json({ success: true, msg: "Address added successfully" ,
+                redirectUrl:'/checkout'
+            })
+        }
+        return res.json({ success: true, msg: "Address added successfully",
+             redirectUrl:'/account/addresses'
+         })
 
     } catch (error) {
 console.log("error in add address field",error)
@@ -83,9 +91,9 @@ console.log("error in add address field",error)
 }
 const loadAddress= async (req,res)=>{
     try {
-        const address= await Address.findOne({userId:req.user._id})
+        const address= await Address.findOne({userId:req.session.user._id})
 console.log(address)
-const user=await User.findOne({_id:req.user.id})
+const user=await User.findOne({_id:req.session.user._id})
         res.render("manage-addres",{
             address,
             user
@@ -143,7 +151,7 @@ const editAddress=async (req,res)=>{
         }
 
         const updateAddress= await Address.findOneAndUpdate(
-            {userId:req.user._id,'address._id':id},
+            {userId:req.session.user._id,'address._id':id},
             {
                 $set:{
                     "address.$.name":name,
@@ -176,7 +184,7 @@ const editAddress=async (req,res)=>{
 }
 const deleteAddress=async (req,res)=>{
     const {id}=req.body
-    console.log(req.user._id,id)
+    console.log(req.session.user._id,id)
 
     if(!req.session.user){
         return res.json({
@@ -185,7 +193,7 @@ const deleteAddress=async (req,res)=>{
         })
     }
     const deleteAddress= await Address.findOneAndUpdate(
-        {userId:req.user._id},
+        {userId:req.session.user._id},
         {
             $pull:{
                 address:{_id:id}

@@ -53,6 +53,7 @@ router.post("/removeFromCart",userAuth,cartController.removeFromCart)
 router.post("/removeCart",userAuth,cartController.removeCart)
 router.post("/applyCoupon",userAuth,cartController.applyCoupon)
 router.post("/removeCoupon",userAuth,cartController.removeCoupon)
+router.get("/showCoupons",userAuth,cartController.showCoupons)
 
 
 // ----------------Address----------

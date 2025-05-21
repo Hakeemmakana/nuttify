@@ -25,7 +25,7 @@ const editName=async(req,res)=>{
     try {
         const {id,name}=req.body
         const findus=await User.findOneAndUpdate(
-            {_id:req.user._id},
+            {_id:req.session.user._id},
             {$set:{
                 name:name
             }}
@@ -59,11 +59,11 @@ const loadWallet=async (req,res)=>{
         const skip=(page-1)*limit
 
         const wallet=await Wallet.findOne(
-            {userId:req.user._id},
+            {userId:req.session.user._id},
             {transactions:{$slice:[skip,limit]}}
         )
         
-        const wallets=await Wallet.findOne({userId:req.user._id})
+        const wallets=await Wallet.findOne({userId:req.session.user._id})
         const count =wallets.transactions.length
         // console.log(wallet)
         const totalTransaction=count

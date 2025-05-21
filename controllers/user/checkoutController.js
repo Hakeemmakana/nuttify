@@ -20,7 +20,7 @@ const loadCheckout = async (req, res) => {
                 msg: 'session expired'
             })
         }
-        const cart = await Cart.findOne({ userId: req.user._id }).populate('items.productId')
+        const cart = await Cart.findOne({ userId: req.session.user._id }).populate('items.productId')
 
         if (!cart || cart.items.length == 0) {
             return res.json({
@@ -93,7 +93,11 @@ const loadCheckout = async (req, res) => {
 
         }
 
-        const address = await Address.findOne({ userId: req.user._id })
+        const address = await Address.findOne({ userId: req.session.user._id })
+        if(!address||address.address.length==0){
+            req.session.addressCreate=true
+           return res.redirect('/account/addresses')
+        }
         // console .log("checkout address",address)
         res.render("checkout", {
             cart,
@@ -124,7 +128,7 @@ const checkout = async (req, res) => {
             })
         }
 
-        const address = await Address.findOne({ userId: req.user._id })
+        const address = await Address.findOne({ userId: req.session.user._id })
         const cartAddress = address.address.find(item => item._id.toString() == addressId.toString())
         console.log(cartAddress)
         if (!cartAddress) {
@@ -139,7 +143,7 @@ const checkout = async (req, res) => {
         //    let address = {
 
         //    }
-        const cart = await Cart.findOne({ userId: req.user._id }).populate('items.productId')
+        const cart = await Cart.findOne({ userId: req.session.user._id }).populate('items.productId')
         if (!cart || cart.items.length === 0) {
             return res.json({
                 success: false,
@@ -247,7 +251,7 @@ const checkout = async (req, res) => {
             const razorpayOrder = await razorpay.orders.create({
                 amount: (totalAmount - totalDiscount - couponDiscount) * 100, // Convert to paise
                 currency: 'INR',
-                // receipt: `order_rcptid_${req.user._id}_${Date.now()}`,
+                // receipt: `order_rcptid_${req.session.user._id}_${Date.now()}`,
                 receipt: 'receiptId',
                 payment_capture: 1 // Auto-capture payment
             });
@@ -263,7 +267,7 @@ const checkout = async (req, res) => {
                     key: process.env.RAZORPAY_KEY_ID
                 },
                 orderDetails: {
-                    userId: req.user._id,
+                    userId: req.session.user._id,
                     address: cartAddress,
                     totalAmount,
                     totalDiscount,
@@ -276,10 +280,10 @@ const checkout = async (req, res) => {
 
 
         if (paymentOption == 'wallet') {
-            let wallet = await Wallet.findOne({ userId: req.user._id })
+            let wallet = await Wallet.findOne({ userId: req.session.user._id })
             if (!wallet) {
                 wallet = new Wallet({
-                    userId: req.user._id,
+                    userId: req.session.user._id,
                     balance: 0,
                     transactions: []
                 });
@@ -298,7 +302,7 @@ const checkout = async (req, res) => {
 
             console.log("fffffffff", totalAmount)
             const newOrder = new Order({
-                userId: req.user._id,
+                userId: req.session.user._id,
                 orderItems: result.map(items => ({
                     productId: items.product.productId,
                     quantity: items.product.quantity,
@@ -336,7 +340,7 @@ const checkout = async (req, res) => {
             }
             console.log("fffffffff", result,'kkkkkkkkkk')
             const newOrder = new Order({
-                userId: req.user._id,
+                userId: req.session.user._id,
                 orderItems: result.map(items => ({
                     productId: items.product.productId,
                     quantity: items.product.quantity,
@@ -356,7 +360,7 @@ const checkout = async (req, res) => {
             req.session.lastOrderId = newOrder._id
 
         }
-        await Cart.updateOne({ userId: req.user._id },
+        await Cart.updateOne({ userId: req.session.user._id },
             { $set: { items: [], } }
         )
         for (let item of cart.items) {
@@ -382,8 +386,8 @@ const checkout = async (req, res) => {
 }
 
 const orderSuccess = async (req, res) => {
-    console.log(req.user._id)
-    const order = await Order.findOne({ userId: req.user._id })
+    console.log(req.session.user._id)
+    const order = await Order.findOne({ userId: req.session.user._id })
         .sort({ createdAt: -1 })
         .populate('orderItems.productId')
 
@@ -457,7 +461,7 @@ const verifyPayment = async (req, res) => {
             }
         }
 
-        // const failedOrder=await Order.findOne({userId:req.user._id,status:'paymentFailed'})
+        // const failedOrder=await Order.findOne({userId:req.session.user._id,status:'paymentFailed'})
         // if(failedOrder){
         // failedOrder.status='orderFailed'
         // await failedOrder.save()
@@ -483,7 +487,7 @@ const verifyPayment = async (req, res) => {
 };
 const orderFailed = async (req, res) => {
     try {
-        const order = await Order.findOne({ userId: req.user._id }).sort({ createdAt: -1 })
+        const order = await Order.findOne({ userId: req.session.user._id }).sort({ createdAt: -1 })
         res.render("orderFailed", {
             order
         })
@@ -554,7 +558,7 @@ const paymentFailed = async (req, res) => {
 const retryPayment = async (req, res) => {
     try {
         const { orderId } = req.body
-        const userId = req.user._id
+        const userId = req.session.user._id
 
         console.log("lllllllllllllllllllllllllllllllllllllllllllllllllll")
         const order = await Order.findOne({ _id: orderId, userId, status: 'paymentFailed' })
