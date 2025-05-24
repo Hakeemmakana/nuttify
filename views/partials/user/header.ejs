@@ -3,14 +3,347 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nutify - Premium Dried Fruits </title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Nutify</title>
+    <link rel="icon" type="image/png" href="/users/image/home/nutlog-removebg-preview.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <link rel="stylesheet" href="/users/css/home.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<style>
-.dropdown-content {
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        /* Top Bar */
+        .nutify-topbar {
+            background: linear-gradient(90deg, #92400e, #b45309);
+            color: #ffffff;
+            padding: 8px 0;
+            font-size: 14px;
+            letter-spacing: 0.3px;
+        }
+
+        .nutify-container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .nutify-topbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nutify-promo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nutify-promo i {
+            color: #fbbf24;
+        }
+
+        .nutify-trustpilot {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nutify-stars {
+            color: #fbbf24;
+            letter-spacing: 2px;
+        }
+
+        /* Main Navigation */
+        .nutify-navbar {
+            background-color: #ffffff;
+            border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+            padding: 16px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            position: relative;
+            z-index: 1000;
+        }
+
+        .nutify-nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 40px;
+        }
+
+        /* Logo */
+        .nutify-brand {
+            font-size: 26px;
+            font-weight: 700;
+            color: #92400e;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            transition: color 0.2s ease;
+        }
+
+        .nutify-brand:hover {
+            color: #b45309;
+        }
+
+        /* Navigation Menu */
+        .nutify-nav-menu {
+            display: flex;
+            align-items: center;
+            list-style: none;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        .nutify-nav-item {
+            margin: 0 20px;
+            position: relative;
+        }
+
+        .nutify-nav-link {
+            color: #4b5563;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            padding: 8px 0;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .nutify-nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: #92400e;
+            transition: width 0.3s ease;
+        }
+
+        .nutify-nav-link:hover {
+            color: #92400e;
+        }
+
+        .nutify-nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Search and Icons */
+        .nutify-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nutify-search-form {
+            position: relative;
+            margin-right: 16px;
+        }
+
+        .nutify-search-input {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 8px 16px;
+            padding-right: 40px;
+            font-size: 14px;
+            width: 240px;
+            transition: all 0.2s ease;
+        }
+
+        .nutify-search-input:focus {
+            outline: none;
+            border-color: #92400e;
+            box-shadow: 0 0 0 3px rgba(146, 64, 14, 0.1);
+            background-color: #ffffff;
+        }
+
+        .nutify-search-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .nutify-search-btn:hover {
+            color: #92400e;
+        }
+
+        .nutify-icon-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nutify-icon-link {
+            color: #4b5563;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            position: relative;
+            padding: 8px;
+        }
+
+        .nutify-icon-link:hover {
+            color: #92400e;
+        }
+
+        .nutify-icon-link i {
+            font-size: 18px;
+        }
+
+        /* User Dropdown */
+        .nutify-user-dropdown {
+            position: relative;
+            margin-left: 8px;
+        }
+
+        .nutify-dropdown-toggle {
+            background: transparent;
+            border: none;
+            color: #4b5563;
+            font-weight: 500;
+            font-size: 15px;
+            cursor: pointer;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .nutify-dropdown-toggle:hover {
+            background-color: #f9fafb;
+            color: #92400e;
+        }
+
+        .nutify-dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: calc(100% + 8px);
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(8px);
+            transition: all 0.2s ease;
+            border: 1px solid #e5e7eb;
+        }
+
+        .nutify-user-dropdown:hover .nutify-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nutify-dropdown-item {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #4b5563;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .nutify-dropdown-item:first-child {
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        .nutify-dropdown-item:last-child {
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+
+        .nutify-dropdown-item:hover {
+            background-color: #f9fafb;
+            color: #92400e;
+        }
+
+        .nutify-dropdown-item i {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Mobile Toggle */
+        .nutify-mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #4b5563;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .nutify-search-input {
+                width: 200px;
+            }
+            
+            .nutify-nav-item {
+                margin: 0 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nutify-mobile-toggle {
+                display: block;
+            }
+            
+            .nutify-nav-menu {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: #ffffff;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 16px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                display: none;
+                z-index: 90;
+            }
+            
+            .nutify-nav-menu.active {
+                display: flex;
+            }
+            
+            .nutify-nav-item {
+                margin: 8px 0;
+                width: 100%;
+            }
+            
+            .nutify-nav-link {
+                display: block;
+                width: 100%;
+            }
+            
+            .nutify-search-form {
+                display: none;
+            }
+            
+            .nutify-container {
+                padding: 0 16px;
+            }
+        }
+
+        .dropdown-content {
     display: none;
     position: absolute;
     background-color: #f9f9f9;
@@ -30,110 +363,156 @@
      margin-top: 0;
      transition-delay: 0.1s;
   }
-
-
-</style>
+  a {
+  text-decoration: none !important;
+}
+    </style>
 </head>
 <body>
-    
- 
- 
- 
-<!-- Top Bar -->
-<div class="top-bar">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <small>Minimum Sale for All Orders and Free Express Delivery - OFF 30%</small>
-            </div>
-            <div class="col-md-6 text-end">
-                <small>Trustpilot</small>
+    <!-- Top Bar -->
+    <div class="nutify-topbar">
+        <div class="nutify-container">
+            <div class="nutify-topbar-content">
+                <div class="nutify-promo">
+                    <i class="fas fa-tag"></i>
+                    <span>Minimum Sale for All Orders and Free Express Delivery - OFF 30%</span>
+                </div>
+                <div class="nutify-trustpilot">
+                    <span class="nutify-stars">★★★★★</span>
+                    <span>Trustpilot</span>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light py-3" 
-     style="border-bottom: .5px solid black; color: black;">
-
-    <div class="container">
-        <a class="navbar-brand" href="#">Nutify</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Home</a> 
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/shoap">Shop</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-            </ul>
-            <div class="d-flex align-items-center">
-                <form class="d-flex me-3">
-                    <div class="input-group">
-                        <input class="form-control form-control-sm" type="text" id="partialSearch"  value="<%=locals.search%>" placeholder="What are you looking for" aria-label="Search">
-                        <span  class="input-group-text"><i id="partialSearchButton" class="bi bi-search"></i>
-                      </div>
-                </form>
-                <a href="#" class="me-3"><i class="far fa-bell"></i></a>
-                <a href="/wishlist" class="me-3"><i class="far fa-heart"></i></a>
-                <a href="/cart" class="me-3"><i class="fas fa-shopping-cart"></i></a>
-                <%if(locals.userName){%>
-                    <div class="dropdown">
-                        <button class="btn bg-transparent border-0 dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <script>
-                                document.write('<%= locals.userName %>'.split(' ')[0]);
-                            </script>
-                        </button>
-                        
-                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="/account"><i class="bi bi-person-circle" style="color: black; padding-right: 12px;"></i>Profile</a></li>
-                            <li><a class="dropdown-item" href="/logout"><i class="fas fa-power-off" style="color: black; padding-right: 12px;"></i>Logout</a></li>
-                        </ul>
-                    </div>
-                <%}else{%>
-                    <a href="/singin" class="me-3"><i class="far fa-user"></i></a>
-               <% }%>
+    <!-- Navigation -->
+    <nav class="nutify-navbar">
+        <div class="nutify-container">
+            <div class="nutify-nav-content">
+                <a href="/" class="nutify-brand">Nutify</a>
                 
+                <button class="nutify-mobile-toggle" aria-label="Toggle menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <ul class="nutify-nav-menu">
+                    <li class="nutify-nav-item">
+                        <a href="/" class="nutify-nav-link">Home</a>
+                    </li>
+                    <li class="nutify-nav-item">
+                        <a href="/shoap" class="nutify-nav-link">Shop</a>
+                    </li>
+                    <li class="nutify-nav-item">
+                        <a href="/contact" class="nutify-nav-link">Contact</a>
+                    </li>
+                    <li class="nutify-nav-item">
+                        <a href="/about" class="nutify-nav-link">About</a>
+                    </li>
+                </ul>
+                
+                <div class="nutify-nav-right">
+                    <form class="nutify-search-form">
+                        <input type="text" class="nutify-search-input" id="partialSearch" value="<%=locals.search%>" placeholder="What are you looking for" aria-label="Search">
+                        <button type="submit" class="nutify-search-btn" id="partialSearchButton">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                    
+                    <div class="nutify-icon-group">
+                        <a href="#" class="nutify-icon-link" aria-label="Notifications">
+                            <i class="far fa-bell"></i>
+                        </a>
+                        <a href="/wishlist" class="nutify-icon-link" aria-label="Wishlist">
+                            <i class="far fa-heart"></i>
+                        </a>
+                        <a href="/cart" class="nutify-icon-link" aria-label="Shopping Cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </a>
+                        
+                        <%if(locals.userName){%>
+                            <div class="nutify-user-dropdown">
+                                <button class="nutify-dropdown-toggle">
+                                    <script>
+                                        document.write('<%= locals.userName %>'.split(' ')[0]);
+                                    </script>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <div class="nutify-dropdown-menu">
+                                    <a href="/account" class="nutify-dropdown-item">
+                                        <i class="fas fa-user-circle"></i>
+                                        Profile
+                                    </a>
+                                    <a href="/account/orders" class="nutify-dropdown-item">
+                                        <i class="fas fa-box"></i>
+                                        My Orders
+                                    </a>
+                                    <a href="/wishlist" class="nutify-dropdown-item">
+                                        <i class="fas fa-heart"></i>
+                                        Wishlist
+                                    </a>
+                                    <a href="/showCoupons" class="nutify-dropdown-item">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="20" height="20" >
+                                            <path d="M0 252.118V48C0 21.49 21.49 0 48 0h204.118a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882 0L14.059 286.059A48 48 0 0 1 0 252.118zM112 64c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/>
+                                          </svg>
+                                       
+                                        Coupon
+                                    </a>
+                                    <a href="/logout" class="nutify-dropdown-item">
+                                        <i class="fas fa-power-off"></i>
+                                        Logout
+                                    </a>
+                                </div>
+                            </div>
+                        <%}else{%>
+                            <a href="/singin" class="nutify-icon-link">
+                                <i class="far fa-user"></i>
+                            </a>
+                        <%}%>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</nav>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    </nav>
 
-<script>
-    
-    function toggleDropdown() {
-        var dropdown = document.getElementById("dropdownMenu");
-        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-    }
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileToggle = document.querySelector('.nutify-mobile-toggle');
+            const navMenu = document.querySelector('.nutify-nav-menu');
+            
+            if (mobileToggle && navMenu) {
+                mobileToggle.addEventListener('click', function() {
+                    navMenu.classList.toggle('active');
+                });
+            }
+            
+            // Search functionality
+            const searchForm = document.querySelector('.nutify-search-form');
+            const searchInput = document.querySelector('.nutify-search-input');
+            
+            if (searchForm && searchInput) {
+                searchForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    if (searchInput.value.trim() !== '') {
+                        console.log('Searching for:', searchInput.value);
+                    }
+                });
+            }
+        });
 
-function showsinup(){
-    Swal.fire({
-    title: "Do you want to save the changes?",
-    showDenyButton: true,
-    showCancelButton: true,
-    confirmButtonText: "Save",
-    denyButtonText: `Don't save`
-  }).then((result) => {
-    /* Read more about isConfirmed, isDenied below */
-    if (result.isConfirmed) {
-      Swal.fire("Saved!", "", "success");
-    } else if (result.isDenied) {
-      Swal.fire("Changes are not saved", "", "info");
-    }
-  });
-}
-
-
-</script>
-
+        function showsinup() {
+            Swal.fire({
+                title: "Do you want to save the changes?",
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: "Save",
+                denyButtonText: `Don't save`
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire("Saved!", "", "success");
+                } else if (result.isDenied) {
+                    Swal.fire("Changes are not saved", "", "info");
+                }
+            });
+        }
+    </script>

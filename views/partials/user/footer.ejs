@@ -1,75 +1,247 @@
-  
-  
-  <!-- Footer -->
-  <footer class="footer mt-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
-                <h4>Nutify</h4>
-                <p>Subscribe</p>
-                <p>Get 10% off your first order</p>
-                <div class="footer-input-group">
-                    <input type="email" class="footer-input" placeholder="Enter your email">
-                    <button class="footer-input-btn">
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutify - Premium Dried Fruits</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        /* Scoped footer styles to avoid conflicts */
+        .nutify-footer {
+            background-color: #1a1a1a; /* Deep black background */
+            color: #d1d1d1; /* Light gray text for readability */
+            padding: 50px 0 20px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .nutify-footer .container2 {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Headings */
+        .nutify-footer h4 {
+            color: #ffffff;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            transition: color 0.3s ease;
+        }
+        .nutify-footer h4:hover {
+            color: #e67e22; /* Orange accent on hover */
+        }
+
+        /* Text and Links */
+        .nutify-footer p, .nutify-footer a {
+            color: #d1d1d1;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .nutify-footer a:hover {
+            color: #e67e22;
+            transform: translateX(5px);
+        }
+
+        /* Subscribe Form */
+        .nutify-footer .footer-input-group {
+            display: flex;
+            max-width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #333333;
+            transition: border-color 0.3s ease;
+        }
+        .nutify-footer .footer-input-group:hover {
+            border-color: #e67e22;
+        }
+        .nutify-footer .footer-input {
+            flex: 1;
+            border: none;
+            padding: 10px 15px;
+            background-color: #2c2c2c;
+            color: #d1d1d1;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+        .nutify-footer .footer-input:focus {
+            background-color: #333333;
+            outline: none;
+        }
+        .nutify-footer .footer-input-btn {
+            background-color: #e67e22;
+            border: none;
+            padding: 10px 15px;
+            color: #ffffff;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .nutify-footer .footer-input-btn:hover {
+            background-color: #d35400;
+            transform: scale(1.05);
+        }
+
+        /* Lists */
+        .nutify-footer ul {
+            list-style: none;
+            padding: 0;
+        }
+        .nutify-footer ul li {
+            margin-bottom: 8px;
+        }
+
+        /* QR Code and App Badges */
+        .nutify-footer .qr-code {
+            max-width: 100px;
+            margin: 10px 0;
+            filter: brightness(90%); /* Slightly dim for black theme */
+            transition: transform 0.3s ease;
+        }
+        .nutify-footer .qr-code:hover {
+            transform: scale(1.1);
+        }
+        .nutify-footer .app-badges img {
+            max-width: 120px;
+            margin: 5px;
+            filter: brightness(90%);
+            transition: transform 0.3s ease;
+        }
+        .nutify-footer .app-badges img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Social Icons */
+        .nutify-footer .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .nutify-footer .social-icons a {
+            color: #d1d1d1;
+            font-size: 1.2rem;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .nutify-footer .social-icons a:hover {
+            color: #e67e22;
+            transform: rotate(15deg);
+        }
+
+        /* Copyright */
+        .nutify-footer .copyright {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #333333;
+        }
+        .nutify-footer .copyright p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #999999;
+        }
+
+        /* Five-Column Layout */
+        .nutify-footer .col-custom {
+            flex: 0 0 20%; /* Equal width for 5 columns (100% / 5 = 20%) */
+            max-width: 20%;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 991px) {
+            .nutify-footer .col-custom {
+                flex: 0 0 100%;
+                max-width: 100%;
+                text-align: center;
+                margin-bottom: 30px;
+            }
+            .nutify-footer .footer-input-group {
+                max-width: 100%;
+                margin: 0 auto;
+            }
+            .nutify-footer .social-icons {
+                flex-wrap: wrap;
+            }
+        }
+        @media (min-width: 992px) and (max-width: 1199px) {
+            .nutify-footer .col-custom {
+                flex: 0 0 33.333%;
+                max-width: 33.333%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Footer -->
+    <footer class="footer mt-5 nutify-footer">
+        <div class="container2">
+            <div class="row">
+                <div class="col-custom mb-4">
+                    <h4>Nutify</h4>
+                    <p>Subscribe</p>
+                    <p>Get 10% off your first order</p>
+                    <div class="footer-input-group">
+                        <input type="email" class="footer-input" placeholder="Enter your email">
+                        <button class="footer-input-btn">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="col-custom mb-4">
+                    <h4>Support</h4>
+                    <p>Nutify Hub, Mavoor, <br>kozhikkode, Kerala, <br>673661, India.</p>
+                    <p>support@nutify.com</p>
+                    <p>+91 8137822686</p>
+                </div>
+                
+                <div class="col-custom mb-4">
+                    <h4>Account</h4>
+                    <ul>
+                        <li><a href="#">My Account</a></li>
+                        <li><a href="#">Orders</a></li>
+                        <li><a href="#">Wishlist</a></li>
+                        <li><a href="#">Ratings</a></li>
+                        <li><a href="#">Addresses</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-custom mb-4">
+                    <h4>Quick Link</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms Of Use</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-custom mb-4">
+                    <h4>Download App</h4>
+                    <p>Save ₹150 with App in first order.</p>
+                    <img src="users/image/home/Qrcode 1.png" alt="QR Code" class="qr-code">
+                    <div class="app-badges">
+                        <a href="#"><img src="users/image/home/png-transparent-google-play-store-logo-google-play-app-store-android-wallets-text-label-logo.png" alt="Google Play"></a>
+                        <a href="#"><img src="users/image/home/download-appstore.png" alt="App Store"></a>
+                    </div>
                 </div>
             </div>
             
-            <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
-                <h4>Support</h4>
-                <p>Nutify Hub, Mavoor, <br>kozhikkode, Kerala, <br>673661, India.</p>
-                <p>support@nutify.com</p>
-                <p>+91 8137822686</p>
-            </div>
-            
-            <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
-                <h4>Account</h4>
-                <ul>
-                    <li><a href="#">My Account</a></li>
-                    <li><a href="#">Orders</a></li>
-                    <li><a href="#">Wishlist</a></li>
-                    <li><a href="#">Ratings</a></li>
-                    <li><a href="#">Addresses</a></li>
-                </ul>
-            </div>
-            
-            <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
-                <h4>Quick Link</h4>
-                <ul>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms Of Use</a></li>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </div>
-            
-            <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
-                <h4>Download App</h4>
-                <p>Save ₹150 with App in first order.</p>
-                <img src="users/image/home/Qrcode 1.png" alt="QR Code" class="qr-code">
-                <div class="app-badges">
-                    <a href="#"><img src="users/image/home/png-transparent-google-play-store-logo-google-play-app-store-android-wallets-text-label-logo.png" alt="Google Play"></a>
-                    <a href="#"><img src="users/image/home/download-appstore.png" alt="App Store"></a>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="social-icons text-center">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="social-icons text-center">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                </div>
+            
+            <div class="copyright">
+                <p>© Copyright Nutify 2025. All right reserved</p>
             </div>
         </div>
-        
-        <div class="copyright">
-            <p>© Copyright Nutify 2025. All right reserved</p>
-        </div>
-    </div>
-</footer>
+    </footer>
 </body>
 </html>

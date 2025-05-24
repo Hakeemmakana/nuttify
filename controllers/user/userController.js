@@ -24,7 +24,7 @@ const loadHomepage=async (req,res)=>{
        
         ; // Debugging
         productData.sort((a,b)=>new Date(b.createOn)-new Date(a.createOn))
-        productData=productData.slice(0,4)
+        // productData=productData.slice(0,4)
         
         if(user){
             const userData=await User.findOne({_id:user._id})
@@ -316,6 +316,9 @@ const singin = async (req,res)=>{
         }
         if(!findUser.isVerified){
             return res.render("singin",{message:"User is blocked by admin"})
+        }
+        if(findUser && findUser.googleId && findUser.googleId !== ''){
+            return res.render("singin",{message:"its already registeded using google id"})
         }
         const passwordMatch=await bcrypt.compare(password,findUser.password)
         if(!passwordMatch){
@@ -692,6 +695,24 @@ function getBestOffer(applicableOffers, product) {
     return bestOffer;
   }
   
+  const contact=async (req,res)=>{
+    try {
+        res.render("contact")
+
+    } catch (error) {
+        console.log("errro in conact load page",error)
+    }
+  }
+
+  const about=async (req,res)=>{
+    try {
+        res.render("about")
+        
+    } catch (error) {
+        console.log("errro in about load page",error)
+    }
+  }
+
 
 
 
@@ -708,6 +729,8 @@ module.exports={
     logout,
     loadShoppingPage,
     filterProduct,
-    productDetails
+    productDetails,
+    contact,
+    about
     
 }

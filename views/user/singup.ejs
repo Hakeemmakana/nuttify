@@ -5,450 +5,511 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nutify - Create Account</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<style>
-
-    /* Global styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
-}
-
-body {
-    color: #333;
-    line-height: 1.6;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
-}
-
-a {
-    text-decoration: none;
-    color: inherit;
-}
-
-ul {
-    list-style: none;
-}
-
-/* Header styles */
-header {
-    padding: 20px 0;
-    border-bottom: 1px solid #eee;
-    background-color: white;
-}
-
-.nav-wrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo h1 {
-    font-weight: bold;
-    font-size: 24px;
-}
-
-nav ul {
-    display: flex;
-}
-
-nav ul li {
-    margin-right: 20px;
-}
-
-nav ul li a {
-    color: #333;
-    font-weight: 500;
-}
-
-.search-bar {
-    display: flex;
-    background: #f5f5f5;
-    border-radius: 4px;
-    overflow: hidden;
-    width: 300px;
-}
-
-.search-bar input {
-    flex: 1;
-    border: none;
-    padding: 10px 15px;
-    background: transparent;
-    outline: none;
-}
-
-.search-bar button {
-    background: transparent;
-    border: none;
-    padding: 0 15px;
-    cursor: pointer;
-}
-
-/* Main content */
-main {
-    padding: 50px 0;
-    background-color: #f9f9f9;
-}
-
-.signup-container {
-    display: flex;
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.image-section {
-    flex: 1;
-    background-color: #e0f2f1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.image-section img {
-    max-width: 100%;
-    height: auto;
-}
-
-.form-section {
-    flex: 1;
-    padding: 40px;
-}
-
-.form-section h2 {
-    font-size: 28px;
-    margin-bottom: 10px;
-}
-
-.form-section p {
-    color: #666;
-    margin-bottom: 30px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    outline: none;
-    font-size: 16px;
-}
-
-.btn {
-    display: block;
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    text-align: center;
-}
-
-.btn-primary {
-    background-color: #e53935;
-    color: white;
-}
-
-.google-signin {
-    margin: 25px 0;
-}
-
-.btn-google {
-    background-color: white;
-    border: 1px solid #ddd;
-    color: #333;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn-google img {
-    height: 20px;
-    margin-right: 10px;
-}
-
-.login-link {
-    text-align: center;
-    margin-top: 15px;
-}
-
-.login-link a {
-    color: #e53935;
-    font-weight: 500;
-}
-
-/* Footer styles */
-footer {
-    background-color: #111;
-    color: white;
-    padding: 50px 0 20px;
-}
-
-.footer-content {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin-bottom: 30px;
-}
-
-.footer-column {
-    flex: 1;
-    min-width: 200px;
-    margin-bottom: 30px;
-}
-
-.footer-column h3 {
-    font-size: 18px;
-    margin-bottom: 20px;
-}
-
-.footer-column p {
-    margin-bottom: 10px;
-    color: #999;
-}
-
-.footer-column ul li {
-    margin-bottom: 10px;
-}
-
-.footer-column ul li a {
-    color: #999;
-}
-
-.footer-column ul li a:hover {
-    color: white;
-}
-
-.subscription {
-    display: flex;
-    margin-top: 15px;
-}
-
-.subscription input {
-    flex: 1;
-    background-color: #222;
-    border: 1px solid #333;
-    color: white;
-    padding: 10px;
-    border-radius: 4px 0 0 4px;
-}
-
-.subscription button {
-    background-color: #222;
-    border: 1px solid #333;
-    border-left: none;
-    color: white;
-    padding: 0 15px;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-}
-
-.qr-code img {
-    width: 100px;
-    margin: 10px 0;
-}
-
-.app-buttons {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.app-buttons img {
-    height: 30px;
-}
-
-.social-icons {
-    display: flex;
-    gap: 15px;
-}
-
-.social-icons a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: #222;
-    color: white;
-}
-
-.copyright {
-    text-align: center;
-    padding-top: 20px;
-    border-top: 1px solid #333;
-    color: #999;
-    font-size: 14px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 992px) {
-    .signup-container {
-        flex-direction: column;
-    }
-    
-    .image-section, .form-section {
-        flex: none;
-    }
-    
-    .footer-content {
-        flex-direction: column;
-    }
-    
-    .footer-column {
-        width: 100%;
-        margin-bottom: 30px;
-    }
-}
-
-@media (max-width: 768px) {
-    .nav-wrapper {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    nav ul {
-        margin: 15px 0;
-    }
-    
-    .search-bar {
-        width: 100%;
-    }
-    
-
-        
-
-}
-.google-icon {
-            margin-right: 10px;
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* Modern Professional Styles */
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
 
-        .google-btn {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-900);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: white;
-            cursor: pointer;
-            margin-bottom: 20px;
+            padding: 20px;
         }
 
-</style>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        .signup-wrapper {
+            width: 100%;
+            max-width: 1000px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 600px;
+            animation: slideUp 0.6s ease-out;
+        }
 
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .image-section {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="20" cy="60" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        }
+
+        .brand-content {
+            text-align: center;
+            z-index: 1;
+            position: relative;
+        }
+
+        .brand-logo {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            box-shadow: var(--shadow-lg);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .brand-logo i {
+            font-size: 60px;
+            color: var(--primary-color);
+        }
+
+        .brand-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .brand-subtitle {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.9);
+            font-weight: 400;
+        }
+
+        .form-section {
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-header {
+            margin-bottom: 40px;
+        }
+
+        .form-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+
+        .form-subtitle {
+            color: var(--gray-600);
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: var(--gray-50);
+            font-weight: 400;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-input::placeholder {
+            color: var(--gray-400);
+            font-weight: 400;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 30px 0;
+            color: var(--gray-500);
+            font-size: 14px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--gray-200);
+        }
+
+        .divider span {
+            padding: 0 16px;
+            background: white;
+        }
+
+        .google-btn {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--gray-700);
+            text-decoration: none;
+            margin-bottom: 24px;
+        }
+
+        .google-btn:hover {
+            border-color: var(--gray-300);
+            background: var(--gray-50);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+            color: var(--gray-700);
+        }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .login-link {
+            text-align: center;
+            color: var(--gray-600);
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .login-link a:hover {
+            color: var(--primary-hover);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .signup-wrapper {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                margin: 20px;
+            }
+
+            .image-section {
+                min-height: 200px;
+            }
+
+            .form-section {
+                padding: 40px 30px;
+            }
+
+            .brand-logo {
+                width: 80px;
+                height: 80px;
+            }
+
+            .brand-logo i {
+                font-size: 40px;
+            }
+
+            .brand-title {
+                font-size: 2rem;
+            }
+
+            .form-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .signup-wrapper {
+                margin: 10px;
+            }
+
+            .form-section {
+                padding: 30px 20px;
+            }
+
+            .brand-title {
+                font-size: 1.75rem;
+            }
+
+            .form-title {
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Loading Animation */
+        .btn-loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 2px solid transparent;
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-300);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-400);
+        }
+    </style>
 </head>
 <body>
-   
-
-    <!-- Main content -->
-    <main>
-        <div class="container">
-            <div class="signup-container">
-                <div class="image-section">
-                    <img src="/users/image/login/login nuttify bottle.png" style="width: auto; height: 100%;" alt="nuttify">
+    <div class="signup-wrapper">
+        <div class="image-section">
+            <div class="brand-content">
+                <div class="brand-logo">
+                    <img src="/users/image/home/nutlog-removebg-preview.png" alt="">
                 </div>
-                <div class="form-section">
-                    <h2>Create an account</h2>
-                    <p>Enter your details below</p>
-                    
-                    <form method="post" action="/singup" onsubmit="validateForm(event)" >
-                        <div class="form-group">
-                            <input type="text" id="name" name="name" placeholder="First Name">
-                        </div>
-                        <div class="form-group">
-                            <input type="text" id="phone" name="phone" placeholder="Phone Number">
-                        </div>
-                        <div class="form-group">
-                            <input type="email" id="email" name="email"placeholder="Email">
-                        </div>
-                        <div class="form-group">
-                            <input type="password" id="password" name="password" placeholder="Password">
-                        </div>
-                        <div class="form-group">
-                            <input type="password" id="cPassword" name="cPassword" placeholder="Confirm Password">
-                        </div>
-
-                        <%if(locals.message&&message.length){%>
-                            <input type="text" id="message" value=" <%=message%>" hidden>
-                               
-                            
-                        <%}%>
-                        <button type="submit" class="btn btn-primary">Create Account</button>
-                        <br>
-                    </form>
-                            <a href="/auth/google" class="google-btn">
-                                <svg class="google-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
-                                    <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
-                                    <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
-                                    <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
-                                    <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
-                                </svg>
-                                Login with Google
-                            </a>
-                        
-                        
-                        <div class="login-link">
-                            <p>Already have account? <a href="singin">Log in</a></p>
-                        </div>
-                    
-                </div>
+                <!-- <h1 class="brand-title">Nutify</h1>
+                <p class="brand-subtitle">Your nutrition companion</p> -->
             </div>
         </div>
-    </main>
+        
+        <div class="form-section">
+            <div class="form-header">
+                <h2 class="form-title">Create Account</h2>
+                <p class="form-subtitle">Join thousands of users who trust Nutify</p>
+            </div>
+            
+            <form method="post" action="/singup" onsubmit="validateForm(event)">
+                <div class="form-group">
+                    <input type="text" id="name" name="name" class="form-input" placeholder="First Name" required>
+                </div>
+                
+                <div class="form-group">
+                    <input type="tel" id="phone" name="phone" class="form-input" placeholder="Phone Number" required>
+                </div>
+                
+                <div class="form-group">
+                    <input type="email" id="email" name="email" class="form-input" placeholder="Email Address" required>
+                </div>
+                
+                <div class="form-group">
+                    <input type="password" id="password" name="password" class="form-input" placeholder="Password" required>
+                </div>
+                
+                <div class="form-group">
+                    <input type="password" id="cPassword" name="cPassword" class="form-input" placeholder="Confirm Password" required>
+                </div>
+
+                <%if(locals.message&&message.length){%>
+                    <input type="text" id="message" value="<%=message%>" hidden>
+                <%}%>
+
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    Create Account
+                </button>
+            </form>
+
+            <div class="divider">
+                <span>or continue with</span>
+            </div>
+
+            <a href="/auth/google" class="google-btn">
+                <svg class="google-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
+                    <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+                    <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+                    <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+                    <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+                </svg>
+                Continue with Google
+            </a>
+            
+            <div class="login-link">
+                <p>Already have an account? <a href="singin">Sign In</a></p>
+            </div>
+        </div>
+    </div>
 
     <script>
         function validateForm(event) {
-          const name = document.getElementById("name").value.trim();
-          const phone = document.getElementById("phone").value.trim();
-          const email = document.getElementById("email").value.trim();
-          const password = document.getElementById("password").value;
-          const cPassword = document.getElementById("cPassword").value;
-      
-          let error = "";
-      
-          if (!name) error = "Name is required.";
-          else if (!/^\d{10}$/.test(phone)) error = "Enter a valid 10-digit phone number.";
-          else if (!/^\S+@\S+\.\S+$/.test(email)) error = "Enter a valid email.";
-          else if (password.length < 6) error = "Password must be at least 6 characters.";
-          else if (password !== cPassword) error = "Passwords do not match.";
-      
-          if (error) {
-            event.preventDefault(); 
-            Swal.fire({
-                icon:'error',
-                title:'Oops...',
-                text:error
-            })
-            
-          }
-        }
-        document.addEventListener("DOMContentLoaded", function () {
-          const message =document.getElementById("message").value
-        if (message) {
-            Swal.fire({
-                icon:'error',
-                title:'Oops...',
-                text:message
-            })}
+            const name = document.getElementById("name").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+            const cPassword = document.getElementById("cPassword").value;
+            const submitBtn = document.getElementById("submitBtn");
 
-        })
-        </script>
+            let error = "";
+
+            if (!name) error = "Name is required.";
+            else if (!/^\d{10}$/.test(phone)) error = "Enter a valid 10-digit phone number.";
+            else if (!/^\S+@\S+\.\S+$/.test(email)) error = "Enter a valid email.";
+            else if (password.length < 6) error = "Password must be at least 6 characters.";
+            else if (password !== cPassword) error = "Passwords do not match.";
+
+            if (error) {
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: error,
+                    confirmButtonColor: '#2563eb'
+                });
+            } else {
+                // Add loading state
+                submitBtn.classList.add('btn-loading');
+                submitBtn.disabled = true;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const messageElement = document.getElementById("message");
+            if (messageElement) {
+                const message = messageElement.value;
+                if (message) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Registration Failed',
+                        text: message,
+                        confirmButtonColor: '#2563eb'
+                    });
+                }
+            }
+        });
+
+        // Add smooth focus transitions
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+    </script>
 </body>
 </html>

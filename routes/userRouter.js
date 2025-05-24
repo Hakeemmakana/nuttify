@@ -97,5 +97,10 @@ router.get('/api/reports/excel',reportCotroller.downloadExcel)
 router.get('/api/reports/pdf',reportCotroller.downloadPDF)
 
 
+//...............constac and about------------
+router.get("/about",userController.about)
+router.get("/contact",userController.contact)
+
+
 
 module.exports=router

@@ -182,9 +182,9 @@ const downloadPDF = async (req, res) => {
       doc.fontSize(10).text(`Order ID: ${order.orderId}`);
       doc.text(`Date: ${order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'N/A'}`);
       doc.text(`Customer: ${order.userId?.name || order.address.name || 'Unknown'}`);
-      doc.text(`Amount: ₹${order.totalAmount.toLocaleString('en-IN')}`);
-      doc.text(`Discount: ₹${(order.totalDiscount + order.couponDiscount).toLocaleString('en-IN')}`);
-      doc.text(`Final Amount: ₹${order.finalAmount.toLocaleString('en-IN')}`);
+      doc.text(`Amount: ${order.totalAmount.toLocaleString('en-IN')}`);
+      doc.text(`Discount: ${(order.totalDiscount + order.couponDiscount).toLocaleString('en-IN')}`);
+      doc.text(`Final Amount: ${order.finalAmount.toLocaleString('en-IN')}`);
       doc.text(`Payment: ${order.paymentMetherd}`);
       doc.text(`Status: ${order.status}`);
       doc.moveDown();
