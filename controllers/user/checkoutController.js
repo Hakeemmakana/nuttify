@@ -487,7 +487,9 @@ const verifyPayment = async (req, res) => {
 };
 const orderFailed = async (req, res) => {
     try {
-        const order = await Order.findOne({ userId: req.session.user._id }).sort({ createdAt: -1 })
+        const order = await Order.findOne({ userId: req.session.user._id,
+            status:'paymentFailed'
+        }).sort({ createdAt: -1 })
         res.render("orderFailed", {
             order
         })

@@ -590,11 +590,11 @@ const downloadInvoice = async (req, res) => {
         xPosition += tableColumnWidths[3];
         
         // Discount column
-        doc.text(formatCurrency(order.totalDiscount || 0), xPosition, y, { width: tableColumnWidths[4], align: 'right' });
+        doc.text(formatCurrency(item.totalDiscount || 0), xPosition, y, { width: tableColumnWidths[4], align: 'right' });
         xPosition += tableColumnWidths[4];
         
         // Total column
-        doc.text(formatCurrency(price-order.totalDiscount ), xPosition, y, { width: tableColumnWidths[5], align: 'right' });
+        doc.text(formatCurrency(price-item.totalDiscount ), xPosition, y, { width: tableColumnWidths[5], align: 'right' });
         
         y += 20; // Move to next row
       });

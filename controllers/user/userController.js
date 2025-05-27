@@ -700,7 +700,9 @@ function getBestOffer(applicableOffers, product) {
   
   const contact=async (req,res)=>{
     try {
-        res.render("contact")
+        res.render("contact",{
+            searchRemove:true
+        })
 
     } catch (error) {
         console.log("errro in conact load page",error)
@@ -709,7 +711,9 @@ function getBestOffer(applicableOffers, product) {
 
   const about=async (req,res)=>{
     try {
-        res.render("about")
+        res.render("about",{
+            searchRemove:true
+        })
         
     } catch (error) {
         console.log("errro in about load page",error)

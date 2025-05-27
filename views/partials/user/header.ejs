@@ -411,12 +411,15 @@
                 </ul>
                 
                 <div class="nutify-nav-right">
+                    <%if(locals.searchRemove){%>
+                        <%}else{%>
                     <form class="nutify-search-form">
                         <input type="text" class="nutify-search-input" id="partialSearch" value="<%=locals.search%>" placeholder="What are you looking for" aria-label="Search">
                         <button type="submit" class="nutify-search-btn" id="partialSearchButton">
                             <i class="fas fa-search"></i>
                         </button>
                     </form>
+                    <%}%>
                     
                     <div class="nutify-icon-group">
                         <a href="#" class="nutify-icon-link" aria-label="Notifications">
