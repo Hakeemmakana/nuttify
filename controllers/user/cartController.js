@@ -91,6 +91,13 @@ const loadCart=async(req,res)=>{
 
 const addToCart = async (req,res)=>{
     const userId=req.session.user._id
+   
+        if(!userId){
+            return res.json({
+                success:false,
+                msg:'session time out plese log in '
+            })
+        }
 try {
     const {productId,quantity}=req.body
   console.log(req.body)

@@ -1680,7 +1680,7 @@ a{
                     <img src="<%=products[i].productImage[0]%>" alt="Premium Almonds">
                 </div>
                 <h3 class="showcase__item_name"><%=products[i].productName%></h3>
-                <button class="showcase__quick_buy">Add to Cart</button>
+                <button class="showcase__quick_buy" onclick="cartAddButton('<%=products[i]._id%>')">Add to Cart</button>
             </div>
         <%}%>
             
@@ -1934,5 +1934,53 @@ a{
                 this.classList.add('active');
             });
         });
+
+
+        function cartAddButton(productId){
+      fetch("/addToCart", {
+        method: 'post',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({productId, quantity: 1})
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        if(data.success){
+          Swal.fire({
+            position: 'bottom',
+            icon: 'success',
+            title: data.msg,
+            showConfirmButton: false,
+            timer: 3000,
+            background: '#000',
+            color: '#fff',
+            timerProgressBar: true,
+            toast: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer);
+              toast.addEventListener('mouseleave', Swal.resumeTimer);
+            }
+          });
+        } else {
+          Swal.fire({
+            position: 'bottom',
+            icon: 'error',
+            title: data.msg,
+            showConfirmButton: false,
+            timer: 3000,
+            background: '#000',
+            color: '#fff',
+            timerProgressBar: true,
+            toast: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer);
+              toast.addEventListener('mouseleave', Swal.resumeTimer);
+            }
+          });
+        }
+      });
+    }
     </script>
     <%-include("../../views/partials/user/footer")%>

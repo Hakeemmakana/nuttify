@@ -57,12 +57,23 @@ const loadWallet=async (req,res)=>{
         }
         const limit=8
         const skip=(page-1)*limit
-
+    
         const wallet=await Wallet.findOne(
             {userId:req.session.user._id},
             {transactions:{$slice:[skip,limit]}}
         )
-        
+        if(!wallet){
+            return res.render("wallet",{
+                wallet:{balance:0,
+                    transactions:[]
+                },
+                currentPage:page,
+                totalTransaction:1,
+                totalPages:1,
+                startItem:1,
+                endItem:1
+            })
+        }
         const wallets=await Wallet.findOne({userId:req.session.user._id})
         const count =wallets.transactions.length
         // console.log(wallet)

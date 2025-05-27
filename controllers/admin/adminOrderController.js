@@ -133,6 +133,9 @@ const returnedOrder=async (req,res)=>{
             }
         }
         }
+        if(order.couponDiscount){
+            refundAmount-=order.couponDiscount
+        }
         res.json({
             success:true,
             msg:'order status updated successfully'

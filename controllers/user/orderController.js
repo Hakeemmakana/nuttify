@@ -138,6 +138,10 @@ const cancelOrder=async (req,res)=>{
 
         }
     }
+    if(order.couponDiscount){
+        refundAmount-=order.couponDiscount
+    }
+
 let wallet= await Wallet.findOne({userId})
 if (!wallet) {
     wallet = new Wallet({

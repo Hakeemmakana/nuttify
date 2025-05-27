@@ -607,6 +607,9 @@ const productDetails= async (req,res)=>{
         // console.log('usergoogle',req.user)
         // console.log('userNormal',req.session.user)
         const user=req.session.user
+        if(!user){
+            return res.redirect("/singin")
+        }
         // console.log(user)
         const userName=user.name
         const id= req.query.id
